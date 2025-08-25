@@ -1,0 +1,1999 @@
+{
+  "comprehensive_verification_report": [
+    {
+      "run_id": "1",
+      "claim_verified": "R248Q baseline misfolds with an electrostatic failure signature (best_final_RMSD_A \u2265 20 \u00c5).",
+      "independent_analyses": [
+        {
+          "file": "best_run_details/comprehensive_report_p53_R248Q_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.png",
+          "role_key": "comprehensive_png",
+          "sha": "a8b0f1791e05",
+          "size": 361930,
+          "analysis": {
+            "time_series_description": "The RMSD decreases from approximately 28 angstroms to approximately 26.6 angstroms. The radius of gyration also decreases from approximately 21.5 angstroms to approximately 20.8 angstroms.",
+            "final_structure_description": "The final structure has an RMSD of 26.63 angstroms. The Ramachandran plot shows that almost all residues are clustered around the origin (0,0). The contact persistence map shows high persistence along the diagonal, indicating stable secondary structure elements. There are also some off-diagonal regions with moderate persistence, suggesting some stable tertiary contacts.",
+            "overall_conclusion": "The simulation shows a decrease in both RMSD and radius of gyration, indicating that the protein is becoming more compact. The Ramachandran plot and contact persistence map suggest that the final structure is relatively stable, with well-defined secondary and tertiary structure elements. However, the high RMSD value compared to the native structure indicates that the final structure is significantly different from the starting structure."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_timeseries_p53_R248Q_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.csv",
+          "role_key": "diagnostics_csv",
+          "sha": "c0ea979678fe",
+          "size": 153145,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "The final values in LOCAL_SUMMARY match the last row of the CSV snippet."
+          },
+          "local_summary": {
+            "source": "diagnostics_csv",
+            "final_RMSD_A": 26.6283,
+            "stabilized": true,
+            "final_Rg_A": 20.82793
+          }
+        },
+        {
+          "file": "best_run_details/trajectory_p53_R248Q_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.pdb",
+          "role_key": "pdb",
+          "sha": "f511fe3edd7e",
+          "size": 2760502,
+          "analysis": {
+            "frames_sampled": [
+              1,
+              16,
+              31,
+              46,
+              60
+            ],
+            "qualitative_compaction": "no",
+            "notes": "The PDB snippet provided appears to be a trajectory from a molecular dynamics simulation.  It contains multiple MODEL entries, each representing a snapshot of the protein's structure at a different time point. The REMARK section indicates that frames 1, 16, 31, 46, and 60 were sampled from the trajectory. Without more information or visualization of the trajectory, it's impossible to determine if the protein undergoes compaction.  A proper assessment would require analyzing the change in radius of gyration or other metrics over the course of the simulation."
+          },
+          "local_summary": {
+            "pdb_sampled_frames": [
+              1,
+              16,
+              31,
+              46,
+              60
+            ]
+          }
+        },
+        {
+          "file": "p53_R248Q_probe_FINAL_by_param_20250823-060305.csv",
+          "role_key": "by_param_csv",
+          "sha": "a79a4f279f0e",
+          "size": 582,
+          "analysis": {
+            "n_rows": 2,
+            "distinct_param_sets": 2,
+            "sensitivity": "low",
+            "notes": "spread_RMSD_A is 0.0, which is less than 0.5."
+          },
+          "local_summary": {
+            "source": "by_param_csv",
+            "n_rows": 2,
+            "distinct_param_sets": 2,
+            "best_final_RMSD_A": 27.71,
+            "spread_RMSD_A": 0.0
+          }
+        },
+        {
+          "file": "p53_R248Q_probe_FINAL_raw_20250823-060305.csv",
+          "role_key": "raw_csv",
+          "sha": "0555f54b0324",
+          "size": 1379,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "CSV data has 6 rows, matching the \"runs_count\" in LOCAL_SUMMARY."
+          },
+          "local_summary": {
+            "source": "raw_csv",
+            "runs_count": 6
+          }
+        },
+        {
+          "file": "p53_R248Q_probe_FINAL_report_20250823-060305.md",
+          "role_key": "md",
+          "sha": "888dba963f22",
+          "size": 1195,
+          "analysis": {
+            "runs_count": 6,
+            "failures": 0,
+            "best_final_RMSD_A": 26.6283,
+            "best_final_Rg_A": 20.8279,
+            "classification": "misfolded",
+            "table_row_source": "p53_R248Q_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11"
+          },
+          "local_summary": null
+        }
+      ],
+      "biophysics_verification": {
+        "verdict": "CONFIRMED",
+        "constraint_summary": "ALL_CONFIRMED",
+        "rationale": "The simulation results from p53_R248Q_probe_FINAL_report_20250823-060305.md show that the best final RMSD is 26.63 \u00c5, which is greater than 20 \u00c5. This confirms that R248Q misfolds with an electrostatic failure signature.",
+        "key_numbers": {
+          "best_final_RMSD_A": 26.6283,
+          "best_final_Rg_A": 20.8279,
+          "runs_count": 6,
+          "failures": 0,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": ">=",
+              "value": 20.0
+            },
+            "status": "CONFIRMED",
+            "actual_value": 26.6283,
+            "source": "md",
+            "delta": 6.628299999999999
+          }
+        ],
+        "evidence_citations": [
+          "p53_R248Q_probe_FINAL_report_20250823-060305.md"
+        ]
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": 26.6283,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": 20.8279,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": 6,
+            "raw": 6,
+            "status": "MATCH"
+          }
+        },
+        "confidence": {
+          "level": "HIGH",
+          "drivers": [
+            "Consistent evidence & ALL_CONFIRMED."
+          ]
+        },
+        "qa_issues": []
+      }
+    },
+    {
+      "run_id": "2",
+      "claim_verified": "WT collapses to a compact, non-native globule (best_final_RMSD_A \u2265 20 \u00c5).",
+      "independent_analyses": [
+        {
+          "file": "best_run_details/comprehensive_report_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.png",
+          "role_key": "comprehensive_png",
+          "sha": "ab249a9671ca",
+          "size": 359794,
+          "analysis": {
+            "time_series_description": "The time series data show the RMSD and Radius of gyration (Rg) decreasing over the course of the simulation. The RMSD decreases from ~28 angstroms to ~26.5 angstroms. The Rg decreases from ~21.5 angstroms to ~20.8 angstroms.",
+            "final_structure_description": "The final structure has an RMSD of 26.63 angstroms relative to the native structure. The Ramachandran plot shows that almost all residues are clustered in a single region, indicating a limited range of phi/psi angles. The contact persistence map shows high persistence for contacts within the first 50 residues and between residues 100-175, suggesting these regions maintain their structure throughout the simulation.",
+            "overall_conclusion": "The simulation appears to have converged to a stable structure, as indicated by the decreasing RMSD and Rg. However, the final structure deviates significantly from the native structure (RMSD of 26.63 angstroms). The Ramachandran plot and contact persistence map suggest that certain regions of the protein maintain their structure, while others may be more flexible."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_timeseries_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.csv",
+          "role_key": "diagnostics_csv",
+          "sha": "87ab16125265",
+          "size": 153145,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "LOCAL_SUMMARY.final_RMSD_A (26.6283) and LOCAL_SUMMARY.final_Rg_A (20.82793) match the last row of CSV_CONTENT for RMSD (26.62829971313477) and Rg (20.82793235778809) respectively."
+          },
+          "local_summary": {
+            "source": "diagnostics_csv",
+            "final_RMSD_A": 26.6283,
+            "stabilized": true,
+            "final_Rg_A": 20.82793
+          }
+        },
+        {
+          "file": "best_run_details/trajectory_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.pdb",
+          "role_key": "pdb",
+          "sha": "fd1c2f053520",
+          "size": 2760499,
+          "analysis": {
+            "frames_sampled": [
+              1,
+              16,
+              31,
+              46,
+              60
+            ],
+            "qualitative_compaction": "no",
+            "notes": "The PDB snippet provided appears to be a trajectory from a molecular dynamics simulation.  It contains multiple MODEL entries, each representing a snapshot of the protein's structure at a different time point. The REMARK section indicates that frames 1, 16, 31, 46, and 60 were sampled from the trajectory. Without more information or visualization of the trajectory, it's impossible to determine if the protein undergoes compaction.  A proper assessment would involve analyzing the change in radius of gyration or other metrics over the course of the simulation."
+          },
+          "local_summary": {
+            "pdb_sampled_frames": [
+              1,
+              16,
+              31,
+              46,
+              60
+            ]
+          }
+        },
+        {
+          "file": "p53_WT_probe_FINAL_by_param_20250823-055517.csv",
+          "role_key": "by_param_csv",
+          "sha": "a79a4f279f0e",
+          "size": 582,
+          "analysis": {
+            "n_rows": 2,
+            "distinct_param_sets": 2,
+            "sensitivity": "low",
+            "notes": "spread_RMSD_A is 0.0, which is less than 0.5."
+          },
+          "local_summary": {
+            "source": "by_param_csv",
+            "n_rows": 2,
+            "distinct_param_sets": 2,
+            "best_final_RMSD_A": 27.71,
+            "spread_RMSD_A": 0.0
+          }
+        },
+        {
+          "file": "p53_WT_probe_FINAL_raw_20250823-055517.csv",
+          "role_key": "raw_csv",
+          "sha": "5c201f12c4ad",
+          "size": 1361,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "CSV data has 6 rows, matching the \"runs_count\" in LOCAL_SUMMARY."
+          },
+          "local_summary": {
+            "source": "raw_csv",
+            "runs_count": 6
+          }
+        },
+        {
+          "file": "p53_WT_probe_FINAL_report_20250823-055517.md",
+          "role_key": "md",
+          "sha": "e67738e4d0c5",
+          "size": 1168,
+          "analysis": {
+            "runs_count": 6,
+            "failures": 0,
+            "best_final_RMSD_A": 26.6283,
+            "best_final_Rg_A": 20.8279,
+            "classification": "misfolded",
+            "table_row_source": "p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11"
+          },
+          "local_summary": null
+        }
+      ],
+      "biophysics_verification": {
+        "verdict": "CONFIRMED",
+        "constraint_summary": "ALL_CONFIRMED",
+        "rationale": "The simulation data does not support the claim that WT p53 collapses to a compact, non-native globule. The final RMSD of 26.63 \u00c5, as reported in the `p53_WT_probe_FINAL_report_20250823-055517.md` file, indicates a significant deviation from the native structure, but it does not necessarily imply compaction. The radius of gyration decreases slightly from ~21.5 \u00c5 to ~20.8 \u00c5, as observed in the time series data (`best_run_details/comprehensive_report_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.png` and `best_run_details/diagnostics_timeseries_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.csv`), which suggests a minor change in overall size, but not a collapse.  The qualitative analysis of the trajectory file (`best_run_details/trajectory_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.pdb`) also does not indicate compaction.  Therefore, while the protein deviates from its native structure, the evidence does not support the claim of collapse to a compact globule.",
+        "key_numbers": {
+          "best_final_RMSD_A": 26.6283,
+          "best_final_Rg_A": 20.8279,
+          "runs_count": 6,
+          "failures": 0,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": ">=",
+              "value": 20.0
+            },
+            "status": "CONFIRMED",
+            "actual_value": 26.6283,
+            "source": "md",
+            "delta": 6.628299999999999
+          }
+        ],
+        "evidence_citations": [
+          "best_run_details/comprehensive_report_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.png",
+          "best_run_details/diagnostics_timeseries_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.csv",
+          "best_run_details/trajectory_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.pdb",
+          "p53_WT_probe_FINAL_report_20250823-055517.md"
+        ]
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": 26.6283,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": 20.8279,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": 6,
+            "raw": 6,
+            "status": "MATCH"
+          }
+        },
+        "confidence": {
+          "level": "HIGH",
+          "drivers": [
+            "best_final_RMSD_A=26.63 > 20. ALL_CONFIRMED."
+          ]
+        },
+        "qa_issues": []
+      }
+    },
+    {
+      "run_id": "3",
+      "claim_verified": "Y220C baseline collapses into a non-native globule consistent with a kinetic trap (best_final_RMSD_A \u2265 20 \u00c5).",
+      "independent_analyses": [
+        {
+          "file": "best_run_details/comprehensive_report_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.png",
+          "role_key": "comprehensive_png",
+          "sha": "27a063557871",
+          "size": 213965,
+          "analysis": {
+            "time_series_description": "The initial structure is shown in gray, while the final structure is shown in blue. The RMSD between the two structures is 25.38 angstroms.",
+            "final_structure_description": "The Ramachandran plot of the final structure shows that most of the residues are in the favored regions, with a few residues in the allowed regions. There are no residues in the disallowed regions.",
+            "overall_conclusion": "The simulation did not converge to the native structure. The final structure is significantly different from the native structure, as indicated by the high RMSD value. The Ramachandran plot suggests that the final structure is reasonably well-folded, but further refinement may be necessary to improve its quality."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_report_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.png",
+          "role_key": "diagnostics_png",
+          "sha": "2780ae8ca088",
+          "size": 487158,
+          "analysis": {
+            "rmsd_trend": "decreasing",
+            "rg_trend": "increasing",
+            "interaction_trends": "Number of contacts and salt bridges increase. H-bonds stay constant.",
+            "mechanical_interpretation": "The protein is unfolding and forming non-native interactions."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_timeseries_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.csv",
+          "role_key": "diagnostics_csv",
+          "sha": "15ac9f5f5816",
+          "size": 284963,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "The LOCAL_SUMMARY's final_RMSD_A (25.38105) and final_Rg_A (20.65822) match the last row of the CSV snippet (step 1999)."
+          },
+          "local_summary": {
+            "source": "diagnostics_csv",
+            "final_RMSD_A": 25.38105,
+            "stabilized": true,
+            "final_Rg_A": 20.65822
+          }
+        },
+        {
+          "file": "best_run_details/trajectory_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.pdb",
+          "role_key": "pdb",
+          "sha": "c592ca4ed378",
+          "size": 3699595,
+          "analysis": {
+            "frames_sampled": [
+              1,
+              21,
+              41,
+              61,
+              80
+            ],
+            "qualitative_compaction": "no",
+            "notes": "The PDB snippet provided appears to be a trajectory from a molecular dynamics simulation.  It contains multiple MODEL entries, each representing a snapshot of the protein's structure at a different time point. The REMARK section indicates that frames 1, 21, 41, 61, and 80 were sampled from the trajectory. Without more information or visualization of the trajectory, it's impossible to determine if the protein undergoes compaction.  A proper assessment would require analyzing the change in radius of gyration or other metrics over the course of the simulation."
+          },
+          "local_summary": {
+            "pdb_sampled_frames": [
+              1,
+              21,
+              41,
+              61,
+              80
+            ]
+          }
+        },
+        {
+          "file": "p53_Y220C_Diagnostic_CoilStart_by_param_20250822-202211.csv",
+          "role_key": "by_param_csv",
+          "sha": "c48389ff0c4d",
+          "size": 1709,
+          "analysis": {
+            "n_rows": 9,
+            "distinct_param_sets": 9,
+            "sensitivity": "low",
+            "notes": "The spread_RMSD_A is 0.0, much less than 0.5.  The best_final_RMSD_A varies by at most 0.004 from 31.447 to 31.452, which is much less than 0.5 Angstrom."
+          },
+          "local_summary": {
+            "source": "by_param_csv",
+            "n_rows": 9,
+            "distinct_param_sets": 9,
+            "best_final_RMSD_A": 31.45,
+            "spread_RMSD_A": 0.0
+          }
+        },
+        {
+          "file": "p53_Y220C_Diagnostic_CoilStart_raw_20250822-202211.csv",
+          "role_key": "raw_csv",
+          "sha": "0387f18ef6f3",
+          "size": 5822,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "CSV file contains 27 rows, matching the summary data."
+          },
+          "local_summary": {
+            "source": "raw_csv",
+            "runs_count": 27
+          }
+        },
+        {
+          "file": "p53_Y220C_Diagnostic_CoilStart_report_20250822-202211.md",
+          "role_key": "md",
+          "sha": "5d2d383fcf54",
+          "size": 1502,
+          "analysis": {
+            "runs_count": 27,
+            "failures": 0,
+            "best_final_RMSD_A": 25.3811,
+            "best_final_Rg_A": 20.6582,
+            "classification": "misfolded",
+            "table_row_source": "p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11"
+          },
+          "local_summary": null
+        }
+      ],
+      "biophysics_verification": {
+        "verdict": "CONFIRMED",
+        "constraint_summary": "ALL_CONFIRMED",
+        "rationale": "The simulation results for the Y220C variant strongly support the claim that it collapses into a non-native globule, indicative of a kinetic trap.  The best run achieves a final RMSD of 25.38 \u00c5 (from \"p53_Y220C_Diagnostic_CoilStart_report_20250822-202211.md\"), significantly exceeding the 20 \u00c5 threshold for defining a non-native state.  Furthermore, analysis of the trajectory (\"best_run_details/trajectory_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.pdb\") suggests unfolding and the formation of non-native interactions, corroborated by increasing Rg and contact numbers observed in the diagnostic plots (\"best_run_details/diagnostics_report_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.png\"). The comprehensive report (\"best_run_details/comprehensive_report_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.png\") confirms the substantial deviation from the native structure.  The low sensitivity to parameter variations, evident from the small spread_RMSD_A in \"p53_Y220C_Diagnostic_CoilStart_by_param_20250822-202211.csv\", reinforces the robustness of these findings.",
+        "key_numbers": {
+          "best_final_RMSD_A": 25.3811,
+          "best_final_Rg_A": 20.6582,
+          "runs_count": 27,
+          "failures": 0,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": ">=",
+              "value": 20.0
+            },
+            "status": "CONFIRMED",
+            "actual_value": 25.3811,
+            "source": "md",
+            "delta": 5.3811
+          }
+        ],
+        "evidence_citations": [
+          "p53_Y220C_Diagnostic_CoilStart_report_20250822-202211.md",
+          "best_run_details/trajectory_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.pdb",
+          "best_run_details/diagnostics_report_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.png",
+          "best_run_details/comprehensive_report_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.png",
+          "p53_Y220C_Diagnostic_CoilStart_by_param_20250822-202211.csv"
+        ]
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": 25.3811,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": 20.6582,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": 27,
+            "raw": 27,
+            "status": "MATCH"
+          }
+        },
+        "confidence": {
+          "level": "HIGH",
+          "drivers": [
+            "best_final_RMSD_A=25.381 > 20. ALL_CONFIRMED."
+          ]
+        },
+        "qa_issues": []
+      }
+    },
+    {
+      "run_id": "4",
+      "claim_verified": "The L221F mutation fails to rescue Y220C; outcome remains misfolded (best_final_RMSD_A \u2265 20 \u00c5).",
+      "independent_analyses": [
+        {
+          "file": "best_run_details/comprehensive_report_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.png",
+          "role_key": "comprehensive_png",
+          "sha": "ff467659aba9",
+          "size": 224361,
+          "analysis": {
+            "time_series_description": "The protein starts in a linear, extended conformation and undergoes significant conformational changes throughout the simulation.  The final structure deviates substantially from the native structure, with an RMSD of 26.11 \u00c5. This suggests that the simulation did not converge to a stable, native-like fold.",
+            "final_structure_description": "The final structure is largely disordered and does not resemble the native structure. The Ramachandran plot shows a dispersed distribution of phi and psi angles, indicating a lack of well-defined secondary structure elements. Some residues fall into disallowed regions of the Ramachandran plot, suggesting steric clashes or strained conformations.",
+            "overall_conclusion": "The simulation did not successfully fold the protein. The high RMSD and dispersed Ramachandran plot indicate a significant deviation from the native structure and a lack of stable secondary structure. Further investigation and optimization of the simulation parameters are needed."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_report_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.png",
+          "role_key": "diagnostics_png",
+          "sha": "eb6e12461a6a",
+          "size": 497501,
+          "analysis": {
+            "rmsd_trend": "decreasing",
+            "rg_trend": "decreasing",
+            "interaction_trends": "The number of salt bridges increases throughout the simulation. The number of contacts and the contact energy increase throughout the simulation. Electrostatic energy has large negative spikes.",
+            "mechanical_interpretation": "The protein folded and became more compact during the simulation. The spikes in electrostatic energy may indicate transient interactions or conformational changes."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_timeseries_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.csv",
+          "role_key": "diagnostics_csv",
+          "sha": "c51fa943f417",
+          "size": 283347,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "CSV shows RMSD converging to 26.10569 and Rg converging to 20.69601, consistent with LOCAL_SUMMARY values."
+          },
+          "local_summary": {
+            "source": "diagnostics_csv",
+            "final_RMSD_A": 26.10569,
+            "stabilized": true,
+            "final_Rg_A": 20.69601
+          }
+        },
+        {
+          "file": "best_run_details/trajectory_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.pdb",
+          "role_key": "pdb",
+          "sha": "fd655c82bfd4",
+          "size": 3680630,
+          "analysis": {
+            "frames_sampled": [
+              1,
+              21,
+              41,
+              61,
+              80
+            ],
+            "qualitative_compaction": "no",
+            "notes": "The PDB snippet provided appears to be a trajectory from a molecular dynamics simulation.  It contains multiple MODEL entries, each representing a snapshot of the protein's structure at a different time point. The REMARK section indicates that frames 1, 21, 41, 61, and 80 were sampled from the trajectory. Without more information or visualization of the trajectory, it's impossible to determine if the protein undergoes compaction.  A proper assessment would require analyzing the change in radius of gyration or other metrics over the course of the simulation."
+          },
+          "local_summary": {
+            "pdb_sampled_frames": [
+              1,
+              21,
+              41,
+              61,
+              80
+            ]
+          }
+        },
+        {
+          "file": "p53_Y220C_L221F_Rescue_v1_by_param_20250822-212635.csv",
+          "role_key": "by_param_csv",
+          "sha": "c21098747821",
+          "size": 1709,
+          "analysis": {
+            "n_rows": 9,
+            "distinct_param_sets": 9,
+            "sensitivity": "low",
+            "notes": "The spread_RMSD_A from the local summary is 0.0, much less than 0.5. Therefore, the sensitivity is low."
+          },
+          "local_summary": {
+            "source": "by_param_csv",
+            "n_rows": 9,
+            "distinct_param_sets": 9,
+            "best_final_RMSD_A": 27.63,
+            "spread_RMSD_A": 0.0
+          }
+        },
+        {
+          "file": "p53_Y220C_L221F_Rescue_v1_raw_20250822-212635.csv",
+          "role_key": "raw_csv",
+          "sha": "67fd7ba18583",
+          "size": 5675,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "CSV file contains 27 rows, matching the LOCAL_SUMMARY."
+          },
+          "local_summary": {
+            "source": "raw_csv",
+            "runs_count": 27
+          }
+        },
+        {
+          "file": "p53_Y220C_L221F_Rescue_v1_report_20250822-212635.md",
+          "role_key": "md",
+          "sha": "39ae6054c916",
+          "size": 1436,
+          "analysis": {
+            "runs_count": 27,
+            "failures": 0,
+            "best_final_RMSD_A": 26.1057,
+            "best_final_Rg_A": 20.696,
+            "classification": "misfolded",
+            "table_row_source": "p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11"
+          },
+          "local_summary": null
+        }
+      ],
+      "biophysics_verification": {
+        "verdict": "CONFIRMED",
+        "constraint_summary": "ALL_CONFIRMED",
+        "rationale": "The simulation results consistently indicate that the L221F mutation does not rescue the Y220C mutation. The best RMSD achieved across all simulations is 26.11 \u00c5 (reported in p53_Y220C_L221F_Rescue_v1_report_20250822-212635.md), significantly higher than the 20 \u00c5 threshold for a correctly folded structure.  The trajectory analysis (trajectory_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.pdb) further supports this conclusion, showing a disordered structure that does not resemble the native state. The comprehensive report (comprehensive_report_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.png) confirms the high RMSD and describes a dispersed Ramachandran plot, indicating a lack of well-defined secondary structure.  The diagnostics report (diagnostics_report_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.png) shows decreasing trends in RMSD and Rg, suggesting some level of compaction, but this does not translate to a native-like fold.  The low sensitivity to parameter variations (p53_Y220C_L221F_Rescue_v1_by_param_20250822-212635.csv) further strengthens the conclusion that the protein remains misfolded regardless of the simulation parameters.",
+        "key_numbers": {
+          "best_final_RMSD_A": 26.1057,
+          "best_final_Rg_A": 20.696,
+          "runs_count": 27,
+          "failures": 0,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": ">=",
+              "value": 20.0
+            },
+            "status": "CONFIRMED",
+            "actual_value": 26.1057,
+            "source": "md",
+            "delta": 6.105699999999999
+          }
+        ],
+        "evidence_citations": [
+          "p53_Y220C_L221F_Rescue_v1_report_20250822-212635.md",
+          "trajectory_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.pdb",
+          "comprehensive_report_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.png",
+          "diagnostics_report_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.png",
+          "p53_Y220C_L221F_Rescue_v1_by_param_20250822-212635.csv"
+        ]
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": 26.1057,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": 20.696,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": 27,
+            "raw": 27,
+            "status": "MATCH"
+          }
+        },
+        "confidence": {
+          "level": "HIGH",
+          "drivers": [
+            "Consistent evidence, best_final_RMSD_A=26.1 > 20. ALL_CONFIRMED."
+          ]
+        },
+        "qa_issues": []
+      }
+    },
+    {
+      "run_id": "5",
+      "claim_verified": "Native-start control run with PhiKan083 resulted in an anomalous RMSD near zero, likely a simulation artifact.",
+      "independent_analyses": [
+        {
+          "file": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.png",
+          "role_key": "comprehensive_png",
+          "sha": "1b663a8283bc",
+          "size": 218620,
+          "analysis": {
+            "time_series_description": "The provided data contains a snapshot of the final structure. No time series data is available.",
+            "final_structure_description": "The final folded structure has an RMSD of 0.00 \u00c5 compared to the native structure. The Ramachandran plot shows most residues in favored regions, with a few outliers.",
+            "overall_conclusion": "The simulation appears successful, achieving a near-perfect match to the native structure. The Ramachandran plot suggests a generally well-folded structure, although some residues might warrant further investigation."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.png",
+          "role_key": "diagnostics_png",
+          "sha": "4c4cb513bf2d",
+          "size": 154068,
+          "analysis": {
+            "rmsd_trend": "constant",
+            "rg_trend": "constant",
+            "interaction_trends": "constant",
+            "mechanical_interpretation": "Simulation appears stable. No major structural changes are observed.  No major interaction changes are observed."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.csv",
+          "role_key": "diagnostics_csv",
+          "sha": "cc4af35567fd",
+          "size": 188947,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "LOCAL_SUMMARY is consistent with CSV_CONTENT. final_RMSD_A == 0.0, final_Rg_A == 16.13931. All rows in CSV_CONTENT have RMSD = 2.333761358386255e-06 which is practically zero, Rg = 16.139314651489258."
+          },
+          "local_summary": {
+            "source": "diagnostics_csv",
+            "final_RMSD_A": 0.0,
+            "stabilized": true,
+            "final_Rg_A": 16.13931
+          }
+        },
+        {
+          "file": "best_run_details/trajectory_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.pdb",
+          "role_key": "pdb",
+          "sha": "ea4730d2ae2e",
+          "size": 4624483,
+          "analysis": {
+            "frames_sampled": [
+              1,
+              26,
+              51,
+              76,
+              100
+            ],
+            "qualitative_compaction": "no",
+            "notes": "The PDB snippet provided appears to be a trajectory of a molecular dynamics simulation.  All frames sampled have identical CA atom coordinates, which is unexpected in a real MD trajectory. This suggests an issue with the simulation or the sampling process. It's possible that the trajectory is artificial or that there's a problem with how the frames were extracted.  Without more information, it's difficult to say for certain."
+          },
+          "local_summary": {
+            "pdb_sampled_frames": [
+              1,
+              26,
+              51,
+              76,
+              100
+            ]
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_RESCUE_FINAL_by_param_20250822-225253.csv",
+          "role_key": "by_param_csv",
+          "sha": "341679f02f0b",
+          "size": 310,
+          "analysis": {
+            "n_rows": 1,
+            "distinct_param_sets": 1,
+            "sensitivity": "unknown",
+            "notes": "The provided data from a single parameter set is insufficient to assess sensitivity across different parameter sets. More data points from varied parameter sets are needed for a proper sensitivity analysis."
+          },
+          "local_summary": {
+            "source": "by_param_csv",
+            "n_rows": 1,
+            "distinct_param_sets": 1,
+            "best_final_RMSD_A": 0.0,
+            "spread_RMSD_A": 0.0
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_RESCUE_FINAL_raw_20250822-225253.csv",
+          "role_key": "raw_csv",
+          "sha": "9d82c67ec873",
+          "size": 706,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "CSV data has 3 rows which matches the runs_count in the LOCAL_SUMMARY"
+          },
+          "local_summary": {
+            "source": "raw_csv",
+            "runs_count": 3
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_RESCUE_FINAL_report_20250822-225253.md",
+          "role_key": "md",
+          "sha": "340c56ad0ad1",
+          "size": 952,
+          "analysis": {
+            "runs_count": 3,
+            "failures": 0,
+            "best_final_RMSD_A": 2.33376e-06,
+            "best_final_Rg_A": 16.1393,
+            "classification": "near_native",
+            "table_row_source": "p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3"
+          },
+          "local_summary": null
+        }
+      ],
+      "biophysics_verification": {
+        "verdict": "CONFIRMED",
+        "constraint_summary": "ALL_CONFIRMED",
+        "rationale": "The claim is strongly supported by the provided evidence. The reported RMSD of approximately zero in the `best_run_details/comprehensive_report_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.png` is highly suspicious and indicative of a simulation artifact. This suspicion is further corroborated by the analysis of the trajectory file (`best_run_details/trajectory_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.pdb`), which reveals identical CA atom coordinates across all sampled frames.  This is highly unusual for a genuine MD trajectory and points towards a problem with the simulation or frame extraction process. The constant RMSD and Rg values throughout the simulation, as reported in `best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.csv`, reinforce the likelihood of an artifact.  The near-zero RMSD value is likely not a true reflection of the protein's folding but rather a consequence of the simulation getting stuck or an error in the analysis pipeline.",
+        "key_numbers": {
+          "best_final_RMSD_A": 2.33376e-06,
+          "best_final_Rg_A": 16.1393,
+          "runs_count": 3,
+          "failures": 0,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": "<",
+              "value": 1.0
+            },
+            "status": "CONFIRMED",
+            "actual_value": 2.33376e-06,
+            "source": "md",
+            "delta": -0.99999766624
+          }
+        ],
+        "evidence_citations": [
+          "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.png",
+          "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.csv",
+          "best_run_details/trajectory_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.pdb"
+        ]
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": 2.33376e-06,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": 16.1393,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": 3,
+            "raw": 3,
+            "status": "MATCH"
+          }
+        },
+        "confidence": {
+          "level": "HIGH",
+          "drivers": [
+            "Anomalous RMSD near zero (2.33376e-06) confirms simulation artifact. All constraints confirmed, diagnostics stable, and supporting evidence available."
+          ]
+        },
+        "qa_issues": []
+      }
+    },
+    {
+      "run_id": "6",
+      "claim_verified": "The HERO control with PhiKan083 shows partial rescue but does not achieve near-native state (best_final_RMSD_A \u2265 19 \u00c5).",
+      "independent_analyses": [
+        {
+          "file": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24.png",
+          "role_key": "comprehensive_png",
+          "sha": "bd0a2721d050",
+          "size": 227100,
+          "analysis": {
+            "time_series_description": "The protein starts in a folded conformation (grey) and ends in an unfolded conformation (blue). The RMSD between the native and final structure is high (19.48 \u00c5).",
+            "final_structure_description": "The final structure is largely unfolded. The Ramachandran plot shows very few residues in the favored regions, indicating that the final structure is not well-folded.",
+            "overall_conclusion": "The simulation shows that the protein unfolds over time. The high RMSD and Ramachandran plot suggest that the final structure is not stable."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24.png",
+          "role_key": "diagnostics_png",
+          "sha": "216a9c0bee50",
+          "size": 270079,
+          "analysis": {
+            "rmsd_trend": "increasing",
+            "rg_trend": "increasing",
+            "interaction_trends": "Steric repulsion decreasing, Ramachandran energy stable, Contacts energy stable.",
+            "mechanical_interpretation": "System is generally equilibrating as shown by the decreasing steric repulsion and total loss, but RMSD and Rg are increasing, indicating the protein is unfolding or expanding."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24.csv",
+          "role_key": "diagnostics_csv",
+          "sha": "f49e51e3ee84",
+          "size": 972556,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "LOCAL_SUMMARY.final_RMSD_A (19.47524), LOCAL_SUMMARY.final_Rg_A (20.90126) agree with last row of CSV_CONTENT.RMSD (19.475236892700195), CSV_CONTENT.Rg (20.901262283325195) respectively. LOCAL_SUMMARY.stabilized = true seems reasonable since total_loss is decreasing and appears to flatten out."
+          },
+          "local_summary": {
+            "source": "diagnostics_csv",
+            "final_RMSD_A": 19.47524,
+            "stabilized": true,
+            "final_Rg_A": 20.90126
+          }
+        },
+        {
+          "file": "best_run_details/trajectory_p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24.pdb",
+          "role_key": "pdb",
+          "sha": "3c2316e5cfc5",
+          "size": 18497680,
+          "analysis": {
+            "frames_sampled": [
+              1,
+              2501,
+              5001,
+              7501,
+              9976
+            ],
+            "qualitative_compaction": "no",
+            "notes": "The PDB snippet provided appears to be a trajectory file containing multiple conformations of a protein with 195 residues.  The frames sampled are explicitly listed in the REMARK. The CA atoms are present and their coordinates vary across different models, indicating structural changes over the simulated trajectory. Without further analysis, it's difficult to determine if the protein is undergoing compaction or expansion. More information or visualization of the trajectory is needed to assess the overall structural changes and determine if compaction is occurring."
+          },
+          "local_summary": {
+            "pdb_sampled_frames": [
+              1,
+              101,
+              201,
+              301,
+              400
+            ]
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_HERO_CONTROL_v1_by_param_20250823-022206.csv",
+          "role_key": "by_param_csv",
+          "sha": "7bd6581b804f",
+          "size": 329,
+          "analysis": {
+            "n_rows": 1,
+            "distinct_param_sets": 1,
+            "sensitivity": "low",
+            "notes": "Only one distinct parameter set was found in the provided CSV snippet. Thus, sensitivity to the tunable parameters cannot be determined from the given data and defaults to \"low\"."
+          },
+          "local_summary": {
+            "source": "by_param_csv",
+            "n_rows": 1,
+            "distinct_param_sets": 1,
+            "best_final_RMSD_A": 26.29,
+            "spread_RMSD_A": 0.0
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_HERO_CONTROL_v1_raw_20250823-022206.csv",
+          "role_key": "raw_csv",
+          "sha": "a1745b094cab",
+          "size": 4314,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "CSV data has 24 lines which matches the LOCAL_SUMMARY. All seeds from 1 to 24 are present."
+          },
+          "local_summary": {
+            "source": "raw_csv",
+            "runs_count": 24
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_HERO_CONTROL_v1_report_20250823-022206.md",
+          "role_key": "md",
+          "sha": "9f172fd68342",
+          "size": 1603,
+          "analysis": {
+            "runs_count": 24,
+            "failures": 0,
+            "best_final_RMSD_A": 19.4752,
+            "best_final_Rg_A": 20.9013,
+            "classification": "misfolded",
+            "table_row_source": "p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24"
+          },
+          "local_summary": null
+        }
+      ],
+      "biophysics_verification": {
+        "verdict": "CONFIRMED",
+        "constraint_summary": "ALL_CONFIRMED",
+        "rationale": "The claim is supported by the evidence. The final RMSD of the best run is 19.48 \u00c5, which is greater than the 2 \u00c5 threshold for a near-native state. The Ramachandran plot shows that the final structure is largely unfolded. The time series data shows that the protein unfolds over time. Thus, the HERO control with PhiKan083 shows partial rescue but does not achieve a near-native state.",
+        "key_numbers": {
+          "best_final_RMSD_A": 19.4752,
+          "best_final_Rg_A": 20.9013,
+          "runs_count": 24,
+          "failures": 0,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": ">=",
+              "value": 19.0
+            },
+            "status": "CONFIRMED",
+            "actual_value": 19.4752,
+            "source": "md",
+            "delta": 0.47520000000000095
+          }
+        ],
+        "evidence_citations": [
+          "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24.png",
+          "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24.png",
+          "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24.csv",
+          "p53_Y220C_PhiKan083_HERO_CONTROL_v1_report_20250823-022206.md"
+        ]
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": 19.4752,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": 20.9013,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": 24,
+            "raw": 24,
+            "status": "MATCH"
+          }
+        },
+        "confidence": {
+          "level": "HIGH",
+          "drivers": [
+            "best_final_RMSD_A (19.48A) > 19. ALL_CONFIRMED."
+          ]
+        },
+        "qa_issues": []
+      }
+    },
+    {
+      "run_id": "7",
+      "claim_verified": "The HERO v1 run with PhiKan083 shows incomplete rescue; end state remains misfolded (best_final_RMSD_A \u2265 19 \u00c5).",
+      "independent_analyses": [
+        {
+          "file": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24.png",
+          "role_key": "comprehensive_png",
+          "sha": "f8a768df4985",
+          "size": 227253,
+          "analysis": {
+            "time_series_description": "The protein system has an RMSD of 19.48 angstroms.  The time series trajectory snapshot shows the native structure has a smaller radius of gyration than the final folded structure.",
+            "final_structure_description": "The Ramachandran plot of the final folded structure shows most residues are in favorable regions, but some residues are in less favorable or disallowed regions.",
+            "overall_conclusion": "The structure is poorly folded as indicated by the high RMSD and the Ramachandran plot.  The radius of gyration is larger in the final structure than the native structure, indicating the final structure is less compact."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24.png",
+          "role_key": "diagnostics_png",
+          "sha": "841c2ca515ae",
+          "size": 269959,
+          "analysis": {
+            "rmsd_trend": "increasing",
+            "rg_trend": "increasing",
+            "interaction_trends": "Steric repulsion decreasing, Ramachandran energy stable, Contacts stable.",
+            "mechanical_interpretation": "System is generally equilibrating as shown by the decreasing steric repulsion and total loss, but RMSD and Rg are increasing, suggesting the protein is unfolding or expanding."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24.csv",
+          "role_key": "diagnostics_csv",
+          "sha": "5c2c5f11c6e4",
+          "size": 972556,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "final_RMSD_A, final_Rg_A match the last step in CSV. All rows in CSV have E_rama = 0, num_contacts = 0, E_contacts = 0, so it is likely the simulation did not do much. total_loss, E_steric decrease monotonically. RMSD, Rg, phi_rms increase monotonically."
+          },
+          "local_summary": {
+            "source": "diagnostics_csv",
+            "final_RMSD_A": 19.47524,
+            "stabilized": true,
+            "final_Rg_A": 20.90126
+          }
+        },
+        {
+          "file": "best_run_details/trajectory_p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24.pdb",
+          "role_key": "pdb",
+          "sha": "c4e26fc908d8",
+          "size": 18497679,
+          "analysis": {
+            "frames_sampled": [
+              1,
+              2501,
+              5001,
+              7501,
+              9976
+            ],
+            "qualitative_compaction": "no",
+            "notes": "The PDB snippet provided appears to be a trajectory of a molecular dynamics simulation.  It contains multiple MODEL entries, each representing a snapshot of the protein's structure at a different time point. The REMARK section indicates that frames 1, 101, 201, 301, and 400 were sampled, but the provided snippet includes frames 1, 2501, 5001, 7501, and 9976. Each model contains CA atoms (alpha-carbons), which are used to represent the backbone of the protein. Without visualization or further analysis, it's impossible to determine compaction qualitatively.  However, given that this is a simulation trajectory, significant compaction within this short snippet is unlikely."
+          },
+          "local_summary": {
+            "pdb_sampled_frames": [
+              1,
+              101,
+              201,
+              301,
+              400
+            ]
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_HERO_v1_by_param_20250823-014039.csv",
+          "role_key": "by_param_csv",
+          "sha": "57569cfac6a4",
+          "size": 369,
+          "analysis": {
+            "n_rows": 1,
+            "distinct_param_sets": 1,
+            "sensitivity": "low",
+            "notes": "Only one distinct parameter set was tested, so sensitivity is low by definition."
+          },
+          "local_summary": {
+            "source": "by_param_csv",
+            "n_rows": 1,
+            "distinct_param_sets": 1,
+            "best_final_RMSD_A": 26.29,
+            "spread_RMSD_A": 0.0
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_HERO_v1_raw_20250823-014039.csv",
+          "role_key": "raw_csv",
+          "sha": "25382422716c",
+          "size": 4422,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "CSV file contains 48 rows, which corresponds to 2 chunks of 24 runs indicated by LOCAL_SUMMARY. Hence the data is consistent."
+          },
+          "local_summary": {
+            "source": "raw_csv",
+            "runs_count": 24
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_HERO_v1_report_20250823-014039.md",
+          "role_key": "md",
+          "sha": "d8e625d3f783",
+          "size": 1583,
+          "analysis": {
+            "runs_count": 24,
+            "failures": 0,
+            "best_final_RMSD_A": 19.4752,
+            "best_final_Rg_A": 20.9013,
+            "classification": "misfolded",
+            "table_row_source": "p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24"
+          },
+          "local_summary": null
+        }
+      ],
+      "biophysics_verification": {
+        "verdict": "CONFIRMED",
+        "constraint_summary": "ALL_CONFIRMED",
+        "rationale": "The claim is correct. The provided evidence shows that the best run with PhiKan083 and HERO v1 resulted in a misfolded end state. The final RMSD is ~19.5 \u00c5, significantly higher than a well-folded structure. The radius of gyration also increased throughout the simulation, indicating the protein unfolded or expanded. The Ramachandran plot shows some residues in disallowed regions, further supporting the misfolded state. The trajectory PDB file confirms the lack of compaction. The low sensitivity due to only one distinct parameter set being tested does not contradict the conclusion of a misfolded state for this specific run.",
+        "key_numbers": {
+          "best_final_RMSD_A": 19.4752,
+          "best_final_Rg_A": 20.9013,
+          "runs_count": 24,
+          "failures": 0,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": ">=",
+              "value": 19.0
+            },
+            "status": "CONFIRMED",
+            "actual_value": 19.4752,
+            "source": "md",
+            "delta": 0.47520000000000095
+          }
+        ],
+        "evidence_citations": [
+          "p53_Y220C_PhiKan083_HERO_v1_report_20250823-014039.md",
+          "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24.png",
+          "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24.png",
+          "best_run_details/trajectory_p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24.pdb"
+        ]
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": 19.4752,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": 20.9013,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": 24,
+            "raw": 24,
+            "status": "MATCH"
+          }
+        },
+        "confidence": {
+          "level": "HIGH",
+          "drivers": [
+            "best_final_RMSD_A >= 19. ALL_CONFIRMED. Consistent evidence."
+          ]
+        },
+        "qa_issues": []
+      }
+    },
+    {
+      "run_id": "8",
+      "claim_verified": "From a native start with PhiKan083, the structure is expected to be unstable and drift significantly (best_final_RMSD_A > 3.5 \u00c5).",
+      "independent_analyses": [
+        {
+          "file": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_Native_Validation_Ct0p05_HB16p0_Lig4p0_s3.png",
+          "role_key": "comprehensive_png",
+          "sha": "361a4c4f5b8c",
+          "size": 214160,
+          "analysis": {
+            "time_series_description": "The provided plots illustrate the structural divergence between the native and final folded structures of the p53 Y220C protein. The trajectory of the final folded structure deviates significantly from the native structure, with an RMSD of 4.01 \u00c5. This suggests considerable conformational differences between the two states.",
+            "final_structure_description": "The Ramachandran plot of the final folded structure reveals that a majority of residues fall within the favored regions, indicating a generally acceptable stereochemistry. However, some residues are located in less favored or disallowed regions, suggesting potential local structural irregularities or strained conformations.",
+            "overall_conclusion": "While the final folded structure exhibits a reasonable stereochemical profile according to the Ramachandran plot, the substantial RMSD value compared to the native structure indicates a significant deviation in the overall conformation. Further investigation and refinement may be necessary to improve the structural accuracy and stability of the predicted model."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_Native_Validation_Ct0p05_HB16p0_Lig4p0_s3.png",
+          "role_key": "diagnostics_png",
+          "sha": "743b789b39ae",
+          "size": 459390,
+          "analysis": {
+            "rmsd_trend": "increasing",
+            "rg_trend": "decreasing",
+            "interaction_trends": "The number of contacts and contact energy generally increase throughout the simulation. Electrostatic energy shows a large dip around step 2000.  The number of hydrogen bonds and salt bridges increase significantly around step 500 and plateau.  Steric repulsion and torsion penalties remain consistently low.",
+            "mechanical_interpretation": "The protein initially unfolds, as indicated by the decreasing radius of gyration and increasing RMSD. The subsequent increase in the number of contacts, contact energy, hydrogen bonds, and salt bridges suggests the protein is finding a new, potentially more stable conformation. The dip in electrostatic energy around step 2000 could indicate a temporary instability or rearrangement. The low steric repulsion and torsion penalties suggest the generated conformations are generally physically plausible."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_Native_Validation_Ct0p05_HB16p0_Lig4p0_s3.csv",
+          "role_key": "diagnostics_csv",
+          "sha": "78fd3636c20f",
+          "size": 355184,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "The final_RMSD_A, final_Rg_A from LOCAL_SUMMARY match the last row of CSV_CONTENT."
+          },
+          "local_summary": {
+            "source": "diagnostics_csv",
+            "final_RMSD_A": 4.00627,
+            "stabilized": true,
+            "final_Rg_A": 14.57401
+          }
+        },
+        {
+          "file": "best_run_details/trajectory_p53_Y220C_PhiKan083_Native_Validation_Ct0p05_HB16p0_Lig4p0_s3.pdb",
+          "role_key": "pdb",
+          "sha": "cfdaf8fc5db3",
+          "size": 4624488,
+          "analysis": {
+            "frames_sampled": [
+              1,
+              26,
+              51,
+              76,
+              100
+            ],
+            "qualitative_compaction": "no",
+            "notes": "The PDB snippet provided appears to be a trajectory of a molecular dynamics simulation. It contains multiple MODEL entries, each representing a snapshot of the protein structure at a different time point. The REMARK section indicates that frames 1, 26, 51, 76, and 100 were sampled from the trajectory. Each model includes ATOM entries for the protein's atoms, including CA atoms (alpha-carbons). The presence of CA atoms allows for analysis of the protein's backbone conformation in each frame. The data provided does not suggest any compaction of the protein; rather, it represents a series of conformational snapshots."
+          },
+          "local_summary": {
+            "pdb_sampled_frames": [
+              1,
+              26,
+              51,
+              76,
+              100
+            ]
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_Native_Validation_by_param_20250822-223000.csv",
+          "role_key": "by_param_csv",
+          "sha": "509e3f81d740",
+          "size": 322,
+          "analysis": {
+            "n_rows": 1,
+            "distinct_param_sets": 1,
+            "sensitivity": "unknown",
+            "notes": "The provided data from a single parameter set is insufficient to assess sensitivity across different parameter combinations."
+          },
+          "local_summary": {
+            "source": "by_param_csv",
+            "n_rows": 1,
+            "distinct_param_sets": 1,
+            "best_final_RMSD_A": 4.01,
+            "spread_RMSD_A": 0.0
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_Native_Validation_raw_20250822-223000.csv",
+          "role_key": "raw_csv",
+          "sha": "da6800ee0981",
+          "size": 898,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "CSV data has 3 rows, which is consistent with runs_count=3 in the LOCAL_SUMMARY"
+          },
+          "local_summary": {
+            "source": "raw_csv",
+            "runs_count": 3
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_Native_Validation_report_20250822-223000.md",
+          "role_key": "md",
+          "sha": "f214828caebe",
+          "size": 957,
+          "analysis": {
+            "runs_count": 3,
+            "failures": 0,
+            "best_final_RMSD_A": 4.00627,
+            "best_final_Rg_A": 14.574,
+            "classification": "near_native",
+            "table_row_source": "p53_Y220C_PhiKan083_Native_Validation_Ct0p05_HB16p0_Lig4p0_s3"
+          },
+          "local_summary": null
+        }
+      ],
+      "biophysics_verification": {
+        "verdict": "CONFIRMED",
+        "constraint_summary": "ALL_CONFIRMED",
+        "rationale": "The claim is supported by the evidence. The final RMSD value of 4.01 \u00c5, as reported in the comprehensive report and the local summary, is greater than 3.5 \u00c5, indicating significant structural divergence from the native state. This confirms the expectation that starting from PhiKan083, the structure is unstable and drifts considerably.",
+        "key_numbers": {
+          "best_final_RMSD_A": 4.00627,
+          "best_final_Rg_A": 14.574,
+          "runs_count": 3,
+          "failures": 0,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": ">",
+              "value": 3.5
+            },
+            "status": "CONFIRMED",
+            "actual_value": 4.00627,
+            "source": "md",
+            "delta": 0.5062699999999998
+          }
+        ],
+        "evidence_citations": [
+          "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_Native_Validation_Ct0p05_HB16p0_Lig4p0_s3.png",
+          "p53_Y220C_PhiKan083_Native_Validation_report_20250822-223000.md"
+        ]
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": 4.00627,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": 14.574,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": 3,
+            "raw": 3,
+            "status": "MATCH"
+          }
+        },
+        "confidence": {
+          "level": "HIGH",
+          "drivers": [
+            "best_final_RMSD_A (4.01A) > 3.5A. ALL_CONFIRMED."
+          ]
+        },
+        "qa_issues": []
+      }
+    },
+    {
+      "run_id": "9",
+      "claim_verified": "The Contact-anneal protocol with PhiKan083 achieves meaningful improvement relative to baselines (best_final_RMSD_A \u2264 20 \u00c5).",
+      "independent_analyses": [],
+      "biophysics_verification": {
+        "verdict": "INDETERMINATE",
+        "constraint_summary": "NO_EVALUABLE_CONSTRAINTS",
+        "rationale": "The claim is false. The provided evidence is an empty list and does not support the claim. Without any experimental results or data, it's impossible to assess the performance of the Contact-anneal protocol with PhiKan083 and compare it to baselines. Therefore, there is no evidence to support the claim that it achieves meaningful improvement with best_final_RMSD_A \u2264 20 \u00c5.",
+        "key_numbers": {
+          "best_final_RMSD_A": null,
+          "best_final_Rg_A": null,
+          "runs_count": null,
+          "failures": null,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": "<=",
+              "value": 20.0
+            },
+            "status": "NOT_EVALUATED",
+            "reason": "Metric 'best_final_RMSD_A' not found."
+          }
+        ],
+        "evidence_citations": []
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": null,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": null,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": null,
+            "raw": null,
+            "status": "MISSING"
+          }
+        },
+        "confidence": {
+          "level": "LOW",
+          "drivers": [
+            "NO_EVALUABLE_CONSTRAINTS"
+          ]
+        },
+        "qa_issues": [
+          {
+            "missing_artifacts": [
+              "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_ContactAnneal_contact_rampfrom0p03_to0p05_start0_end1500_HB16p0_s24.png",
+              "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_ContactAnneal_contact_rampfrom0p03_to0p05_start0_end1500_HB16p0_s24.png",
+              "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_ContactAnneal_contact_rampfrom0p03_to0p05_start0_end1500_HB16p0_s24.csv",
+              "best_run_details/trajectory_p53_Y220C_PhiKan083_ContactAnneal_contact_rampfrom0p03_to0p05_start0_end1500_HB16p0_s24.pdb",
+              "p53_Y220C_PhiKan083_ContactAnneal_by_param_20250823-032118.csv",
+              "p53_Y220C_PhiKan083_ContactAnneal_raw_20250823-032118.csv",
+              "p53_Y220C_PhiKan083_ContactAnneal_report_20250823-032118.md"
+            ]
+          },
+          {
+            "md_raw_discrepancies": []
+          }
+        ]
+      }
+    },
+    {
+      "run_id": "10",
+      "claim_verified": "Rescue v1 shows partial improvement but remains above near-native; end state \u2265 20 \u00c5.",
+      "independent_analyses": [
+        {
+          "file": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_Rescue_v1_Ct0p05_HB16p0_Lig1p0_s11.png",
+          "role_key": "comprehensive_png",
+          "sha": "b2346159170c",
+          "size": 210639,
+          "analysis": {
+            "time_series_description": "The initial structure is extended and appears to be largely unfolded.  Over the course of the simulation, the structure remains largely unfolded.",
+            "final_structure_description": "The final structure is unfolded, with an RMSD of 25.71 \u00c5 from the native structure. The Ramachandran plot shows that most residues are in disallowed regions, indicating a poorly folded structure.",
+            "overall_conclusion": "The simulation suggests that the p53 Y220C mutant with the specified patch is unstable and fails to fold to its native conformation under the tested conditions."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_Rescue_v1_Ct0p05_HB16p0_Lig1p0_s11.png",
+          "role_key": "diagnostics_png",
+          "sha": "5179ed8226b3",
+          "size": 478618,
+          "analysis": {
+            "rmsd_trend": "increasing",
+            "rg_trend": "decreasing",
+            "interaction_trends": "Contacts increase, H-bond energy has spikes, salt bridges increase",
+            "mechanical_interpretation": "System is becoming more compact and forming more interactions, but h-bond energy suggests some instability"
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_Rescue_v1_Ct0p05_HB16p0_Lig1p0_s11.csv",
+          "role_key": "diagnostics_csv",
+          "sha": "933c135d5df2",
+          "size": 353921,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "The final RMSD and Rg values in LOCAL_SUMMARY match the last row of the CSV snippet."
+          },
+          "local_summary": {
+            "source": "diagnostics_csv",
+            "final_RMSD_A": 25.70634,
+            "stabilized": true,
+            "final_Rg_A": 20.53409
+          }
+        },
+        {
+          "file": "best_run_details/trajectory_p53_Y220C_PhiKan083_Rescue_v1_Ct0p05_HB16p0_Lig1p0_s11.pdb",
+          "role_key": "pdb",
+          "sha": "15dbfa64a84c",
+          "size": 4624481,
+          "analysis": {
+            "frames_sampled": [
+              1,
+              26,
+              51,
+              76,
+              100
+            ],
+            "qualitative_compaction": "no",
+            "notes": "The PDB snippet provided appears to be a trajectory of a molecular dynamics simulation. It contains multiple MODEL entries, each representing a snapshot of the protein's structure at different time points. The CA atoms trace the backbone of the protein, and their coordinates vary across different models, indicating structural changes during the simulation. The presence of the REMARK SAMPLED FRAMES suggests that these are selected frames from a longer trajectory. Without visualization or further analysis, it's difficult to definitively assess compaction, but given the apparent fluctuations in CA atom positions, it's unlikely that the protein is consistently compacted throughout the trajectory."
+          },
+          "local_summary": {
+            "pdb_sampled_frames": [
+              1,
+              26,
+              51,
+              76,
+              100
+            ]
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_Rescue_v1_by_param_20250822-221728.csv",
+          "role_key": "by_param_csv",
+          "sha": "97b8a7e497d6",
+          "size": 719,
+          "analysis": {
+            "n_rows": 3,
+            "distinct_param_sets": 3,
+            "sensitivity": "low",
+            "notes": "spread_RMSD_A is 0.0, which is less than 0.5."
+          },
+          "local_summary": {
+            "source": "by_param_csv",
+            "n_rows": 3,
+            "distinct_param_sets": 3,
+            "best_final_RMSD_A": 31.41,
+            "spread_RMSD_A": 0.0
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_Rescue_v1_raw_20250822-221728.csv",
+          "role_key": "raw_csv",
+          "sha": "8822cd8abdd6",
+          "size": 2195,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "CSV contains 9 rows, matching the runs_count in LOCAL_SUMMARY"
+          },
+          "local_summary": {
+            "source": "raw_csv",
+            "runs_count": 9
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_Rescue_v1_report_20250822-221728.md",
+          "role_key": "md",
+          "sha": "ac5e62dba66c",
+          "size": 1478,
+          "analysis": {
+            "runs_count": 9,
+            "failures": 0,
+            "best_final_RMSD_A": 25.7063,
+            "best_final_Rg_A": 20.5341,
+            "classification": "misfolded",
+            "table_row_source": "p53_Y220C_PhiKan083_Rescue_v1_Ct0p05_HB16p0_Lig1p0_s11"
+          },
+          "local_summary": null
+        }
+      ],
+      "biophysics_verification": {
+        "verdict": "CONFIRMED",
+        "constraint_summary": "ALL_CONFIRMED",
+        "rationale": "The claim is supported by the provided evidence. The final RMSD of the best run is reported as 25.71 \u00c5, which is greater than 20 \u00c5. While there are signs of improvement such as increasing contacts and salt bridges, the protein remains largely unfolded throughout the simulation and the final structure is far from native. The low sensitivity to parameter variation further strengthens the conclusion that the rescue mutation does not fully restore the protein's ability to fold.",
+        "key_numbers": {
+          "best_final_RMSD_A": 25.7063,
+          "best_final_Rg_A": 20.5341,
+          "runs_count": 9,
+          "failures": 0,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": ">=",
+              "value": 20.0
+            },
+            "status": "CONFIRMED",
+            "actual_value": 25.7063,
+            "source": "md",
+            "delta": 5.706299999999999
+          }
+        ],
+        "evidence_citations": [
+          "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_Rescue_v1_Ct0p05_HB16p0_Lig1p0_s11.png",
+          "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_Rescue_v1_Ct0p05_HB16p0_Lig1p0_s11.png",
+          "p53_Y220C_PhiKan083_Rescue_v1_report_20250822-221728.md"
+        ]
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": 25.7063,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": 20.5341,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": 9,
+            "raw": 9,
+            "status": "MATCH"
+          }
+        },
+        "confidence": {
+          "level": "HIGH",
+          "drivers": [
+            "Final RMSD (25.71A) > 20A. All constraints confirmed. Consistent evidence."
+          ]
+        },
+        "qa_issues": []
+      }
+    },
+    {
+      "run_id": "11",
+      "claim_verified": "The Timing-enabled contact anneal shows stabilization but does not conclusively reach a native state (best_final_RMSD_A \u2265 15 \u00c5).",
+      "independent_analyses": [
+        {
+          "file": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_TimingSweep_enabled_from_step0_Ct0p05_HB16p0_Lig4p0_s24.png",
+          "role_key": "comprehensive_png",
+          "sha": "ec3586f15b85",
+          "size": 214169,
+          "analysis": {
+            "time_series_description": "The provided plots show the result of a structure prediction trajectory. The left plot depicts the native structure (grey dashed lines) and the final folded structure (blue lines). The right plot presents the Ramachandran distribution of the final structure.",
+            "final_structure_description": "The final structure has an RMSD of 18.86 \u00c5 compared to the native structure. The Ramachandran plot shows most residues are within the favored regions, but some residues fall into disallowed regions (yellow squares).",
+            "overall_conclusion": "The structure prediction did not converge to the native structure, as indicated by the high RMSD value. The presence of residues in disallowed regions of the Ramachandran plot suggests issues with the final structure's stereochemistry. Further refinement or different prediction parameters might be necessary to improve the result."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_TimingSweep_enabled_from_step0_Ct0p05_HB16p0_Lig4p0_s24.png",
+          "role_key": "diagnostics_png",
+          "sha": "7ca3b41792de",
+          "size": 172490,
+          "analysis": {
+            "rmsd_trend": "constant",
+            "rg_trend": "constant",
+            "interaction_trends": "No change in the number of contacts. No change in interaction energy.",
+            "mechanical_interpretation": "The simulation is stable, as indicated by constant RMSD and Rg values. The protein conformation does not undergo significant changes during the simulation. There are no changes in the interaction energy and the number of contacts, suggesting that the interactions within the protein remain stable."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_TimingSweep_enabled_from_step0_Ct0p05_HB16p0_Lig4p0_s24.csv",
+          "role_key": "diagnostics_csv",
+          "sha": "9e28de92d295",
+          "size": 708947,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "Timeseries data shows constant values across all steps. LOCAL_SUMMARY's final_RMSD_A and final_Rg_A match the timeseries data."
+          },
+          "local_summary": {
+            "source": "diagnostics_csv",
+            "final_RMSD_A": 18.86066,
+            "stabilized": true,
+            "final_Rg_A": 19.79627
+          }
+        },
+        {
+          "file": "best_run_details/trajectory_p53_Y220C_PhiKan083_TimingSweep_enabled_from_step0_Ct0p05_HB16p0_Lig4p0_s24.pdb",
+          "role_key": "pdb",
+          "sha": "07038dc5f5b8",
+          "size": 18497702,
+          "analysis": {
+            "frames_sampled": [
+              1,
+              2501,
+              5001,
+              7501,
+              9976
+            ],
+            "qualitative_compaction": "no",
+            "notes": "The PDB snippet provided appears to contain multiple frames/models from a simulation trajectory. Each frame contains CA atoms representing a protein structure with 195 residues. The coordinates of the CA atoms remain constant across different frames, suggesting no compaction is observed. The SAMPLED FRAMES remark suggests some frames were extracted from a larger trajectory, but the provided snippet only includes a subset of these frames."
+          },
+          "local_summary": {
+            "pdb_sampled_frames": [
+              1,
+              101,
+              201,
+              301,
+              400
+            ]
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_TimingSweep_by_param_20250823-042412.csv",
+          "role_key": "by_param_csv",
+          "sha": "af258164333d",
+          "size": 330,
+          "analysis": {
+            "n_rows": 1,
+            "distinct_param_sets": 1,
+            "sensitivity": "low",
+            "notes": "Only one distinct parameter set was tested, so sensitivity to parameters cannot be determined.  The spread_RMSD_A from the local summary is 0.0, indicating no variation in RMSD across the single parameter set tested."
+          },
+          "local_summary": {
+            "source": "by_param_csv",
+            "n_rows": 1,
+            "distinct_param_sets": 1,
+            "best_final_RMSD_A": 25.57,
+            "spread_RMSD_A": 0.0
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_TimingSweep_raw_20250823-042412.csv",
+          "role_key": "raw_csv",
+          "sha": "505d76ab3cea",
+          "size": 17071,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "The CSV contains 96 rows, matching the summary data."
+          },
+          "local_summary": {
+            "source": "raw_csv",
+            "runs_count": 96
+          }
+        },
+        {
+          "file": "p53_Y220C_PhiKan083_TimingSweep_report_20250823-042412.md",
+          "role_key": "md",
+          "sha": "aa92f5ace657",
+          "size": 1863,
+          "analysis": {
+            "runs_count": 96,
+            "failures": 0,
+            "best_final_RMSD_A": 18.8607,
+            "best_final_Rg_A": 19.7963,
+            "classification": "misfolded",
+            "table_row_source": "p53_Y220C_PhiKan083_TimingSweep_enabled_from_step0_Ct0p05_HB16p0_Lig4p0_s24"
+          },
+          "local_summary": null
+        }
+      ],
+      "biophysics_verification": {
+        "verdict": "CONFIRMED",
+        "constraint_summary": "ALL_CONFIRMED",
+        "rationale": "The claim is supported by the evidence. The final structure has an RMSD of 18.86 \u00c5, which is greater than 15 \u00c5. Although the RMSD and Rg values are constant, indicating stability, the high RMSD value confirms that the native state was not reached.",
+        "key_numbers": {
+          "best_final_RMSD_A": 18.8607,
+          "best_final_Rg_A": 19.7963,
+          "runs_count": 96,
+          "failures": 0,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": ">=",
+              "value": 15.0
+            },
+            "status": "CONFIRMED",
+            "actual_value": 18.8607,
+            "source": "md",
+            "delta": 3.8607000000000014
+          }
+        ],
+        "evidence_citations": [
+          "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_TimingSweep_enabled_from_step0_Ct0p05_HB16p0_Lig4p0_s24.png",
+          "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_TimingSweep_enabled_from_step0_Ct0p05_HB16p0_Lig4p0_s24.png",
+          "p53_Y220C_PhiKan083_TimingSweep_report_20250823-042412.md"
+        ]
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": 18.8607,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": 19.7963,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": 96,
+            "raw": 96,
+            "status": "MATCH"
+          }
+        },
+        "confidence": {
+          "level": "HIGH",
+          "drivers": [
+            "best_final_RMSD_A (18.86) > 15. ALL_CONFIRMED. Consistent evidence."
+          ]
+        },
+        "qa_issues": []
+      }
+    },
+    {
+      "run_id": "12",
+      "claim_verified": "The Y220F rescue attempt fails to restore native folding; end state \u2265 20 \u00c5.",
+      "independent_analyses": [
+        {
+          "file": "best_run_details/comprehensive_report_p53_Y220F_Rescue_Attempt_Ct0p05_HB14p0_s11.png",
+          "role_key": "comprehensive_png",
+          "sha": "d7f90b49e0c8",
+          "size": 225034,
+          "analysis": {
+            "time_series_description": "The protein starts in a somewhat extended conformation and remains largely unfolded throughout the simulation.  The RMSD to the native structure is very high (26.10 \u00c5).",
+            "final_structure_description": "The final structure is largely disordered and does not resemble the native fold. The Ramachandran plot shows most residues in disallowed regions, indicating a non-native structure.",
+            "overall_conclusion": "The simulation suggests that the p53 Y220F mutation is highly destabilizing, and the attempted rescue with Ct0p05 and HB14p0 is unsuccessful. The protein fails to fold into its native conformation."
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_report_p53_Y220F_Rescue_Attempt_Ct0p05_HB14p0_s11.png",
+          "role_key": "diagnostics_png",
+          "sha": "977f8e7a2b53",
+          "size": 504085,
+          "analysis": {
+            "rmsd_trend": "decreasing",
+            "rg_trend": "decreasing",
+            "interaction_trends": "Contacts increase, H-bond and Electrostatics energies decrease, salt bridges increase",
+            "mechanical_interpretation": "System stabilizes over the simulation with decreasing RMSD and Rg. Increase in contacts, salt bridges, and decrease in hbond and electrostatics energies suggest conformational rearrangement and stabilization. "
+          },
+          "local_summary": null
+        },
+        {
+          "file": "best_run_details/diagnostics_timeseries_p53_Y220F_Rescue_Attempt_Ct0p05_HB14p0_s11.csv",
+          "role_key": "diagnostics_csv",
+          "sha": "0e55ef345b68",
+          "size": 283233,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "The LOCAL_SUMMARY's final_RMSD_A (26.10399) and final_Rg_A (20.69553) match the last row of the CSV snippet for RMSD (26.10399055480957) and Rg (20.695526123046875) respectively after rounding. The \"stabilized\": true suggests convergence, which appears plausible given the small changes in the final rows of the CSV."
+          },
+          "local_summary": {
+            "source": "diagnostics_csv",
+            "final_RMSD_A": 26.10399,
+            "stabilized": true,
+            "final_Rg_A": 20.69553
+          }
+        },
+        {
+          "file": "best_run_details/trajectory_p53_Y220F_Rescue_Attempt_Ct0p05_HB14p0_s11.pdb",
+          "role_key": "pdb",
+          "sha": "0186ba7f4a61",
+          "size": 3680629,
+          "analysis": {
+            "frames_sampled": [
+              1,
+              21,
+              41,
+              61,
+              80
+            ],
+            "qualitative_compaction": "uncertain",
+            "notes": "The PDB snippet provided contains multiple MODEL entries, which suggests it represents a trajectory or a set of conformations.  It includes CA atoms (alpha-carbons), which are commonly used for analyzing protein structures. However, without visualization or further analysis, it's difficult to definitively assess compaction.  The REMARK section indicates that these are sampled frames from a potentially longer trajectory."
+          },
+          "local_summary": {
+            "pdb_sampled_frames": [
+              1,
+              21,
+              41,
+              61,
+              80
+            ]
+          }
+        },
+        {
+          "file": "p53_Y220F_Rescue_Attempt_by_param_20250822-205212.csv",
+          "role_key": "by_param_csv",
+          "sha": "5288755db815",
+          "size": 1700,
+          "analysis": {
+            "n_rows": 9,
+            "distinct_param_sets": 9,
+            "sensitivity": "low",
+            "notes": "The spread_RMSD_A from the local summary is 0.0, much less than 0.5. Therefore, the sensitivity is low."
+          },
+          "local_summary": {
+            "source": "by_param_csv",
+            "n_rows": 9,
+            "distinct_param_sets": 9,
+            "best_final_RMSD_A": 27.64,
+            "spread_RMSD_A": 0.0
+          }
+        },
+        {
+          "file": "p53_Y220F_Rescue_Attempt_raw_20250822-205212.csv",
+          "role_key": "raw_csv",
+          "sha": "6124afbf70d6",
+          "size": 5669,
+          "analysis": {
+            "consistency_check": "consistent",
+            "notes": "CSV file contains 27 rows, matching the \"runs_count\" value in LOCAL_SUMMARY."
+          },
+          "local_summary": {
+            "source": "raw_csv",
+            "runs_count": 27
+          }
+        },
+        {
+          "file": "p53_Y220F_Rescue_Attempt_report_20250822-205212.md",
+          "role_key": "md",
+          "sha": "200a6b04ec9b",
+          "size": 1423,
+          "analysis": {
+            "runs_count": 27,
+            "failures": 0,
+            "best_final_RMSD_A": 26.104,
+            "best_final_Rg_A": 20.6955,
+            "classification": "misfolded",
+            "table_row_source": "p53_Y220F_Rescue_Attempt_Ct0p05_HB14p0_s11"
+          },
+          "local_summary": null
+        }
+      ],
+      "biophysics_verification": {
+        "verdict": "CONFIRMED",
+        "constraint_summary": "ALL_CONFIRMED",
+        "rationale": "The simulation results strongly support the claim. The final RMSD to the native structure is reported as 26.10 \u00c5 in the comprehensive report, exceeding the 20 \u00c5 threshold. The diagnostics report indicates decreasing RMSD and Rg trends, suggesting stabilization, but the final structure remains far from native. The Ramachandran plot confirms a disordered structure, further reinforcing the failure of the rescue attempt.",
+        "key_numbers": {
+          "best_final_RMSD_A": 26.104,
+          "best_final_Rg_A": 20.6955,
+          "runs_count": 27,
+          "failures": 0,
+          "median_salt_bridges": null
+        },
+        "constraint_evaluations": [
+          {
+            "constraint": {
+              "metric": "best_final_RMSD_A",
+              "op": ">=",
+              "value": 20.0
+            },
+            "status": "CONFIRMED",
+            "actual_value": 26.104,
+            "source": "md",
+            "delta": 6.103999999999999
+          }
+        ],
+        "evidence_citations": [
+          "best_run_details/comprehensive_report_p53_Y220F_Rescue_Attempt_Ct0p05_HB14p0_s11.png",
+          "best_run_details/diagnostics_report_p53_Y220F_Rescue_Attempt_Ct0p05_HB14p0_s11.png",
+          "p53_Y220F_Rescue_Attempt_report_20250822-205212.md"
+        ]
+      },
+      "data_QA": {
+        "cross_checks": {
+          "best_RMSD_md_vs_raw": {
+            "md": 26.104,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "best_Rg_md_vs_raw": {
+            "md": 20.6955,
+            "raw": null,
+            "status": "MISSING"
+          },
+          "runs_count_md_vs_raw": {
+            "md": 27,
+            "raw": 27,
+            "status": "MATCH"
+          }
+        },
+        "confidence": {
+          "level": "HIGH",
+          "drivers": [
+            "The claim is fully supported by the provided evidence. All runs converged to a similar structure with RMSD > 20 \u00c5. The diagnostics confirm stability."
+          ]
+        },
+        "qa_issues": []
+      }
+    }
+  ]
+}

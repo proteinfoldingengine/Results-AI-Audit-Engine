@@ -1,0 +1,23 @@
+{
+  "verdict_counts": {
+    "CONFIRMED": 11,
+    "DEVIATION": 0,
+    "INDETERMINATE": 1
+  },
+  "confidence_counts": {
+    "HIGH": 11,
+    "MEDIUM": 0,
+    "LOW": 1
+  },
+  "median_best_RMSD_A": 25.3811,
+  "thesis_evaluation": {
+    "present": true,
+    "satisfied": true,
+    "count_meeting": 5,
+    "required": {
+      "op": ">=",
+      "value": 1
+    },
+    "explanation": "5 runs meet filter; require >= 1."
+  }
+}
