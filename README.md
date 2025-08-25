@@ -31,6 +31,7 @@ your-project-name/
 ├── unified_audit_engine.py       # The main engine script
 ├── findings.json                 # Your authoritative science contract
 ├── README.md                     # This file
+├── LICENSE                       # The new license file
 ├── .gitignore                    # Tells Git to ignore private files
 |
 └── data/                         # A dedicated folder for all simulation data
@@ -92,4 +93,10 @@ Biophysics_Final_Report.md: The final, human-readable report.
 Biophysics_Final_Report_Summary.json: A JSON file with the high-level summary metrics.
 
 License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0). See the LICENSE file for details.
+
+This license allows others to share and adapt the work for non-commercial purposes, as long as they give appropriate credit and license their new creations under the identical terms.
+
+For any commercial use, licensing, or partnership inquiries, please contact us to arrange a separate commercial license.
+
+Disclaimer: This is not legal advice. Please consult with a legal professional to ensure the chosen license meets your specific needs.
