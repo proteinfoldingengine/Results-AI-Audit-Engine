@@ -1,25 +1,28 @@
 # ==============================================================================
 # Unified p53 Audit Engine
-# V1.5 (GitHub Data Source Integration)
+# V1.8 (Timeout & Logging Patch)
 # ==============================================================================
 #
 # This single script performs the complete end-to-end audit process for the
 # p53 simulation study.
 #
-# WHAT'S NEW (v1.5 GitHub Integration):
-# - The engine now clones a specified GitHub repository to fetch the dataset
-#   and findings manifest, removing the dependency on Google Drive.
-# - The data source is now controlled by the `GITHUB_DATA_REPO_URL` variable.
+# WHAT'S NEW (v1.8 Patch):
+# - Implemented more aggressive PDB file sampling to create smaller data
+#   snippets, preventing potential API timeouts on large trajectory files.
+# - Added verbose logging to show the exact payload size in bytes before
+#   each API call, improving traceability.
+#
+# WHAT'S NEW (v1.7 User Experience):
+# - The script now interactively prompts the user to paste their Gemini API key
+#   if an `API_KEY.txt` file is not found.
 #
 # WORKFLOW:
 # 1. **Clone Data Repository:** Downloads the entire dataset from GitHub.
-# 2. **Initialize AI Connection (Mandatory):** Stops if the Gemini model cannot be initialized.
-# 3. Loads the `findings.json` manifest from the cloned repository.
-# 4. Analyzes each artifact, performing local calculations and using the Gemini API.
-# 5. Deterministically evaluates the claims and constraints for each run.
-# 6. Saves the `Comprehensive_Verification_Report.json`.
-# 7. Processes the comprehensive report to generate the final `Biophysics_Final_Report.md`
-#    and `Biophysics_Final_Report_Summary.json`.
+# 2. **Initialize AI Connection:** Prompts for API key if needed, then initializes the model.
+# 3. Loads the `findings.json` manifest from the specified project directory.
+# 4. Analyzes each artifact within that project directory.
+# 5. Deterministically evaluates claims and constraints.
+# 6. Saves all final report artifacts.
 #
 # ==============================================================================
 
@@ -47,7 +50,7 @@ except ImportError:
     GEMINI_AVAILABLE = False
 
 # --------------------------- Logging -----------------------------------------
-logger = logging.getLogger("unified_p3_engine")
+logger = logging.getLogger("unified_p53_engine")
 logger.setLevel(logging.INFO)
 if logger.hasHandlers():
     logger.handlers.clear()
@@ -63,8 +66,9 @@ MAX_PAYLOAD_SIZE_BYTES = 1_500_000
 PNG_MAX_SIDE = 1600
 MODEL_NAME = "gemini-1.5-pro-latest"
 
-# --- NEW CONFIGURATION: Set your data repository URL here ---
+# --- CONFIGURATION: Set your data repository and project name here ---
 GITHUB_DATA_REPO_URL = "https://github.com/ProteinFoldingEngine/Results-AI-Audit-Engine.git"
+PROJECT_NAME = "p53"  # <-- CHANGE THIS TO SELECT THE PROJECT TO AUDIT
 
 PROMPT_LIBRARY = {
     "md": """ROLE: Senior biophysicist.
@@ -292,7 +296,8 @@ def pdb_stratified_snippet(text: str, max_frames: int = 5) -> Tuple[str, List[in
         elif in_model:
             cur.append(ln)
     if not models:
-        return "".join(lines[:8000]), []
+        # More aggressive fallback for single-frame PDBs
+        return "".join(lines[:4000]), []
     num = len(models)
     if max_frames < 2:
         idx = [0]
@@ -303,7 +308,8 @@ def pdb_stratified_snippet(text: str, max_frames: int = 5) -> Tuple[str, List[in
     for i in idx:
         m = models[i]
         ca = [ln for ln in m if " CA " in ln]
-        out.extend([m[0]] + ca[:2000] + [m[-1]])
+        # More aggressive truncation of atoms per frame
+        out.extend([m[0]] + ca[:1000] + [m[-1]])
     snippet = "".join(out)
     if len(snippet.encode("utf-8", errors="ignore")) > MAX_PAYLOAD_SIZE_BYTES:
         snippet = safe_text_snippet(snippet, MAX_PAYLOAD_SIZE_BYTES)
@@ -413,6 +419,10 @@ def precheck_and_cross_validate(analyses):
 
 # --------------------------- IO Helpers --------------------------------------
 def _resolve_path(root_dir: Path, dataset_root: Optional[str], source_folder: str, artifact_path: str) -> Path:
+    # The root_dir is now the specific project folder, e.g., '.../Projects/p53'
+    # The source_folder is the run-specific folder, e.g., 'p53_R248Q_probe_FINAL_...'
+    # The artifact_path is the file within that run folder, e.g., 'raw_data.csv'
+    # The structure is now root_dir / source_folder / artifact_path
     base_path = Path(root_dir)
     run_path = base_path / source_folder
     artifact_full_path = run_path / artifact_path
@@ -484,6 +494,7 @@ def run_verification_engine(findings_path: str, root_dir: str, model: Any) -> Di
             role_name, rel_path = art.get("role"), art.get("path")
             role_key = ROLE_TO_PROMPT.get(role_name)
             if not role_key or not rel_path: continue
+            # The root_dir is now the project directory, so paths are resolved from there
             resolved_path = _resolve_path(root_path, dataset_root, source_folder, rel_path)
             raw_bytes, text = _open_artifact(resolved_path)
             if raw_bytes is None and text is None:
@@ -503,6 +514,15 @@ def run_verification_engine(findings_path: str, root_dir: str, model: Any) -> Di
                     snippet, frames = pdb_stratified_snippet(text or ""); payload = PROMPT_LIBRARY[role_key].format(FILE_CONTENT=snippet); local_summary = {"pdb_sampled_frames": frames}
                 elif role_key == "md": payload = PROMPT_LIBRARY[role_key].format(FILE_CONTENT=safe_text_snippet(text or "", MAX_PAYLOAD_SIZE_BYTES), LOCAL_SUMMARY="{}")
                 if resolved_path.exists(): file_info.update({"sha": short_sha256(resolved_path), "size": resolved_path.stat().st_size})
+                
+                # --- NEW: LOG PAYLOAD SIZE ---
+                if isinstance(payload, str):
+                    payload_size = len(payload.encode('utf-8', 'ignore'))
+                    logger.info(f"    - Preparing to send text payload of size: {payload_size} bytes.")
+                elif isinstance(payload, list) and len(payload) > 1 and isinstance(payload[1], Image.Image):
+                     logger.info(f"    - Preparing to send image payload.")
+                # --- END NEW ---
+
                 an = call_gemini_with_retry(model, payload)
                 file_info.update({"analysis": an, "local_summary": local_summary or None}); analyses.append(file_info)
                 logger.info(f"    - Analysis complete for: {rel_path}")
@@ -595,47 +615,65 @@ def write_final_report(findings_doc, verification_report, api_key, out_md="Bioph
 # ==============================================================================
 
 def main():
-    # --- MODIFIED: Clone GitHub repository instead of mounting Drive ---
-    if not GITHUB_DATA_REPO_URL:
-        logger.critical("FATAL: GITHUB_DATA_REPO_URL is not set. Please configure it at the top of the script.")
+    # --- MODIFIED: Clone GitHub repository and set up project paths ---
+    if not GITHUB_DATA_REPO_URL or not PROJECT_NAME:
+        logger.critical("FATAL: GITHUB_DATA_REPO_URL or PROJECT_NAME is not set. Please configure them at the top of the script.")
         return
 
-    # Extract repo name to use as the root directory
     try:
         repo_name = GITHUB_DATA_REPO_URL.split('/')[-1].replace('.git', '')
         logger.info(f"Preparing to clone data repository: {repo_name}")
         
-        # Clean up any old version before cloning for a fresh start
         if os.path.exists(repo_name):
             logger.info(f"Removing existing directory '{repo_name}'...")
             os.system(f"rm -rf {repo_name}")
 
-        # Clone the repository
         logger.info(f"Cloning from {GITHUB_DATA_REPO_URL}...")
         clone_result = os.system(f"git clone {GITHUB_DATA_REPO_URL}")
         if clone_result != 0:
             raise RuntimeError(f"git clone failed with exit code {clone_result}")
         logger.info("✅ Repository cloned successfully.")
         
-        # Set the root directory for the audit to be the cloned repo
-        root_dir = repo_name
-        # The findings file is expected to be in the root of the cloned repo
-        findings_path = os.path.join(repo_name, "findings.json")
+        # --- NEW: Construct paths based on PROJECT_NAME ---
+        project_path = os.path.join(repo_name, "Projects", PROJECT_NAME)
+        
+        # The root directory for the audit is now the specific project folder
+        root_dir = project_path
+        # The findings file is expected to be inside that project folder
+        findings_path = os.path.join(project_path, "findings.json")
+
+        # --- NEW: Validate that the project path and findings file exist ---
+        if not os.path.isdir(project_path):
+            logger.critical(f"FATAL: Project directory '{PROJECT_NAME}' not found inside the 'Projects' folder of the repository.")
+            logger.critical(f"Looked for: {project_path}")
+            return
+        if not os.path.exists(findings_path):
+            logger.critical(f"FATAL: 'findings.json' not found in project directory: {findings_path}")
+            return
 
     except Exception as e:
         logger.critical(f"FATAL: Failed to clone and set up the data repository. Error: {e}")
         return
 
-    # --- API Key Handling (Unchanged) ---
+    # --- API Key Handling (UPDATED) ---
     api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key and os.path.exists("API_KEY.txt"):
-        api_key = Path("API_KEY.txt").read_text().strip()
-    elif IN_COLAB and not api_key:
+    api_key_path = Path("API_KEY.txt")
+
+    if not api_key and api_key_path.exists():
+        api_key = api_key_path.read_text().strip()
+    
+    if not api_key and IN_COLAB:
         try:
-            logger.info("Please upload API_KEY.txt")
-            up = files.upload()
-            if "API_KEY.txt" in up: api_key = up["API_KEY.txt"].decode().strip()
-        except Exception: pass
+            # Prompt the user to paste the key directly.
+            logger.info("Gemini API Key not found.")
+            api_key = input("Please paste your Gemini API key here and press Enter: ")
+            if api_key:
+                # Save the key to a file for the current session.
+                api_key_path.write_text(api_key)
+                logger.info("API Key received and saved to API_KEY.txt for this session.")
+        except Exception as e:
+            logger.warning(f"Could not get API key from user input: {e}")
+            pass
     
     if not api_key:
         logger.critical("FATAL: Gemini API key is missing. The audit engine requires the API key to perform AI peer review and cannot proceed.")
