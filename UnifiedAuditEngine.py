@@ -1,27 +1,24 @@
 # ==============================================================================
 # Unified p53 Audit Engine
-# V1.4 (Combines Verification V20.4 and Narrative V2.4 with Patches)
+# V1.5 (GitHub Data Source Integration)
 # ==============================================================================
 #
 # This single script performs the complete end-to-end audit process for the
 # p53 simulation study.
 #
-# WHAT'S NEW (v1.4 Full Reporting):
-# - As requested, the engine now saves the detailed intermediate report,
-#   `Comprehensive_Verification_Report.json`, to disk.
-# - This ensures all three key artifacts are generated for maximum clarity and
-#   auditability:
-#   1. Comprehensive_Verification_Report.json (detailed, machine-readable)
-#   2. Biophysics_Final_Report.md (final, human-readable)
-#   3. Biophysics_Final_Report_Summary.json (final, summary metrics)
+# WHAT'S NEW (v1.5 GitHub Integration):
+# - The engine now clones a specified GitHub repository to fetch the dataset
+#   and findings manifest, removing the dependency on Google Drive.
+# - The data source is now controlled by the `GITHUB_DATA_REPO_URL` variable.
 #
 # WORKFLOW:
-# 1. **Initialize AI Connection (Mandatory):** Stop if the Gemini model cannot be initialized.
-# 2. Loads the `findings.json` manifest and locates all data artifacts.
-# 3. Analyzes each artifact, performing local calculations and using the Gemini API.
-# 4. Deterministically evaluates the claims and constraints for each run.
-# 5. **Saves the `Comprehensive_Verification_Report.json`.**
-# 6. Processes the comprehensive report to generate the final `Biophysics_Final_Report.md`
+# 1. **Clone Data Repository:** Downloads the entire dataset from GitHub.
+# 2. **Initialize AI Connection (Mandatory):** Stops if the Gemini model cannot be initialized.
+# 3. Loads the `findings.json` manifest from the cloned repository.
+# 4. Analyzes each artifact, performing local calculations and using the Gemini API.
+# 5. Deterministically evaluates the claims and constraints for each run.
+# 6. Saves the `Comprehensive_Verification_Report.json`.
+# 7. Processes the comprehensive report to generate the final `Biophysics_Final_Report.md`
 #    and `Biophysics_Final_Report_Summary.json`.
 #
 # ==============================================================================
@@ -36,7 +33,7 @@ import io
 
 # (Colab helpers are optional; guarded)
 try:
-    from google.colab import drive, files
+    from google.colab import files
     IN_COLAB = True
 except ImportError:
     IN_COLAB = False
@@ -50,7 +47,7 @@ except ImportError:
     GEMINI_AVAILABLE = False
 
 # --------------------------- Logging -----------------------------------------
-logger = logging.getLogger("unified_p53_engine")
+logger = logging.getLogger("unified_p3_engine")
 logger.setLevel(logging.INFO)
 if logger.hasHandlers():
     logger.handlers.clear()
@@ -65,6 +62,9 @@ logger.addHandler(fh)
 MAX_PAYLOAD_SIZE_BYTES = 1_500_000
 PNG_MAX_SIDE = 1600
 MODEL_NAME = "gemini-1.5-pro-latest"
+
+# --- NEW CONFIGURATION: Set your data repository URL here ---
+GITHUB_DATA_REPO_URL = "https://github.com/ProteinFoldingEngine/Results-AI-Audit-Engine.git"
 
 PROMPT_LIBRARY = {
     "md": """ROLE: Senior biophysicist.
@@ -595,13 +595,38 @@ def write_final_report(findings_doc, verification_report, api_key, out_md="Bioph
 # ==============================================================================
 
 def main():
-    if IN_COLAB:
-        try:
-            logger.info("Mounting Google Drive (if available)...")
-            drive.mount("/content/drive", force_remount=True)
-        except Exception:
-            logger.warning("Drive mount skipped or failed.")
+    # --- MODIFIED: Clone GitHub repository instead of mounting Drive ---
+    if not GITHUB_DATA_REPO_URL:
+        logger.critical("FATAL: GITHUB_DATA_REPO_URL is not set. Please configure it at the top of the script.")
+        return
 
+    # Extract repo name to use as the root directory
+    try:
+        repo_name = GITHUB_DATA_REPO_URL.split('/')[-1].replace('.git', '')
+        logger.info(f"Preparing to clone data repository: {repo_name}")
+        
+        # Clean up any old version before cloning for a fresh start
+        if os.path.exists(repo_name):
+            logger.info(f"Removing existing directory '{repo_name}'...")
+            os.system(f"rm -rf {repo_name}")
+
+        # Clone the repository
+        logger.info(f"Cloning from {GITHUB_DATA_REPO_URL}...")
+        clone_result = os.system(f"git clone {GITHUB_DATA_REPO_URL}")
+        if clone_result != 0:
+            raise RuntimeError(f"git clone failed with exit code {clone_result}")
+        logger.info("✅ Repository cloned successfully.")
+        
+        # Set the root directory for the audit to be the cloned repo
+        root_dir = repo_name
+        # The findings file is expected to be in the root of the cloned repo
+        findings_path = os.path.join(repo_name, "findings.json")
+
+    except Exception as e:
+        logger.critical(f"FATAL: Failed to clone and set up the data repository. Error: {e}")
+        return
+
+    # --- API Key Handling (Unchanged) ---
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key and os.path.exists("API_KEY.txt"):
         api_key = Path("API_KEY.txt").read_text().strip()
@@ -616,14 +641,11 @@ def main():
         logger.critical("FATAL: Gemini API key is missing. The audit engine requires the API key to perform AI peer review and cannot proceed.")
         return
 
-    findings_path = os.getenv("FINDINGS_JSON", "findings.json")
-    default_root = "/content/drive/MyDrive/Folding/PharmaApp/ProductDetails/P53 Study/Plots/_analysis" if IN_COLAB else "."
-    root_dir = os.getenv("DATA_ROOT_DIR", default_root)
-
     logger.info(f"Gemini model: {MODEL_NAME}")
     logger.info(f"Using findings: {findings_path}")
     logger.info(f"Base data root_dir: {root_dir}")
 
+    # --- Model Initialization (Unchanged) ---
     model = None
     if GEMINI_AVAILABLE:
         try:
@@ -641,13 +663,12 @@ def main():
         logger.critical("FATAL: Gemini model could not be initialized. Aborting.")
         return
 
-    # --- Execute Verification and Narrative ---
+    # --- Execute Verification and Narrative (Unchanged) ---
     verification_report = run_verification_engine(findings_path=findings_path, root_dir=root_dir, model=model)
     if not verification_report or not verification_report.get("comprehensive_verification_report"):
         logger.critical("Verification engine failed to produce a report. Aborting.")
         return
     
-    # PATCH v1.4: Save the comprehensive report to disk
     comprehensive_report_path = "Comprehensive_Verification_Report.json"
     with open(comprehensive_report_path, "w", encoding="utf-8") as f:
         json.dump(verification_report, f, indent=2)
