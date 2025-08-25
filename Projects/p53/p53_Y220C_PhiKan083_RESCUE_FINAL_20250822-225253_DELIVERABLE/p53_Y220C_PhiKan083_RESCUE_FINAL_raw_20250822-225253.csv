@@ -1,0 +1,4 @@
+patch_id,step,RMSD,Rg,phi_rms,E_steric,E_elec,E_hb,E_rama,E_contacts,E_torsion,hb_pairs,num_contacts,salt_bridge_count,total_loss,tunable_forces.k_contact_springs,tunable_forces.k_hbond,tunable_forces.k_ligand_interaction,seed
+p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3,2499.0,2.333761358386255e-06,16.139314651489258,0.9468469619750975,,,,,0.0,,,0.0,,0.0,0.05,16.0,4.0,3
+p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s7,2499.0,2.333761358386255e-06,16.139314651489258,0.9468469619750975,,,,,0.0,,,0.0,,0.0,0.05,16.0,4.0,7
+p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s11,2499.0,2.333761358386255e-06,16.139314651489258,0.9468469619750975,,,,,0.0,,,0.0,,0.0,0.05,16.0,4.0,11

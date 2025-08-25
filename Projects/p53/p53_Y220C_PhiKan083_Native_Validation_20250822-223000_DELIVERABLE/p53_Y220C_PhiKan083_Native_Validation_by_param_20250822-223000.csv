@@ -1,0 +1,2 @@
+tunable_forces.k_hbond,tunable_forces.k_contact_springs,tunable_forces.k_ligand_interaction,RMSD_median,RMSD_min,RMSD_std,Rg_median,Rg_min,Rg_std,total_loss_median,total_loss_min,total_loss_std
+16.0,0.05,4.0,4.006271839141846,4.006271839141846,0.0,14.574012756347656,14.574012756347656,0.0,1528.97265625,1528.97265625,0.0

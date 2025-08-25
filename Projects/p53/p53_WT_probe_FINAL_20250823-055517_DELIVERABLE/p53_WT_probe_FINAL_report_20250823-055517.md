@@ -1,0 +1,25 @@
+# PHARMA Report – p53_WT_probe_FINAL
+
+**Generated:** 2025-08-23 05:55:17
+## Ground Truth Sequence (Chain: A)
+
+```
+SVPSQKTYQGSYGFRLGFLHSGTAKSVTCTYSPALNKMFCQLAKTCPVQLWVDSTPPPGTRVRAMAIYKQSQHMTEVVRRCPHHERCSDSDGLAPPQHLIRVEGNLRVEYLDDRNTFRHSVVVPYEPPEVGSDCTTIHYNYMCNSSCMGGMNRRPILTIITLEDSSGNLLGRNSFEVRVCACPGRDRRTEEENL
+```
+
+**Runs prepared:** 6
+**Failures:** 0
+
+## Top 10 runs (lowest final RMSD)
+
+| patch_id                                             |    RMSD |      Rg |   total_loss |
+|:-----------------------------------------------------|--------:|--------:|-------------:|
+| p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11 | 26.6283 | 20.8279 |     1278.92  |
+| p53_WT_probe_FINAL_Ct0p05_Elec0p2_HB16p0_Rama2p0_s11 | 26.6283 | 20.8279 |     1278.92  |
+| p53_WT_probe_FINAL_Ct0p05_Elec0p2_HB16p0_Rama2p0_s3  | 27.7068 | 24.8691 |     1310.82  |
+| p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s3  | 27.7068 | 24.8691 |     1310.82  |
+| p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s7  | 34.9077 | 32.6276 |      873.709 |
+| p53_WT_probe_FINAL_Ct0p05_Elec0p2_HB16p0_Rama2p0_s7  | 34.9077 | 32.6276 |      873.709 |
+
+## Data Files Generated in This Package
+

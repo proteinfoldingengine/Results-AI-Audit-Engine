@@ -1,0 +1,282 @@
+{
+  "schema_version": "2.2",
+  "project": "p53 Mutational Mechanisms – UQCF-GEM Campaign (Verified & Corrected)",
+  "created_utc": "2025-08-25T20:00:00Z",
+  "dataset_root": "_analysis",
+  "metrics_vocabulary": {
+    "best_final_RMSD_A": {
+      "unit": "Å",
+      "aggregation": "min_across_runs",
+      "preferred_sources": ["md", "raw_csv", "diagnostics_csv"]
+    },
+    "best_final_Rg_A": {
+      "unit": "Å",
+      "aggregation": "min_across_runs",
+      "preferred_sources": ["md", "raw_csv"]
+    },
+    "runs_count": { "unit": "count", "aggregation": "count_rows", "preferred_sources": ["raw_csv", "md"] },
+    "failures": { "unit": "count", "aggregation": "from_report_or_zero", "preferred_sources": ["md"] },
+    "median_salt_bridges": { "unit": "count", "aggregation": "timeseries_median", "preferred_sources": ["diagnostics_csv"] }
+  },
+  "findings": [
+    {
+      "run_id": 1,
+      "source_folder": "p53_R248Q_probe_FINAL_20250823-060305_DELIVERABLE",
+      "purpose": "R248Q baseline (electrostatics-sensitive mutant)",
+      "canonical_claim": {
+        "type": "electrostatic_failure",
+        "statement": "R248Q baseline misfolds with an electrostatic failure signature (best_final_RMSD_A ≥ 20 Å).",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": ">=", "value": 20.0 }],
+        "tags": ["R248Q", "baseline", "electrostatics", "misfolded"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_R248Q_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_R248Q_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_R248Q_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.pdb" },
+        { "role": "by_param_csv", "path": "p53_R248Q_probe_FINAL_by_param_20250823-060305.csv" },
+        { "role": "raw_csv", "path": "p53_R248Q_probe_FINAL_raw_20250823-060305.csv" },
+        { "role": "md_report", "path": "p53_R248Q_probe_FINAL_report_20250823-060305.md" }
+      ]
+    },
+    {
+      "run_id": 2,
+      "source_folder": "p53_WT_probe_FINAL_20250823-055517_DELIVERABLE",
+      "purpose": "WT baseline probe (reference behavior)",
+      "canonical_claim": {
+        "type": "control_informative",
+        "statement": "WT collapses to a compact, non-native globule (best_final_RMSD_A ≥ 20 Å).",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": ">=", "value": 20.0 }],
+        "tags": ["WT", "baseline", "misfolded"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_WT_probe_FINAL_Ct0p05_Elec0p1_HB16p0_Rama2p0_s11.pdb" },
+        { "role": "by_param_csv", "path": "p53_WT_probe_FINAL_by_param_20250823-055517.csv" },
+        { "role": "raw_csv", "path": "p53_WT_probe_FINAL_raw_20250823-055517.csv" },
+        { "role": "md_report", "path": "p53_WT_probe_FINAL_report_20250823-055517.md" }
+      ]
+    },
+    {
+      "run_id": 3,
+      "source_folder": "p53_Y220C_Diagnostic_CoilStart_20250822-202211_DELIVERABLE",
+      "purpose": "Y220C baseline (no ligand)",
+      "canonical_claim": {
+        "type": "kinetic_trap",
+        "statement": "Y220C baseline collapses into a non-native globule consistent with a kinetic trap (best_final_RMSD_A ≥ 20 Å).",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": ">=", "value": 20.0 }],
+        "tags": ["Y220C", "baseline", "trap", "misfolded"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.png" },
+        { "role": "diagnostics_png", "path": "best_run_details/diagnostics_report_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_Y220C_Diagnostic_CoilStart_Ct0p04_HB14p0_s11.pdb" },
+        { "role": "by_param_csv", "path": "p53_Y220C_Diagnostic_CoilStart_by_param_20250822-202211.csv" },
+        { "role": "raw_csv", "path": "p53_Y220C_Diagnostic_CoilStart_raw_20250822-202211.csv" },
+        { "role": "md_report", "path": "p53_Y220C_Diagnostic_CoilStart_report_20250822-202211.md" }
+      ]
+    },
+    {
+      "run_id": 4,
+      "source_folder": "p53_Y220C_L221F_Rescue_v1_20250822-212635_DELIVERABLE",
+      "purpose": "Y220C + L221F genetic rescue attempt",
+      "canonical_claim": {
+        "type": "negative_result",
+        "statement": "The L221F mutation fails to rescue Y220C; outcome remains misfolded (best_final_RMSD_A ≥ 20 Å).",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": ">=", "value": 20.0 }],
+        "tags": ["Y220C", "L221F", "rescue_fail"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.png" },
+        { "role": "diagnostics_png", "path": "best_run_details/diagnostics_report_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_Y220C_L221F_Rescue_v1_Ct0p05_HB14p0_s11.pdb" },
+        { "role": "by_param_csv", "path": "p53_Y220C_L221F_Rescue_v1_by_param_20250822-212635.csv" },
+        { "role": "raw_csv", "path": "p53_Y220C_L221F_Rescue_v1_raw_20250822-212635.csv" },
+        { "role": "md_report", "path": "p53_Y220C_L221F_Rescue_v1_report_20250822-212635.md" }
+      ]
+    },
+    {
+      "run_id": 5,
+      "source_folder": "p53_Y220C_PhiKan083_RESCUE_FINAL_20250822-225253_DELIVERABLE",
+      "purpose": "Y220C + PhiKan083 (Native-start control artifact)",
+      "canonical_claim": {
+        "type": "control_artifact",
+        "statement": "Native-start control run with PhiKan083 resulted in an anomalous RMSD near zero, likely a simulation artifact.",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": "<", "value": 1.0 }],
+        "tags": ["Y220C", "native_start", "control", "artifact_result"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.png" },
+        { "role": "diagnostics_png", "path": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_Y220C_PhiKan083_RESCUE_FINAL_Ct0p05_HB16p0_Lig4p0_s3.pdb" },
+        { "role": "by_param_csv", "path": "p53_Y220C_PhiKan083_RESCUE_FINAL_by_param_20250822-225253.csv" },
+        { "role": "raw_csv", "path": "p53_Y220C_PhiKan083_RESCUE_FINAL_raw_20250822-225253.csv" },
+        { "role": "md_report", "path": "p53_Y220C_PhiKan083_RESCUE_FINAL_report_20250822-225253.md" }
+      ]
+    },
+    {
+      "run_id": 6,
+      "source_folder": "p53_Y220C_PhiKan083_HERO_CONTROL_v1_20250823-022206_DELIVERABLE",
+      "purpose": "Y220C + PhiKan083 (HERO control)",
+      "canonical_claim": {
+        "type": "ligand_partial",
+        "statement": "The HERO control with PhiKan083 shows partial rescue but does not achieve near-native state (best_final_RMSD_A ≥ 19 Å).",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": ">=", "value": 19.0 }],
+        "tags": ["Y220C", "PhiKan083", "control", "misfolded"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24.png" },
+        { "role": "diagnostics_png", "path": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_Y220C_PhiKan083_HERO_CONTROL_v1_Ct0p05_HB16p0_s24.pdb" },
+        { "role": "by_param_csv", "path": "p53_Y220C_PhiKan083_HERO_CONTROL_v1_by_param_20250823-022206.csv" },
+        { "role": "raw_csv", "path": "p53_Y220C_PhiKan083_HERO_CONTROL_v1_raw_20250823-022206.csv" },
+        { "role": "md_report", "path": "p53_Y220C_PhiKan083_HERO_CONTROL_v1_report_20250823-022206.md" }
+      ]
+    },
+    {
+      "run_id": 7,
+      "source_folder": "p53_Y220C_PhiKan083_HERO_v1_20250823-014039_DELIVERABLE",
+      "purpose": "Y220C + PhiKan083 (HERO v1)",
+      "canonical_claim": {
+        "type": "ligand_partial",
+        "statement": "The HERO v1 run with PhiKan083 shows incomplete rescue; end state remains misfolded (best_final_RMSD_A ≥ 19 Å).",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": ">=", "value": 19.0 }],
+        "tags": ["Y220C", "PhiKan083", "misfolded"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24.png" },
+        { "role": "diagnostics_png", "path": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_Y220C_PhiKan083_HERO_v1_Ct0p05_HB16p0_Lig4p0_s24.pdb" },
+        { "role": "by_param_csv", "path": "p53_Y220C_PhiKan083_HERO_v1_by_param_20250823-014039.csv" },
+        { "role": "raw_csv", "path": "p53_Y220C_PhiKan083_HERO_v1_raw_20250823-014039.csv" },
+        { "role": "md_report", "path": "p53_Y220C_PhiKan083_HERO_v1_report_20250823-014039.md" }
+      ]
+    },
+    {
+      "run_id": 8,
+      "source_folder": "p53_Y220C_PhiKan083_Native_Validation_20250822-223000_DELIVERABLE",
+      "purpose": "Y220C + PhiKan083 (native-start validation)",
+      "canonical_claim": {
+        "type": "native_validation_limit",
+        "statement": "From a native start with PhiKan083, the structure is expected to be unstable and drift significantly (best_final_RMSD_A > 3.5 Å).",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": ">", "value": 3.5 }],
+        "tags": ["Y220C", "PhiKan083", "native_start", "validation_limit"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_Native_Validation_Ct0p05_HB16p0_Lig4p0_s3.png" },
+        { "role": "diagnostics_png", "path": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_Native_Validation_Ct0p05_HB16p0_Lig4p0_s3.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_Native_Validation_Ct0p05_HB16p0_Lig4p0_s3.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_Y220C_PhiKan083_Native_Validation_Ct0p05_HB16p0_Lig4p0_s3.pdb" },
+        { "role": "by_param_csv", "path": "p53_Y220C_PhiKan083_Native_Validation_by_param_20250822-223000.csv" },
+        { "role": "raw_csv", "path": "p53_Y220C_PhiKan083_Native_Validation_raw_20250822-223000.csv" },
+        { "role": "md_report", "path": "p53_Y220C_PhiKan083_Native_Validation_report_20250822-223000.md" }
+      ]
+    },
+    {
+      "run_id": 9,
+      "source_folder": "p53_Y220C_PhiKan083_ContactAnneal_20250823-032118_DELIVERABLE",
+      "purpose": "Y220C + PhiKan083 (Contact Anneal)",
+      "canonical_claim": {
+        "type": "rescue_protocol",
+        "statement": "The Contact-anneal protocol with PhiKan083 achieves meaningful improvement relative to baselines (best_final_RMSD_A ≤ 20 Å).",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": "<=", "value": 20.0 }],
+        "tags": ["Y220C", "PhiKan083", "rescue", "protocol", "improved"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_ContactAnneal_contact_rampfrom0p03_to0p05_start0_end1500_HB16p0_s24.png" },
+        { "role": "diagnostics_png", "path": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_ContactAnneal_contact_rampfrom0p03_to0p05_start0_end1500_HB16p0_s24.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_ContactAnneal_contact_rampfrom0p03_to0p05_start0_end1500_HB16p0_s24.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_Y220C_PhiKan083_ContactAnneal_contact_rampfrom0p03_to0p05_start0_end1500_HB16p0_s24.pdb" },
+        { "role": "by_param_csv", "path": "p53_Y220C_PhiKan083_ContactAnneal_by_param_20250823-032118.csv" },
+        { "role": "raw_csv", "path": "p53_Y220C_PhiKan083_ContactAnneal_raw_20250823-032118.csv" },
+        { "role": "md_report", "path": "p53_Y220C_PhiKan083_ContactAnneal_report_20250823-032118.md" }
+      ]
+    },
+    {
+      "run_id": 10,
+      "source_folder": "p53_Y220C_PhiKan083_Rescue_v1_20250822-221728_DELIVERABLE",
+      "purpose": "Y220C + PhiKan083 (Rescue v1 pilot)",
+      "canonical_claim": {
+        "type": "ligand_partial",
+        "statement": "Rescue v1 shows partial improvement but remains above near-native; end state ≥ 20 Å.",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": ">=", "value": 20.0 }],
+        "tags": ["Y220C", "PhiKan083", "pilot", "misfolded"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_Rescue_v1_Ct0p05_HB16p0_Lig1p0_s11.png" },
+        { "role": "diagnostics_png", "path": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_Rescue_v1_Ct0p05_HB16p0_Lig1p0_s11.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_Rescue_v1_Ct0p05_HB16p0_Lig1p0_s11.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_Y220C_PhiKan083_Rescue_v1_Ct0p05_HB16p0_Lig1p0_s11.pdb" },
+        { "role": "by_param_csv", "path": "p53_Y220C_PhiKan083_Rescue_v1_by_param_20250822-221728.csv" },
+        { "role": "raw_csv", "path": "p53_Y220C_PhiKan083_Rescue_v1_raw_20250822-221728.csv" },
+        { "role": "md_report", "path": "p53_Y220C_PhiKan083_Rescue_v1_report_20250822-221728.md" }
+      ]
+    },
+    {
+      "run_id": 11,
+      "source_folder": "p53_Y220C_PhiKan083_TimingSweep_20250823-042412_DELIVERABLE",
+      "purpose": "Y220C + PhiKan083 (Timing Sweep)",
+      "canonical_claim": {
+        "type": "ligand_thermodynamic",
+        "statement": "The Timing-enabled contact anneal shows stabilization but does not conclusively reach a native state (best_final_RMSD_A ≥ 15 Å).",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": ">=", "value": 15.0 }],
+        "tags": ["Y220C", "PhiKan083", "timing_sweep", "thermodynamic"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_Y220C_PhiKan083_TimingSweep_enabled_from_step0_Ct0p05_HB16p0_Lig4p0_s24.png" },
+        { "role": "diagnostics_png", "path": "best_run_details/diagnostics_report_p53_Y220C_PhiKan083_TimingSweep_enabled_from_step0_Ct0p05_HB16p0_Lig4p0_s24.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_Y220C_PhiKan083_TimingSweep_enabled_from_step0_Ct0p05_HB16p0_Lig4p0_s24.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_Y220C_PhiKan083_TimingSweep_enabled_from_step0_Ct0p05_HB16p0_Lig4p0_s24.pdb" },
+        { "role": "by_param_csv", "path": "p53_Y220C_PhiKan083_TimingSweep_by_param_20250823-042412.csv" },
+        { "role": "raw_csv", "path": "p53_Y220C_PhiKan083_TimingSweep_raw_20250823-042412.csv" },
+        { "role": "md_report", "path": "p53_Y220C_PhiKan083_TimingSweep_report_20250823-042412.md" }
+      ]
+    },
+    {
+      "run_id": 12,
+      "source_folder": "p53_Y220F_Rescue_Attempt_20250822-205212_DELIVERABLE",
+      "purpose": "Y220F genetic rescue attempt",
+      "canonical_claim": {
+        "type": "negative_result",
+        "statement": "The Y220F rescue attempt fails to restore native folding; end state ≥ 20 Å.",
+        "constraints": [{ "metric": "best_final_RMSD_A", "op": ">=", "value": 20.0 }],
+        "tags": ["Y220F", "rescue_fail", "misfolded"]
+      },
+      "artifacts": [
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_p53_Y220F_Rescue_Attempt_Ct0p05_HB14p0_s11.png" },
+        { "role": "diagnostics_png", "path": "best_run_details/diagnostics_report_p53_Y220F_Rescue_Attempt_Ct0p05_HB14p0_s11.png" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_p53_Y220F_Rescue_Attempt_Ct0p05_HB14p0_s11.csv" },
+        { "role": "trajectory_pdb", "path": "best_run_details/trajectory_p53_Y220F_Rescue_Attempt_Ct0p05_HB14p0_s11.pdb" },
+        { "role": "by_param_csv", "path": "p53_Y220F_Rescue_Attempt_by_param_20250822-205212.csv" },
+        { "role": "raw_csv", "path": "p53_Y220F_Rescue_Attempt_raw_20250822-205212.csv" },
+        { "role": "md_report", "path": "p53_Y220F_Rescue_Attempt_report_20250822-205212.md" }
+      ]
+    }
+  ],
+  "thesis": {
+    "canonical_field_claim": {
+      "statement": "Across the UQCF-GEM campaign, p53-Y220C predominantly fails via a kinetic collapse trap, while p53-R248Q failure is electrostatic in nature. A protocol-level intervention—contact anneal with PhiKan083—achieves meaningful improvement (≤ 20 Å) relative to ~25 Å baselines, demonstrating that kinetic failure modes can be mitigated. The campaign ultimately revealed a force-field limitation in the ligand model, guiding future engine development.",
+      "constraints": [
+        {
+          "aggregation": "count_runs_meeting",
+          "where": [
+            { "metric": "best_final_RMSD_A", "op": "<=", "value": 20.0 },
+            { "metric": "failures", "op": "==", "value": 0 }
+          ],
+          "op": ">=",
+          "value": 1
+        }
+      ],
+      "implications": [
+        "Mechanistic transparency distinguishes kinetic traps from electrostatic failures, informing tailored rescue strategies.",
+        "Protocol engineering (e.g., contact anneal + ligand) can improve fold quality even when native-start validation is limited.",
+        "The platform can be used to diagnose its own limitations, providing a data-driven path for engine upgrades."
+      ]
+    }
+  }
+}
