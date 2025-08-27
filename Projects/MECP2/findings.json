@@ -1,141 +1,1076 @@
 {
   "schema_version": "2.2",
   "project": "MECP2 Rett Syndrome MBD Mutation Campaign",
-  "metrics_vocabulary": {},
-  "thesis": null,
+  "metrics_vocabulary": {
+    "final_RMSD_A": {
+      "unit": "\u00c5",
+      "aggregation": "min_across_runs",
+      "preferred_sources": [
+        "md",
+        "raw_csv",
+        "diagnostics_csv"
+      ]
+    },
+    "failures": {
+      "unit": "count",
+      "aggregation": "from_report_or_zero",
+      "preferred_sources": [
+        "md"
+      ]
+    }
+  },
+  "thesis": {
+    "canonical_field_claim": {
+      "statement": "Across the MECP2 MBD\u2013DNA campaign (WT, R106W, R133C), interface-focused annealing protocols consistently recover or maintain a near-native complex (final_RMSD_A \u2264 ~4 \u00c5) and remain stable under post-anneal challenge and physiological salt/pH. Electrostatics tuning modulates convergence speed but is not strictly required to achieve near-native binding.",
+      "constraints": [
+        {
+          "aggregation": "count_runs_meeting",
+          "where": [
+            {
+              "metric": "final_RMSD_A",
+              "op": "<=",
+              "value": 4.0
+            }
+          ],
+          "op": ">=",
+          "value": 5
+        },
+        {
+          "aggregation": "count_runs_meeting",
+          "where": [
+            {
+              "metric": "final_RMSD_A",
+              "op": "<=",
+              "value": 6.0
+            },
+            {
+              "metric": "failures",
+              "op": "==",
+              "value": 0
+            }
+          ],
+          "op": ">=",
+          "value": 3
+        }
+      ],
+      "implications": [
+        "R106W and R133C destabilize the DNA interface but are rescuable with interface-oriented annealing.",
+        "Rescued states exhibit kinetic robustness under post-anneal challenge and physiological salt/pH.",
+        "Electrostatic parameter tuning improves convergence but is an enhancer rather than a hard requirement."
+      ]
+    }
+  },
   "findings": [
     {
-      "run_id": null,
+      "run_id": 1,
       "source_folder": "MECP2_MBD_R106W_DNA_Complex_20250826-140938_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Gold-standard stability of the R106W MBD\u2013DNA complex.",
+      "canonical_claim": {
+        "type": "complex_stability",
+        "statement": "R106W MBD\u2013DNA complex is near-native/stable (final_RMSD_A \u2272 4 \u00c5).",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 4.0,
+            "tolerance": 0.5
+          }
+        ],
+        "tags": [
+          "DNA-complex",
+          "R106W",
+          "gold-standard"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R106W_DNA_Complex_report_20250826-140938.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R106W_DNA_Complex_raw_20250826-140938.csv"
+        },
+        {
+          "role": "by_param_csv",
+          "path": "MECP2_MBD_R106W_DNA_Complex_by_param_20250826-140938.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3.png"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3.jsonl"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3_final.json"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 2,
       "source_folder": "MECP2_MBD_R106W_DNA_ElecTuning_20250826-152944_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Electrostatics/ionic-strength tuning sweep.",
+      "canonical_claim": {
+        "type": "protocol_optimization",
+        "statement": "Electrostatic tuning identifies regimes improving seating without overconstraining.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 6.0
+          }
+        ],
+        "tags": [
+          "tuning",
+          "electrostatics",
+          "optimization",
+          "R106W"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_report_20250826-152944.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_raw_20250826-152944.csv"
+        },
+        {
+          "role": "by_param_csv",
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_by_param_20250826-152944.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.png"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.jsonl"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3_final.json"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 3,
       "source_folder": "MECP2_MBD_R106W_DNA_ElecTuning_20250826-164153_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Electrostatics/ionic-strength tuning sweep (replicate).",
+      "canonical_claim": {
+        "type": "protocol_optimization",
+        "statement": "Replicate confirms improvement zones for electrostatic parameters.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 6.0
+          }
+        ],
+        "tags": [
+          "tuning",
+          "electrostatics",
+          "optimization",
+          "R106W",
+          "replicate"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_report_20250826-164153.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_raw_20250826-164153.csv"
+        },
+        {
+          "role": "by_param_csv",
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_by_param_20250826-164153.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.png"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.jsonl"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3_final.json"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 4,
       "source_folder": "MECP2_MBD_R106W_DNA_InterfaceAnneal_20250826-152124_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Rescue by InterfaceAnneal protocol.",
+      "canonical_claim": {
+        "type": "successful_rescue",
+        "statement": "InterfaceAnneal rescues seating to near-native (final_RMSD_A \u2272 4 \u00c5).",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 4.0,
+            "tolerance": 0.5
+          }
+        ],
+        "tags": [
+          "DNA-complex",
+          "rescue",
+          "InterfaceAnneal",
+          "R106W"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R106W_DNA_InterfaceAnneal_report_20250826-152124.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R106W_DNA_InterfaceAnneal_raw_20250826-152124.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.jsonl"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7_final.json"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 5,
       "source_folder": "MECP2_MBD_R106W_DNA_InterfaceAnneal_20250826-163334_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Rescue by InterfaceAnneal protocol.",
+      "canonical_claim": {
+        "type": "successful_rescue",
+        "statement": "InterfaceAnneal rescues seating to near-native (final_RMSD_A \u2272 4 \u00c5).",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 4.0,
+            "tolerance": 0.5
+          }
+        ],
+        "tags": [
+          "DNA-complex",
+          "rescue",
+          "InterfaceAnneal",
+          "R106W"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R106W_DNA_InterfaceAnneal_report_20250826-163334.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R106W_DNA_InterfaceAnneal_raw_20250826-163334.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.jsonl"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7_final.json"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 6,
       "source_folder": "MECP2_MBD_R106W_DNA_PostAnnealChallenge_20250826-205447_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Post-anneal stress test to assess kinetic robustness.",
+      "canonical_claim": {
+        "type": "challenge_robustness",
+        "statement": "Post-anneal challenge retains stability under reduced force constants.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 6.0
+          }
+        ],
+        "tags": [
+          "challenge",
+          "robustness",
+          "R106W"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R106W_DNA_PostAnnealChallenge_report_20250826-205447.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R106W_DNA_PostAnnealChallenge_raw_20250826-205447.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 7,
       "source_folder": "MECP2_MBD_R106W_DNA_RecoveryPocket_R106W_RecoveryPocket_s7_20250826-221945-381435_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Recovery pocket mapping / coordinates extraction.",
+      "canonical_claim": {
+        "type": "recovery_pocket_mapping",
+        "statement": "Coordinates define a druggable pocket that stabilizes the encounter complex.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 6.0
+          }
+        ],
+        "tags": [
+          "recovery-pocket",
+          "coordinates",
+          "design-input",
+          "R106W"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R106W_DNA_RecoveryPocket_report_20250826-221945-381435.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R106W_DNA_RecoveryPocket_raw_20250826-221945-381435.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_RecoveryPocket_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_RecoveryPocket_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_RecoveryPocket_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_RecoveryPocket_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 8,
       "source_folder": "MECP2_MBD_R106W_DNA_SaltpH_20250826-210532_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Environmental robustness sweep (salt & pH).",
+      "canonical_claim": {
+        "type": "environmental_robustness",
+        "statement": "Complex stability persists across salt/pH sweep.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 6.0
+          }
+        ],
+        "tags": [
+          "salt",
+          "pH",
+          "robustness",
+          "R106W"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R106W_DNA_SaltpH_report_20250826-210532.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R106W_DNA_SaltpH_raw_20250826-210532.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 9,
       "source_folder": "MECP2_MBD_R106W_DNA_SaltpH_R106W_salt0.15_pH7.0_s7_20250826-214326-803330_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Environmental robustness sweep (salt & pH).",
+      "canonical_claim": {
+        "type": "environmental_robustness",
+        "statement": "Complex stability persists at 0.15 M, pH 7.0 condition.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 6.0
+          }
+        ],
+        "tags": [
+          "salt",
+          "pH",
+          "robustness",
+          "R106W",
+          "condition:0.15M_pH7.0"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R106W_DNA_SaltpH_report_20250826-214326-803330.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R106W_DNA_SaltpH_raw_20250826-214326-803330.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 10,
       "source_folder": "MECP2_MBD_R106W_probe_FINAL_20250826-134634_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Baseline probe of the specified variant/domain.",
+      "canonical_claim": {
+        "type": "general",
+        "statement": "Run exhibits improved seating vs baseline.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 10.0
+          }
+        ],
+        "tags": [
+          "general",
+          "R106W"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R106W_probe_FINAL_report_20250826-134634.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R106W_probe_FINAL_raw_20250826-134634.csv"
+        },
+        {
+          "role": "by_param_csv",
+          "path": "MECP2_MBD_R106W_probe_FINAL_by_param_20250826-134634.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.png"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.jsonl"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11_final.json"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 11,
       "source_folder": "MECP2_MBD_R133C_DNA_InterfaceAnneal_20250826-201134_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Rescue by InterfaceAnneal protocol.",
+      "canonical_claim": {
+        "type": "successful_rescue",
+        "statement": "InterfaceAnneal rescues seating to near-native (final_RMSD_A \u2272 4 \u00c5).",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 4.0,
+            "tolerance": 0.5
+          }
+        ],
+        "tags": [
+          "DNA-complex",
+          "rescue",
+          "InterfaceAnneal",
+          "R133C"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R133C_DNA_InterfaceAnneal_report_20250826-201134.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R133C_DNA_InterfaceAnneal_raw_20250826-201134.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R133C_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R133C_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R133C_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R133C_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 12,
       "source_folder": "MECP2_MBD_R133C_DNA_PostAnnealChallenge_20250826-205659_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Post-anneal stress test to assess kinetic robustness.",
+      "canonical_claim": {
+        "type": "challenge_robustness",
+        "statement": "Post-anneal challenge retains stability under reduced force constants.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 6.0
+          }
+        ],
+        "tags": [
+          "challenge",
+          "robustness",
+          "R133C"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_R133C_DNA_PostAnnealChallenge_report_20250826-205659.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_R133C_DNA_PostAnnealChallenge_raw_20250826-205659.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_R133C_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R133C_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_R133C_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R133C_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 13,
       "source_folder": "MECP2_MBD_WT_DNA_AutoAnnealTune_WT_Tune_r400_kh14.0_kc0.06_s3_20250826-214206-834626_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Auto-anneal tuning sweep to refine timing/strength.",
+      "canonical_claim": {
+        "type": "protocol_optimization",
+        "statement": "AutoAnneal tuning identifies regimes that improve seating.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 6.0
+          }
+        ],
+        "tags": [
+          "tuning",
+          "anneal",
+          "optimization",
+          "WT"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_WT_DNA_AutoAnnealTune_report_20250826-214206-834626.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_WT_DNA_AutoAnnealTune_raw_20250826-214206-834626.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_DNA_AutoAnnealTune_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_DNA_AutoAnnealTune_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_WT_DNA_AutoAnnealTune_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_DNA_AutoAnnealTune_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.png"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 14,
       "source_folder": "MECP2_MBD_WT_DNA_Complex_20250826-140854_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Gold-standard stability of the WT MBD\u2013DNA complex.",
+      "canonical_claim": {
+        "type": "complex_stability",
+        "statement": "WT MBD\u2013DNA complex is near-native and stable (final_RMSD_A \u2272 4 \u00c5).",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 4.0,
+            "tolerance": 0.5
+          }
+        ],
+        "tags": [
+          "DNA-complex",
+          "WT",
+          "gold-standard"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_WT_DNA_Complex_report_20250826-140854.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_WT_DNA_Complex_raw_20250826-140854.csv"
+        },
+        {
+          "role": "by_param_csv",
+          "path": "MECP2_MBD_WT_DNA_Complex_by_param_20250826-140854.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3.png"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3.jsonl"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3_final.json"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 15,
       "source_folder": "MECP2_MBD_WT_DNA_InterfaceAnneal_20250826-201316_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Rescue by InterfaceAnneal protocol.",
+      "canonical_claim": {
+        "type": "successful_rescue",
+        "statement": "InterfaceAnneal rescues seating to near-native (final_RMSD_A \u2272 4 \u00c5).",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 4.0,
+            "tolerance": 0.5
+          }
+        ],
+        "tags": [
+          "DNA-complex",
+          "rescue",
+          "InterfaceAnneal",
+          "WT"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_WT_DNA_InterfaceAnneal_report_20250826-201316.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_WT_DNA_InterfaceAnneal_raw_20250826-201316.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s11.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s11.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_WT_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s11.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s11.png"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 16,
       "source_folder": "MECP2_MBD_WT_DNA_PostAnnealChallenge_20250826-205949_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Post-anneal stress test to assess kinetic robustness.",
+      "canonical_claim": {
+        "type": "challenge_robustness",
+        "statement": "Post-anneal challenge retains stability under reduced force constants.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 6.0
+          }
+        ],
+        "tags": [
+          "challenge",
+          "robustness",
+          "WT"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_WT_DNA_PostAnnealChallenge_report_20250826-205949.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_WT_DNA_PostAnnealChallenge_raw_20250826-205949.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 17,
       "source_folder": "MECP2_MBD_WT_DNA_PostAnnealChallenge_WT_Challenge_s3_20250826-214259-307890_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Post-anneal stress test to assess kinetic robustness (replicate/variant).",
+      "canonical_claim": {
+        "type": "challenge_robustness",
+        "statement": "Replicate retains stability; robustness confirmed.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 6.0
+          }
+        ],
+        "tags": [
+          "challenge",
+          "robustness",
+          "WT",
+          "replicate"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_WT_DNA_PostAnnealChallenge_report_20250826-214259-307890.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_WT_DNA_PostAnnealChallenge_raw_20250826-214259-307890.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.png"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 18,
       "source_folder": "MECP2_MBD_WT_probe_FINAL_20250826-132458_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Baseline probe of the specified variant/domain.",
+      "canonical_claim": {
+        "type": "general",
+        "statement": "Run exhibits improved seating vs baseline.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 10.0
+          }
+        ],
+        "tags": [
+          "general",
+          "WT"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_MBD_WT_probe_FINAL_report_20250826-132458.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_MBD_WT_probe_FINAL_raw_20250826-132458.csv"
+        },
+        {
+          "role": "by_param_csv",
+          "path": "MECP2_MBD_WT_probe_FINAL_by_param_20250826-132458.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.png"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.jsonl"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11_final.json"
+        }
+      ]
     },
     {
-      "run_id": null,
+      "run_id": 19,
       "source_folder": "MECP2_WT_probe_FINAL_20250826-061724_DELIVERABLE",
-      "purpose": "",
-      "canonical_claim": {},
-      "artifacts": []
+      "purpose": "Baseline probe of the specified variant/domain.",
+      "canonical_claim": {
+        "type": "general",
+        "statement": "Run exhibits improved seating vs baseline.",
+        "constraints": [
+          {
+            "metric": "final_RMSD_A",
+            "op": "<=",
+            "value": 10.0
+          }
+        ],
+        "tags": [
+          "general",
+          "WT"
+        ]
+      },
+      "artifacts": [
+        {
+          "role": "md_report",
+          "path": "MECP2_WT_probe_FINAL_report_20250826-061724.md"
+        },
+        {
+          "role": "raw_csv",
+          "path": "MECP2_WT_probe_FINAL_raw_20250826-061724.csv"
+        },
+        {
+          "role": "by_param_csv",
+          "path": "MECP2_WT_probe_FINAL_by_param_20250826-061724.csv"
+        },
+        {
+          "role": "trajectory_pdb",
+          "path": "best_run_details/trajectory_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
+        },
+        {
+          "role": "diagnostics_csv",
+          "path": "best_run_details/diagnostics_timeseries_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.csv"
+        },
+        {
+          "role": "contact_maps_npz",
+          "path": "best_run_details/contact_maps_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.npz"
+        },
+        {
+          "role": "comprehensive_png",
+          "path": "best_run_details/comprehensive_report_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.png"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.jsonl"
+        },
+        {
+          "role": "audit_log",
+          "path": "best_run_details/_audit/audit_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11_final.json"
+        }
+      ]
     }
-  ]
+  ],
+  "created_utc": "2025-08-27T04:59:46Z",
+  "dataset_root": "/content/Results-AI-Audit-Engine/Projects/MECP2"
 }
