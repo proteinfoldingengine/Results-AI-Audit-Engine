@@ -1,0 +1,27 @@
+{
+  "patch_id": "MECP2_MBD_R106W_DNA_LocalPatch_mutations_alt[{'pos': 107, 'from': 'any', 'to': 'K'}]_s3",
+  "pdb_id": "3C2I",
+  "chain_id": "A",
+  "sequence_length": 70,
+  "uniprot": {
+    "accession": "P51608"
+  },
+  "mutation_numbering": "uniprot",
+  "allow_forced_mutation": false,
+  "steps": 2000,
+  "log_interval": 25,
+  "outputs": {
+    "timeseries_csv": "/content/drive/My Drive/Folding/PharmaApp/plots/MECP2_MBD_R106W_DNA_LocalPatch_mutations_alt[{'pos': 107, 'from': 'any', 'to': 'K'}]_s3/diagnostics_timeseries_MECP2_MBD_R106W_DNA_LocalPatch_mutations_alt[{'pos': 107, 'from': 'any', 'to': 'K'}]_s3.csv",
+    "trajectory_pdb": "/content/drive/My Drive/Folding/PharmaApp/plots/MECP2_MBD_R106W_DNA_LocalPatch_mutations_alt[{'pos': 107, 'from': 'any', 'to': 'K'}]_s3/trajectory_MECP2_MBD_R106W_DNA_LocalPatch_mutations_alt[{'pos': 107, 'from': 'any', 'to': 'K'}]_s3.pdb",
+    "plots_dir": "/content/drive/My Drive/Folding/PharmaApp/plots/MECP2_MBD_R106W_DNA_LocalPatch_mutations_alt[{'pos': 107, 'from': 'any', 'to': 'K'}]_s3"
+  },
+  "metrics_final": {
+    "RMSD": 3.208587646484375,
+    "Rg": 11.544217109680176,
+    "phi_rms": 2.1840100288391113,
+    "total_loss": 171.0016326904297
+  },
+  "health": {
+    "loss_explosions": 0
+  }
+}
