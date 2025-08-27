@@ -1,20 +1,16 @@
 # ==============================================================================
 # Unified p53 Audit Engine
-# V1.8 (Timeout & Logging Patch)
+# V1.9 (Combined Patches)
 # ==============================================================================
 #
 # This single script performs the complete end-to-end audit process for the
 # p53 simulation study.
 #
-# WHAT'S NEW (v1.8 Patch):
-# - Implemented more aggressive PDB file sampling to create smaller data
-#   snippets, preventing potential API timeouts on large trajectory files.
-# - Added verbose logging to show the exact payload size in bytes before
-#   each API call, improving traceability.
-#
-# WHAT'S NEW (v1.7 User Experience):
-# - The script now interactively prompts the user to paste their Gemini API key
-#   if an `API_KEY.txt` file is not found.
+# WHAT'S NEW (v1.9 Combined Patches):
+# - Patched PDB handling to prevent timeouts on large single-frame PDBs by
+#   ensuring the payload size check is never bypassed.
+# - Patched final report generation to prevent a TypeError when no valid RMSD
+#   metrics are found across all runs.
 #
 # WORKFLOW:
 # 1. **Clone Data Repository:** Downloads the entire dataset from GitHub.
@@ -50,7 +46,7 @@ except ImportError:
     GEMINI_AVAILABLE = False
 
 # --------------------------- Logging -----------------------------------------
-logger = logging.getLogger("unified_p53_engine")
+logger = logging.getLogger("unified_engine")
 logger.setLevel(logging.INFO)
 if logger.hasHandlers():
     logger.handlers.clear()
@@ -68,7 +64,7 @@ MODEL_NAME = "gemini-1.5-pro-latest"
 
 # --- CONFIGURATION: Set your data repository and project name here ---
 GITHUB_DATA_REPO_URL = "https://github.com/ProteinFoldingEngine/Results-AI-Audit-Engine.git"
-PROJECT_NAME = "p53"  # <-- CHANGE THIS TO SELECT THE PROJECT TO AUDIT
+PROJECT_NAME = "MECP2"  # <-- CHANGE THIS TO SELECT THE PROJECT TO AUDIT
 
 PROMPT_LIBRARY = {
     "md": """ROLE: Senior biophysicist.
@@ -283,11 +279,13 @@ def summarize_by_param_csv_from_df(df: pd.DataFrame) -> Dict[str, Any]:
             out["spread_RMSD_A"] = round(float(s.max() - s.min()), 2)
     return out
 
+# --- PATCH 1: FIX FOR PDB TIMEOUT ---
 def pdb_stratified_snippet(text: str, max_frames: int = 5) -> Tuple[str, List[int]]:
     lines = text.splitlines(True)
     header = [ln for ln in lines if not ln.startswith(("MODEL", "ATOM", "HETATM"))]
     models, cur, in_model = [], [], False
     frames = []
+    
     for ln in lines:
         if ln.startswith("MODEL"):
             in_model = True; cur = [ln]
@@ -295,25 +293,34 @@ def pdb_stratified_snippet(text: str, max_frames: int = 5) -> Tuple[str, List[in
             cur.append(ln); models.append(cur); in_model = False
         elif in_model:
             cur.append(ln)
+
+    snippet_content = ""
     if not models:
-        # More aggressive fallback for single-frame PDBs
-        return "".join(lines[:4000]), []
-    num = len(models)
-    if max_frames < 2:
-        idx = [0]
+        # Fallback for single-frame PDBs
+        snippet_content = "".join(lines[:4000])
+        # Frames list is empty for single-frame files
     else:
-        idx = sorted(set([0, num - 1] + [int(num * (i / (max_frames - 1))) for i in range(1, max_frames - 1)]))
-    frames = [i + 1 for i in idx]
-    out = header + [f"REMARK SAMPLED FRAMES: {frames}\n"]
-    for i in idx:
-        m = models[i]
-        ca = [ln for ln in m if " CA " in ln]
-        # More aggressive truncation of atoms per frame
-        out.extend([m[0]] + ca[:1000] + [m[-1]])
-    snippet = "".join(out)
-    if len(snippet.encode("utf-8", errors="ignore")) > MAX_PAYLOAD_SIZE_BYTES:
-        snippet = safe_text_snippet(snippet, MAX_PAYLOAD_SIZE_BYTES)
-    return snippet, frames
+        # Logic for multi-frame PDBs
+        num = len(models)
+        if max_frames < 2:
+            idx = [0]
+        else:
+            idx = sorted(set([0, num - 1] + [int(num * (i / (max_frames - 1))) for i in range(1, max_frames - 1)]))
+        frames = [i + 1 for i in idx]
+        
+        out_lines = header + [f"REMARK SAMPLED FRAMES: {frames}\n"]
+        for i in idx:
+            m = models[i]
+            ca = [ln for ln in m if " CA " in ln]
+            out_lines.extend([m[0]] + ca[:1000] + [m[-1]])
+        snippet_content = "".join(out_lines)
+
+    # --- FINAL GUARDRAIL (Now applies to BOTH cases) ---
+    if len(snippet_content.encode("utf-8", errors="ignore")) > MAX_PAYLOAD_SIZE_BYTES:
+        # Use the more aggressive text snippet function as a last resort
+        snippet_content = safe_text_snippet(snippet_content, MAX_PAYLOAD_SIZE_BYTES)
+        
+    return snippet_content, frames
 
 def short_sha256(path: Path) -> str:
     h = hashlib.sha256()
@@ -595,13 +602,22 @@ def write_final_report(findings_doc, verification_report, api_key, out_md="Bioph
         verdict_counts[verdict] += 1; conf_counts[conf] += 1
         rows.append([rid, cfg_by_id.get(rid, {}).get("source_folder", ""), f"{verdict} — {conf}", f"{key_numbers.get('best_final_RMSD_A'):.2f}" if key_numbers.get('best_final_RMSD_A') is not None else "—", f"{key_numbers.get('best_final_Rg_A'):.2f}" if key_numbers.get('best_final_Rg_A') is not None else "—", key_numbers.get('runs_count', '—'), key_numbers.get('failures', '—')])
     rows.sort(key=lambda r: int(r[0]))
+    
+    # --- PATCH 2: FIX FOR TYPEERROR ON REPORT GENERATION ---
     valid_rmsds = [v for v in rmsds if v is not None]
     median_rmsd, min_rmsd, max_rmsd = (statistics.median(valid_rmsds) if valid_rmsds else None, min(valid_rmsds) if valid_rmsds else None, max(valid_rmsds) if valid_rmsds else None)
+    
+    # Pre-format the RMSD summary string with a check for None
+    rmsd_summary_line = f"- RMSD summary: Not Available (no valid RMSD values found)"
+    if median_rmsd is not None and min_rmsd is not None and max_rmsd is not None:
+        rmsd_summary_line = f"- RMSD summary: median **{median_rmsd:.2f} Å**, min **{min_rmsd:.2f} Å**, max **{max_rmsd:.2f} Å**"
+
     thesis_eval = evaluate_thesis(thesis_cfg, per_run_keynums)
     exec_summary_md = (f"- Runs analyzed: **{len(blocks)}**\n"
                        f"- Verdicts — CONFIRMED: **{verdict_counts['CONFIRMED']}**, DEVIATION: **{verdict_counts['DEVIATION']}**, INDETERMINATE: **{verdict_counts['INDETERMINATE']}**\n"
-                       f"- RMSD summary: median **{median_rmsd:.2f} Å**, min **{min_rmsd:.2f} Å**, max **{max_rmsd:.2f} Å**\n"
+                       f"{rmsd_summary_line}\n"  # Use the pre-formatted line
                        f"- Thesis check: **{'✅ satisfied' if thesis_eval.get('satisfied') else '❌ not satisfied' if thesis_eval.get('satisfied') is False else '—'}** — {thesis_eval.get('explanation','')}")
+    
     table_md = "| " + " | ".join(headers) + " |\n| " + " | ".join([":--" for _ in headers]) + " |\n" + "\n".join("| " + " | ".join(map(str,r)) + " |" for r in rows)
     narrative = generate_narrative(api_key, MODEL_NAME, project, thesis_cfg, table_md, exec_summary_md)
     md_content = (f"# Biophysics Final Report\n\n**Project:** {project}\n\n## Executive Summary (deterministic)\n{exec_summary_md}\n\n"
