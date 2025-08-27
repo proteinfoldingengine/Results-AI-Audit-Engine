@@ -85,39 +85,39 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_Cx_report_20250826_140938.md"
+          "path": "MECP2_MBD_R106W_DNA_Complex_report_20250826-140938.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_Cx_raw_20250826_140938.csv"
+          "path": "MECP2_MBD_R106W_DNA_Complex_raw_20250826-140938.csv"
         },
         {
           "role": "by_param_csv",
-          "path": "MECP2_MBD_R106W_DNA_Cx_by_param_20250826_140938.csv"
+          "path": "MECP2_MBD_R106W_DNA_Complex_by_param_20250826-140938.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3.png"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.jsonl"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3.jsonl"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3_final.json"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_Complex_Elec0p1_HB12p0_s3_final.json"
         }
       ]
     },
@@ -145,39 +145,39 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_report_20250826_152944.md"
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_report_20250826-152944.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_raw_20250826_152944.csv"
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_raw_20250826-152944.csv"
         },
         {
           "role": "by_param_csv",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_by_param_20250826_152944.csv"
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_by_param_20250826-152944.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.png"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.jsonl"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.jsonl"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3_final.json"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3_final.json"
         }
       ]
     },
@@ -206,39 +206,39 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_report_20250826_164153.md"
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_report_20250826-164153.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_raw_20250826_164153.csv"
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_raw_20250826-164153.csv"
         },
         {
           "role": "by_param_csv",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_by_param_20250826_164153.csv"
+          "path": "MECP2_MBD_R106W_DNA_ElecTuning_by_param_20250826-164153.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.png"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.jsonl"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3.jsonl"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3_final.json"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_ElecTuning_ionic_strength_M0p05_Elec0p1_s3_final.json"
         }
       ]
     },
@@ -267,35 +267,35 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_IA_report_20250826_152124.md"
+          "path": "MECP2_MBD_R106W_DNA_InterfaceAnneal_report_20250826-152124.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_IA_raw_20250826_152124.csv"
+          "path": "MECP2_MBD_R106W_DNA_InterfaceAnneal_raw_20250826-152124.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_6b8d0170.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_81c3c955.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.jsonl"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.jsonl"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7_final.json"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7_final.json"
         }
       ]
     },
@@ -324,35 +324,35 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_IA_report_20250826_163334.md"
+          "path": "MECP2_MBD_R106W_DNA_InterfaceAnneal_report_20250826-163334.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_IA_raw_20250826_163334.csv"
+          "path": "MECP2_MBD_R106W_DNA_InterfaceAnneal_raw_20250826-163334.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_6b8d0170.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_81c3c955.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.jsonl"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.jsonl"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7_final.json"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7_final.json"
         }
       ]
     },
@@ -379,27 +379,27 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_PAC_report_20250826_205447.md"
+          "path": "MECP2_MBD_R106W_DNA_PostAnnealChallenge_report_20250826-205447.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_PAC_raw_20250826_205447.csv"
+          "path": "MECP2_MBD_R106W_DNA_PostAnnealChallenge_raw_20250826-205447.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contac_2266c2f1.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact__7e4039aa.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
         }
       ]
     },
@@ -427,27 +427,27 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_RP_report_20250826_221945_381435.md"
+          "path": "MECP2_MBD_R106W_DNA_RecoveryPocket_report_20250826-221945-381435.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_RP_raw_20250826_221945_381435.csv"
+          "path": "MECP2_MBD_R106W_DNA_RecoveryPocket_raw_20250826-221945-381435.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_RecoveryPocket_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_95896079.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_RecoveryPocket_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_RecoveryPocket_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_19dc3797.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_RecoveryPocket_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
         }
       ]
     },
@@ -475,27 +475,27 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_SaltpH_report_20250826_210532.md"
+          "path": "MECP2_MBD_R106W_DNA_SaltpH_report_20250826-210532.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_SaltpH_raw_20250826_210532.csv"
+          "path": "MECP2_MBD_R106W_DNA_SaltpH_raw_20250826-210532.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_con_c8cf82b9.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_sprin_211f97bf.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_conta_a53083f7.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
         }
       ]
     },
@@ -524,27 +524,27 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_SaltpH_report_20250826_214326_803330.md"
+          "path": "MECP2_MBD_R106W_DNA_SaltpH_report_20250826-214326-803330.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_SaltpH_raw_20250826_214326_803330.csv"
+          "path": "MECP2_MBD_R106W_DNA_SaltpH_raw_20250826-214326-803330.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_con_c8cf82b9.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_sprin_211f97bf.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_conta_a53083f7.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_DNA_SaltpH_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
         }
       ]
     },
@@ -570,19 +570,19 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R106W_probe_FINAL_report_20250826_134634.md"
+          "path": "MECP2_MBD_R106W_probe_FINAL_report_20250826-134634.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_probe_FINAL_raw_20250826_134634.csv"
+          "path": "MECP2_MBD_R106W_probe_FINAL_raw_20250826-134634.csv"
         },
         {
           "role": "by_param_csv",
-          "path": "MECP2_MBD_R106W_probe_FINAL_by_param_20250826_134634.csv"
+          "path": "MECP2_MBD_R106W_probe_FINAL_by_param_20250826-134634.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
         },
         {
           "role": "diagnostics_csv",
@@ -631,27 +631,27 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R133C_DNA_IA_report_20250826_201134.md"
+          "path": "MECP2_MBD_R133C_DNA_InterfaceAnneal_report_20250826-201134.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R133C_DNA_IA_raw_20250826_201134.csv"
+          "path": "MECP2_MBD_R133C_DNA_InterfaceAnneal_raw_20250826-201134.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R133C_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_7905d679.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R133C_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_R133C_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_a9f63565.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R133C_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
         }
       ]
     },
@@ -678,27 +678,27 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_R133C_DNA_PAC_report_20250826_205659.md"
+          "path": "MECP2_MBD_R133C_DNA_PostAnnealChallenge_report_20250826-205659.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_R133C_DNA_PAC_raw_20250826_205659.csv"
+          "path": "MECP2_MBD_R133C_DNA_PostAnnealChallenge_raw_20250826-205659.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_R133C_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contac_df0bfeb1.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R133C_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_R133C_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact__9c6ba420.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_R133C_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
         }
       ]
     },
@@ -726,27 +726,27 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_WT_DNA_AAT_report_20250826_214206_834626.md"
+          "path": "MECP2_MBD_WT_DNA_AutoAnnealTune_report_20250826-214206-834626.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_WT_DNA_AAT_raw_20250826_214206_834626.csv"
+          "path": "MECP2_MBD_WT_DNA_AutoAnnealTune_raw_20250826-214206-834626.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_DNA_AutoAnnealTune_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_480de421.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_DNA_AutoAnnealTune_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_WT_DNA_AutoAnnealTune_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spr_659b57ef.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_DNA_AutoAnnealTune_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.png"
         }
       ]
     },
@@ -774,39 +774,39 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_WT_DNA_Cx_report_20250826_140854.md"
+          "path": "MECP2_MBD_WT_DNA_Complex_report_20250826-140854.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_WT_DNA_Cx_raw_20250826_140854.csv"
+          "path": "MECP2_MBD_WT_DNA_Complex_raw_20250826-140854.csv"
         },
         {
           "role": "by_param_csv",
-          "path": "MECP2_MBD_WT_DNA_Cx_by_param_20250826_140854.csv"
+          "path": "MECP2_MBD_WT_DNA_Complex_by_param_20250826-140854.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3.png"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.jsonl"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3.jsonl"
         },
         {
           "role": "audit_log",
-          "path": "audit_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3_final.json"
+          "path": "best_run_details/_audit/audit_MECP2_MBD_WT_DNA_Complex_Elec0p1_HB12p0_s3_final.json"
         }
       ]
     },
@@ -835,27 +835,27 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_WT_DNA_IA_report_20250826_201316.md"
+          "path": "MECP2_MBD_WT_DNA_InterfaceAnneal_report_20250826-201316.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_WT_DNA_IA_raw_20250826_201316.csv"
+          "path": "MECP2_MBD_WT_DNA_InterfaceAnneal_raw_20250826-201316.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s11.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s11.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_sp_98d07168.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s11.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s11.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_WT_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s11.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spri_cda30ed2.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_DNA_InterfaceAnneal_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s11.png"
         }
       ]
     },
@@ -882,27 +882,27 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_WT_DNA_PAC_report_20250826_205949.md"
+          "path": "MECP2_MBD_WT_DNA_PostAnnealChallenge_report_20250826-205949.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_WT_DNA_PAC_raw_20250826_205949.csv"
+          "path": "MECP2_MBD_WT_DNA_PostAnnealChallenge_raw_20250826-205949.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_0e35f372.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spr_c969a720.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s7.png"
         }
       ]
     },
@@ -930,27 +930,27 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_WT_DNA_PAC_report_20250826_214259_307890.md"
+          "path": "MECP2_MBD_WT_DNA_PostAnnealChallenge_report_20250826-214259-307890.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_WT_DNA_PAC_raw_20250826_214259_307890.csv"
+          "path": "MECP2_MBD_WT_DNA_PostAnnealChallenge_raw_20250826-214259-307890.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.pdb"
         },
         {
           "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_0ae08ea1.csv"
+          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.csv"
         },
         {
           "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.npz"
+          "path": "best_run_details/contact_maps_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.npz"
         },
         {
           "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spr_0cabf877.png"
+          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_DNA_PostAnnealChallenge_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3.png"
         }
       ]
     },
@@ -976,19 +976,19 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_MBD_WT_probe_FINAL_report_20250826_132458.md"
+          "path": "MECP2_MBD_WT_probe_FINAL_report_20250826-132458.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_MBD_WT_probe_FINAL_raw_20250826_132458.csv"
+          "path": "MECP2_MBD_WT_probe_FINAL_raw_20250826-132458.csv"
         },
         {
           "role": "by_param_csv",
-          "path": "MECP2_MBD_WT_probe_FINAL_by_param_20250826_132458.csv"
+          "path": "MECP2_MBD_WT_probe_FINAL_by_param_20250826-132458.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
+          "path": "best_run_details/trajectory_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
         },
         {
           "role": "diagnostics_csv",
@@ -1034,19 +1034,19 @@
       "artifacts": [
         {
           "role": "md_report",
-          "path": "MECP2_WT_probe_FINAL_report_20250826_061724.md"
+          "path": "MECP2_WT_probe_FINAL_report_20250826-061724.md"
         },
         {
           "role": "raw_csv",
-          "path": "MECP2_WT_probe_FINAL_raw_20250826_061724.csv"
+          "path": "MECP2_WT_probe_FINAL_raw_20250826-061724.csv"
         },
         {
           "role": "by_param_csv",
-          "path": "MECP2_WT_probe_FINAL_by_param_20250826_061724.csv"
+          "path": "MECP2_WT_probe_FINAL_by_param_20250826-061724.csv"
         },
         {
           "role": "trajectory_pdb",
-          "path": "traj_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
+          "path": "best_run_details/trajectory_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
         },
         {
           "role": "diagnostics_csv",
