@@ -1,17 +1,19 @@
 # ==============================================================================
 # Unified Audit Engine (p53/MECP2-ready)
-# v2.1  — with 6 integrated patches
+# v2.2  — with 8 integrated patches
 # ==============================================================================
 #
-# WHAT'S NEW (v2.1):
-# PATCH #6: Safe prompt formatting to prevent KeyErrors from literal braces in schemas.
+# WHAT'S NEW (v2.2):
+# PATCH #7: Fixed metric lookup logic to correctly use original vocab keys.
+# PATCH #8: Correctly passed API key to the final narrative generation stage.
 #
-# PREVIOUS PATCHES (v2.0):
-# PATCH #1: Robust PDB payload guard for large/single-frame PDBs (prevents timeouts).
-# PATCH #2: Final report guard when no valid RMSDs are present (no TypeError).
-# PATCH #3: Canonical aliasing layer for sources and artifact roles.
-# PATCH #4: Canonical metric aliasing (e.g., "final_RMSD_A" <-> "best_final_RMSD_A").
+# PREVIOUS PATCHES (v2.1):
+# PATCH #6: Safe prompt formatting to prevent KeyErrors from literal braces in schemas.
 # PATCH #5: Schema auto-repair for findings.json to normalize aliases and enums.
+# PATCH #4: Canonical metric aliasing (e.g., "final_RMSD_A" <-> "best_final_RMSD_A").
+# PATCH #3: Canonical aliasing layer for sources and artifact roles.
+# PATCH #2: Final report guard when no valid RMSDs are present (no TypeError).
+# PATCH #1: Robust PDB payload guard for large/single-frame PDBs (prevents timeouts).
 #
 # WORKFLOW:
 # 1) Clone repo
@@ -433,12 +435,17 @@ def call_gemini_with_retry(model, payload, max_retries=3, timeout=300):
     return {"error": "API failed after all retries"}
 
 # --------------------------- Metric & Source Lookup --------------------------
+# --- PATCH #7: FIX FOR METRIC LOOKUP LOGIC ---
 def get_metric_from_sources(metric: str, nums: Dict, vocab: Dict) -> Tuple[Optional[Any], Optional[str]]:
-    # PATCH #4: normalize metric and sources
+    # The `metric` variable passed in is the ORIGINAL name from the vocab declaration
+    # We normalize it here to get the CANONICAL name for the key_map lookup
     metric_norm = normalize_metric_name(metric)
+
+    # Use the ORIGINAL metric name to look up its own definition in the vocab
     preferred = [normalize_source_name(s) for s in (vocab.get(metric, {}) or {}).get("preferred_sources", [])]
     preferred = [s for s in preferred if s]  # drop non-canonical
-    # Key map into our numeric store
+
+    # Key map into our numeric store (uses CANONICAL names)
     key_map = {
         "md": {
             "best_final_RMSD_A": "md_best_rmsd",
@@ -458,6 +465,7 @@ def get_metric_from_sources(metric: str, nums: Dict, vocab: Dict) -> Tuple[Optio
         },
     }
     for source in preferred:
+        # Use the CANONICAL name to look up the key for the `nums` dictionary
         key = key_map.get(source, {}).get(metric_norm)
         if key and nums.get(key) is not None:
             return nums[key], source
@@ -483,11 +491,21 @@ def evaluate_constraints(constraints: List[Dict], nums: Dict, vocab: Dict) -> Tu
     if not constraints: return "NO_EVALUABLE_CONSTRAINTS", []
     results, any_dev, any_eval = [], False, False
     for const in constraints:
-        metric = normalize_metric_name(const.get("metric"))
+        # Use the REPAIRED metric name from the constraint for evaluation
+        metric_in_constraint = normalize_metric_name(const.get("metric"))
         op, value, tol = const.get("op"), const.get("value"), const.get("tolerance", 0.0)
-        actual, source = get_metric_from_sources(metric, nums, vocab)
+
+        # Find the original metric key in the vocab that aliases to our canonical name
+        original_metric_key = const.get("metric") # Fallback
+        for k in vocab.keys():
+            if normalize_metric_name(k) == metric_in_constraint:
+                original_metric_key = k
+                break
+
+        actual, source = get_metric_from_sources(original_metric_key, nums, vocab)
+
         if actual is None:
-            results.append({"constraint": const, "status": "NOT_EVALUATED", "reason": f"Metric '{metric}' not found."})
+            results.append({"constraint": const, "status": "NOT_EVALUATED", "reason": f"Metric '{metric_in_constraint}' not found."})
             continue
         any_eval = True
         ok = apply_op(actual, op, value, tol)
@@ -628,8 +646,11 @@ def _auto_repair_findings(doc: Dict[str, Any]) -> Dict[str, Any]:
                     changes.append(f"{path_hint}.constraints.metric: '{m}' -> '{nm}'")
 
     # Thesis constraints
-    thesis = ((repaired.get("thesis") or {}).get("canonical_field_claim") or {})
-    fix_constraints(thesis.get("constraints"), "thesis")
+    thesis_claim = ((repaired.get("thesis") or {}).get("canonical_field_claim") or {})
+    fix_constraints(thesis_claim.get("constraints"), "thesis.canonical_field_claim")
+    for constraint in thesis_claim.get("constraints", []):
+        fix_constraints(constraint.get("where"), "thesis.canonical_field_claim.where")
+
 
     # Findings constraints and artifacts
     for i, run in enumerate(repaired.get("findings", []), start=1):
@@ -767,11 +788,10 @@ def run_verification_engine(findings_path: str, root_dir: str, model: Any) -> Di
             f"CLAIM:\n{claim_text}\n\nEVIDENCE:\n{json.dumps([{'file': a.get('file'), 'analysis': a.get('analysis')} for a in analyses])[:45000]}\n\nSCHEMA: {{\"rationale\":\"string\",\"evidence_citations\":[\"string\",...]}}"
         )
 
-        # Key numbers by canonical metric names from metrics_vocabulary
+        # Key numbers by original metric names from metrics_vocabulary
         key_numbers = {}
         for metric in (vocab.keys() if isinstance(vocab, dict) else []):
-            m_norm = normalize_metric_name(metric)
-            key_numbers[metric] = get_metric_from_sources(m_norm, nums, vocab)[0]
+            key_numbers[metric] = get_metric_from_sources(metric, nums, vocab)[0]
 
         report.append({
             "run_id": run_id,
@@ -800,27 +820,42 @@ def run_verification_engine(findings_path: str, root_dir: str, model: Any) -> Di
 def evaluate_thesis(thesis_cfg, per_run_numbers):
     if not thesis_cfg or not (cons := thesis_cfg.get("constraints")):
         return {"present": False}
-    c0 = cons[0]
-    agg, where, op, val = c0.get("aggregation"), c0.get("where", []), c0.get("op"), c0.get("value")
-    if agg != "count_runs_meeting":
-        return {"present": True, "satisfied": None, "explanation": f"Unsupported aggregator '{agg}'."}
 
-    def run_meets(kn):
-        for w in where:
-            m = normalize_metric_name(w.get("metric"))
-            if apply_op(kn.get(m), w.get("op"), w.get("value"), w.get("tolerance", 0.0)) is not True:
-                return False
-        return True
+    # Handle multiple constraints in the thesis
+    all_results = []
+    for constraint in cons:
+        agg, where, op, val = constraint.get("aggregation"), constraint.get("where", []), constraint.get("op"), constraint.get("value")
+        if agg != "count_runs_meeting":
+            all_results.append({"present": True, "satisfied": None, "explanation": f"Unsupported aggregator '{agg}'."})
+            continue
 
-    count_meeting = sum(1 for kn in per_run_numbers if run_meets(kn))
-    sat = apply_op(count_meeting, op, val, 0.0)
+        def run_meets(kn):
+            for w in where:
+                m = normalize_metric_name(w.get("metric"))
+                # Use the canonical metric name for lookup in per_run_numbers
+                if apply_op(kn.get(m), w.get("op"), w.get("value"), w.get("tolerance", 0.0)) is not True:
+                    return False
+            return True
+
+        count_meeting = sum(1 for kn in per_run_numbers if run_meets(kn))
+        sat = apply_op(count_meeting, op, val, 0.0)
+        all_results.append({
+            "satisfied": bool(sat),
+            "count_meeting": count_meeting,
+            "required": {"op": op, "value": val},
+            "explanation": f"{count_meeting} runs meet filter; require {op} {val}."
+        })
+
+    # Combine results: satisfied if ALL constraints are satisfied
+    final_satisfied = all(r.get("satisfied", False) for r in all_results)
+    explanations = " | ".join(r.get("explanation", "") for r in all_results)
     return {
         "present": True,
-        "satisfied": bool(sat),
-        "count_meeting": count_meeting,
-        "required": {"op": op, "value": val},
-        "explanation": f"{count_meeting} runs meet filter; require {op} {val}."
+        "satisfied": final_satisfied,
+        "explanation": explanations,
+        "details": all_results
     }
+
 
 def generate_narrative(api_key, model_name, project, thesis, runs_rows_md, exec_summary_md):
     if not api_key or not GEMINI_AVAILABLE:
@@ -901,7 +936,8 @@ def write_final_report(findings_doc, verification_report, api_key, out_md="Bioph
     table_md = "| " + " | ".join(headers) + " |\n| " + " | ".join([":--" for _ in headers]) + " |\n" + \
                "\n".join("| " + " | ".join(map(str,r)) + " |" for r in rows)
 
-    narrative = generate_narrative(os.getenv("GEMINI_API_KEY"), MODEL_NAME, project, thesis_cfg, table_md, exec_summary_md)
+    # --- PATCH #8: PASS API KEY TO NARRATIVE FUNCTION ---
+    narrative = generate_narrative(api_key, MODEL_NAME, project, thesis_cfg, table_md, exec_summary_md)
     md_content = (
         f"# Biophysics Final Report\n\n**Project:** {project}\n\n"
         f"## Executive Summary (deterministic)\n{exec_summary_md}\n\n"
