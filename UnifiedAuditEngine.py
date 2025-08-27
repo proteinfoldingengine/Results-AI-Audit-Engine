@@ -1,18 +1,17 @@
 # ==============================================================================
 # Unified Audit Engine (p53/MECP2-ready)
-# v2.0  — with 5 integrated patches
+# v2.1  — with 6 integrated patches
 # ==============================================================================
 #
-# WHAT'S NEW (v2.0):
+# WHAT'S NEW (v2.1):
+# PATCH #6: Safe prompt formatting to prevent KeyErrors from literal braces in schemas.
+#
+# PREVIOUS PATCHES (v2.0):
 # PATCH #1: Robust PDB payload guard for large/single-frame PDBs (prevents timeouts).
 # PATCH #2: Final report guard when no valid RMSDs are present (no TypeError).
-# PATCH #3: Canonical aliasing layer
-#           - preferred_sources aliases (e.g., "md_report" -> "md")
-#           - artifact role aliases; unknown-but-expected extra roles treated as AUX and skipped cleanly
-# PATCH #4: Canonical metric aliasing
-#           - "final_RMSD_A" <-> "best_final_RMSD_A" (and Rg) so constraints & thesis filters work across projects
-# PATCH #5: Schema auto-repair + warnings
-#           - findings.json is normalized in-memory (no file rewrite) so engine is tolerant but precise; all changes logged
+# PATCH #3: Canonical aliasing layer for sources and artifact roles.
+# PATCH #4: Canonical metric aliasing (e.g., "final_RMSD_A" <-> "best_final_RMSD_A").
+# PATCH #5: Schema auto-repair for findings.json to normalize aliases and enums.
 #
 # WORKFLOW:
 # 1) Clone repo
@@ -271,6 +270,20 @@ OUTPUT: JSON only.
 # SECTION 1: VERIFICATION ENGINE LOGIC
 # ==============================================================================
 
+# --- PATCH #6: FIX FOR PROMPT FORMATTING KEYERROR ---
+def _safe_prompt_format(template: str, **kwargs) -> str:
+    """
+    Safely format a template that includes literal { } (e.g., JSON SCHEMA blocks).
+    We escape all braces, then unescape our two placeholders.
+    """
+    # Step 1: escape everything
+    esc = template.replace("{", "{{").replace("}", "}}")
+    # Step 2: re-enable the two placeholders we actually support
+    esc = esc.replace("{{FILE_CONTENT}}", "{FILE_CONTENT}")
+    esc = esc.replace("{{LOCAL_SUMMARY}}", "{LOCAL_SUMMARY}")
+    # Step 3: standard format
+    return esc.format(**kwargs)
+
 def safe_text_snippet(s: str, max_bytes: int, head: int = 200, tail: int = 200) -> str:
     b = s.encode("utf-8", errors="ignore")
     if len(b) <= max_bytes:
@@ -439,7 +452,7 @@ def get_metric_from_sources(metric: str, nums: Dict, vocab: Dict) -> Tuple[Optio
             "runs_count": "raw_runs",
         },
         "diagnostics_csv": {
-            "best_final_RMSD_A": "ts_final_rmsd",   # final of timeseries
+            "best_final_RMSD_A": "ts_final_rmsd",  # final of timeseries
             "best_final_Rg_A": "ts_final_rg",
             "median_salt_bridges": "ts_median_salt_bridges",
         },
@@ -480,7 +493,7 @@ def evaluate_constraints(constraints: List[Dict], nums: Dict, vocab: Dict) -> Tu
         ok = apply_op(actual, op, value, tol)
         delta = float(actual) - float(value) if actual is not None and value is not None else None
         results.append({"constraint": const, "status": "CONFIRMED" if ok else "DEVIATION",
-                        "actual_value": actual, "source": source, "delta": delta})
+                          "actual_value": actual, "source": source, "delta": delta})
         if ok is False: any_dev = True
     if not any_eval: return "NO_EVALUABLE_CONSTRAINTS", results
     return "CONFIRMED_WITH_DEVIATIONS" if any_dev else "ALL_CONFIRMED", results
@@ -494,7 +507,7 @@ def precheck_and_cross_validate(analyses):
     for a in analyses:
         role, an, loc = a.get("role_key"), a.get("analysis", {}), a.get("local_summary", {}) or {}
         if not isinstance(an, dict): continue
-        if role == "md": 
+        if role == "md":
             nums.update({
                 "md_best_rmsd": an.get("best_final_RMSD_A"),
                 "md_best_rg": an.get("best_final_Rg_A"),
@@ -628,7 +641,7 @@ def _auto_repair_findings(doc: Dict[str, Any]) -> Dict[str, Any]:
         arts = run.get("artifacts") or []
         for a in arts:
             role = a.get("role")
-            if not role: 
+            if not role:
                 continue
             new_role, is_aux = normalize_role_name(role)
             if new_role != role:
@@ -701,16 +714,21 @@ def run_verification_engine(findings_path: str, root_dir: str, model: Any) -> Di
                         local_summary = summarize_timeseries_csv_from_df(df)
                     else:
                         local_summary = summarize_by_param_csv_from_df(df)
-                    payload = PROMPT_LIBRARY[role_key].format(
+                    # --- PATCH #6 APPLIED HERE ---
+                    payload = _safe_prompt_format(
+                        PROMPT_LIBRARY[role_key],
                         FILE_CONTENT=csv_focus_minimal(df),
                         LOCAL_SUMMARY=json.dumps(local_summary)
                     )
                 elif role_key == "pdb":
                     snippet, frames = pdb_stratified_snippet(text or "")
-                    payload = PROMPT_LIBRARY[role_key].format(FILE_CONTENT=snippet)
+                    # --- PATCH #6 APPLIED HERE ---
+                    payload = _safe_prompt_format(PROMPT_LIBRARY[role_key], FILE_CONTENT=snippet)
                     local_summary = {"pdb_sampled_frames": frames}
                 elif role_key == "md":
-                    payload = PROMPT_LIBRARY[role_key].format(
+                    # --- PATCH #6 APPLIED HERE ---
+                    payload = _safe_prompt_format(
+                        PROMPT_LIBRARY[role_key],
                         FILE_CONTENT=safe_text_snippet(text or "", MAX_PAYLOAD_SIZE_BYTES),
                         LOCAL_SUMMARY="{}"
                     )
