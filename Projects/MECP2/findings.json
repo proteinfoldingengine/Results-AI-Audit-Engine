@@ -2,35 +2,25 @@
   "schema_version": "2.2",
   "project": "MECP2 Rett Syndrome MBD Mutation Campaign",
   "metrics_vocabulary": {
-    "final_RMSD_A": {
-      "unit": "\u00c5",
+    "best_final_RMSD_A": {
+      "unit": "Å",
       "aggregation": "min_across_runs",
-      "preferred_sources": [
-        "md",
-        "raw_csv",
-        "diagnostics_csv"
-      ]
+      "preferred_sources": ["md_report", "raw_csv", "diagnostics_csv"]
     },
     "failures": {
       "unit": "count",
       "aggregation": "from_report_or_zero",
-      "preferred_sources": [
-        "md"
-      ]
+      "preferred_sources": ["md_report"]
     }
   },
   "thesis": {
     "canonical_field_claim": {
-      "statement": "Across the MECP2 MBD\u2013DNA campaign (WT, R106W, R133C), interface-focused annealing protocols consistently recover or maintain a near-native complex (final_RMSD_A \u2264 ~4 \u00c5) and remain stable under post-anneal challenge and physiological salt/pH. Electrostatics tuning modulates convergence speed but is not strictly required to achieve near-native binding.",
+      "statement": "Across the MECP2 MBD–DNA campaign (WT, R106W, R133C), interface-focused annealing protocols consistently recover or maintain a near-native complex (best_final_RMSD_A ≤ ~4 Å) and remain stable under post-anneal challenge and physiological salt/pH. Electrostatics tuning modulates convergence speed but is not strictly required to achieve near-native binding.",
       "constraints": [
         {
           "aggregation": "count_runs_meeting",
           "where": [
-            {
-              "metric": "final_RMSD_A",
-              "op": "<=",
-              "value": 4.0
-            }
+            { "metric": "best_final_RMSD_A", "op": "<=", "value": 4.0 }
           ],
           "op": ">=",
           "value": 5
@@ -38,16 +28,8 @@
         {
           "aggregation": "count_runs_meeting",
           "where": [
-            {
-              "metric": "final_RMSD_A",
-              "op": "<=",
-              "value": 6.0
-            },
-            {
-              "metric": "failures",
-              "op": "==",
-              "value": 0
-            }
+            { "metric": "best_final_RMSD_A", "op": "<=", "value": 6.0 },
+            { "metric": "failures", "op": "==", "value": 0 }
           ],
           "op": ">=",
           "value": 3
@@ -64,61 +46,25 @@
     {
       "run_id": 1,
       "source_folder": "MECP2_MBD_R106W_DNA_Complex_20250826-140938_DELIVERABLE",
-      "purpose": "Gold-standard stability of the R106W MBD\u2013DNA complex.",
+      "purpose": "Gold-standard stability of the R106W MBD–DNA complex.",
       "canonical_claim": {
         "type": "complex_stability",
-        "statement": "R106W MBD\u2013DNA complex is near-native/stable (final_RMSD_A \u2272 4 \u00c5).",
+        "statement": "R106W MBD–DNA complex is near-native/stable (best_final_RMSD_A ≲ 4 Å).",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 4.0,
-            "tolerance": 0.5
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 4.0, "tolerance": 0.5 }
         ],
-        "tags": [
-          "DNA-complex",
-          "R106W",
-          "gold-standard"
-        ]
+        "tags": ["DNA-complex", "R106W", "gold-standard"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_Cx_report_20250826_140938.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_Cx_raw_20250826_140938.csv"
-        },
-        {
-          "role": "by_param_csv",
-          "path": "MECP2_MBD_R106W_DNA_Cx_by_param_20250826_140938.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.png"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.jsonl"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3_final.json"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R106W_DNA_Cx_report_20250826_140938.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R106W_DNA_Cx_raw_20250826_140938.csv" },
+        { "role": "by_param_csv", "path": "MECP2_MBD_R106W_DNA_Cx_by_param_20250826_140938.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.png" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3.jsonl" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_R106W_DNA_Cx_Elec0p1_HB12p0_s3_final.json" }
       ]
     },
     {
@@ -129,56 +75,20 @@
         "type": "protocol_optimization",
         "statement": "Electrostatic tuning identifies regimes improving seating without overconstraining.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 6.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 6.0 }
         ],
-        "tags": [
-          "tuning",
-          "electrostatics",
-          "optimization",
-          "R106W"
-        ]
+        "tags": ["tuning", "electrostatics", "optimization", "R106W"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_report_20250826_152944.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_raw_20250826_152944.csv"
-        },
-        {
-          "role": "by_param_csv",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_by_param_20250826_152944.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.png"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.jsonl"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3_final.json"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R106W_DNA_ElecT_report_20250826_152944.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R106W_DNA_ElecT_raw_20250826_152944.csv" },
+        { "role": "by_param_csv", "path": "MECP2_MBD_R106W_DNA_ElecT_by_param_20250826_152944.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.png" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.jsonl" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3_final.json" }
       ]
     },
     {
@@ -189,57 +99,20 @@
         "type": "protocol_optimization",
         "statement": "Replicate confirms improvement zones for electrostatic parameters.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 6.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 6.0 }
         ],
-        "tags": [
-          "tuning",
-          "electrostatics",
-          "optimization",
-          "R106W",
-          "replicate"
-        ]
+        "tags": ["tuning", "electrostatics", "optimization", "R106W", "replicate"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_report_20250826_164153.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_raw_20250826_164153.csv"
-        },
-        {
-          "role": "by_param_csv",
-          "path": "MECP2_MBD_R106W_DNA_ElecT_by_param_20250826_164153.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.png"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.jsonl"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3_final.json"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R106W_DNA_ElecT_report_20250826_164153.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R106W_DNA_ElecT_raw_20250826_164153.csv" },
+        { "role": "by_param_csv", "path": "MECP2_MBD_R106W_DNA_ElecT_by_param_20250826_164153.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.png" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3.jsonl" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_R106W_DNA_ElecT_ionic_strength_M0p05_Elec0p1_s3_final.json" }
       ]
     },
     {
@@ -248,55 +121,21 @@
       "purpose": "Rescue by InterfaceAnneal protocol.",
       "canonical_claim": {
         "type": "successful_rescue",
-        "statement": "InterfaceAnneal rescues seating to near-native (final_RMSD_A \u2272 4 \u00c5).",
+        "statement": "InterfaceAnneal rescues seating to near-native (best_final_RMSD_A ≲ 4 Å).",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 4.0,
-            "tolerance": 0.5
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 4.0, "tolerance": 0.5 }
         ],
-        "tags": [
-          "DNA-complex",
-          "rescue",
-          "InterfaceAnneal",
-          "R106W"
-        ]
+        "tags": ["DNA-complex", "rescue", "InterfaceAnneal", "R106W"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_IA_report_20250826_152124.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_IA_raw_20250826_152124.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_6b8d0170.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_81c3c955.png"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.jsonl"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7_final.json"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R106W_DNA_IA_report_20250826_152124.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R106W_DNA_IA_raw_20250826_152124.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_6b8d0170.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_81c3c955.png" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.jsonl" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7_final.json" }
       ]
     },
     {
@@ -305,55 +144,21 @@
       "purpose": "Rescue by InterfaceAnneal protocol.",
       "canonical_claim": {
         "type": "successful_rescue",
-        "statement": "InterfaceAnneal rescues seating to near-native (final_RMSD_A \u2272 4 \u00c5).",
+        "statement": "InterfaceAnneal rescues seating to near-native (best_final_RMSD_A ≲ 4 Å).",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 4.0,
-            "tolerance": 0.5
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 4.0, "tolerance": 0.5 }
         ],
-        "tags": [
-          "DNA-complex",
-          "rescue",
-          "InterfaceAnneal",
-          "R106W"
-        ]
+        "tags": ["DNA-complex", "rescue", "InterfaceAnneal", "R106W"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_IA_report_20250826_163334.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_IA_raw_20250826_163334.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_6b8d0170.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_81c3c955.png"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.jsonl"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7_final.json"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R106W_DNA_IA_report_20250826_163334.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R106W_DNA_IA_raw_20250826_163334.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_6b8d0170.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_81c3c955.png" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.jsonl" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_R106W_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7_final.json" }
       ]
     },
     {
@@ -364,43 +169,17 @@
         "type": "challenge_robustness",
         "statement": "Post-anneal challenge retains stability under reduced force constants.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 6.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 6.0 }
         ],
-        "tags": [
-          "challenge",
-          "robustness",
-          "R106W"
-        ]
+        "tags": ["challenge", "robustness", "R106W"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_PAC_report_20250826_205447.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_PAC_raw_20250826_205447.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contac_2266c2f1.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact__7e4039aa.png"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R106W_DNA_PAC_report_20250826_205447.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R106W_DNA_PAC_raw_20250826_205447.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contac_2266c2f1.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_R106W_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact__7e4039aa.png" }
       ]
     },
     {
@@ -411,44 +190,17 @@
         "type": "recovery_pocket_mapping",
         "statement": "Coordinates define a druggable pocket that stabilizes the encounter complex.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 6.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 6.0 }
         ],
-        "tags": [
-          "recovery-pocket",
-          "coordinates",
-          "design-input",
-          "R106W"
-        ]
+        "tags": ["recovery-pocket", "coordinates", "design-input", "R106W"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_RP_report_20250826_221945_381435.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_RP_raw_20250826_221945_381435.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_95896079.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_19dc3797.png"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R106W_DNA_RP_report_20250826_221945_381435.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R106W_DNA_RP_raw_20250826_221945_381435.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_95896079.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_R106W_DNA_RP_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_19dc3797.png" }
       ]
     },
     {
@@ -459,44 +211,17 @@
         "type": "environmental_robustness",
         "statement": "Complex stability persists across salt/pH sweep.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 6.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 6.0 }
         ],
-        "tags": [
-          "salt",
-          "pH",
-          "robustness",
-          "R106W"
-        ]
+        "tags": ["salt", "pH", "robustness", "R106W"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_SaltpH_report_20250826_210532.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_SaltpH_raw_20250826_210532.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_con_c8cf82b9.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_sprin_211f97bf.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_conta_a53083f7.png"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R106W_DNA_SaltpH_report_20250826_210532.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R106W_DNA_SaltpH_raw_20250826_210532.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_con_c8cf82b9.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_sprin_211f97bf.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_conta_a53083f7.png" }
       ]
     },
     {
@@ -507,45 +232,17 @@
         "type": "environmental_robustness",
         "statement": "Complex stability persists at 0.15 M, pH 7.0 condition.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 6.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 6.0 }
         ],
-        "tags": [
-          "salt",
-          "pH",
-          "robustness",
-          "R106W",
-          "condition:0.15M_pH7.0"
-        ]
+        "tags": ["salt", "pH", "robustness", "R106W", "condition:0.15M_pH7.0"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R106W_DNA_SaltpH_report_20250826_214326_803330.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_DNA_SaltpH_raw_20250826_214326_803330.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_con_c8cf82b9.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_sprin_211f97bf.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_conta_a53083f7.png"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R106W_DNA_SaltpH_report_20250826_214326_803330.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R106W_DNA_SaltpH_raw_20250826_214326_803330.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_con_c8cf82b9.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_sprin_211f97bf.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_R106W_DNA_SaltpH_protocol_events_step_0_physicspk_hbond_10p0_physicspk_conta_a53083f7.png" }
       ]
     },
     {
@@ -556,54 +253,20 @@
         "type": "general",
         "statement": "Run exhibits improved seating vs baseline.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 10.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 10.0 }
         ],
-        "tags": [
-          "general",
-          "R106W"
-        ]
+        "tags": ["general", "R106W"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R106W_probe_FINAL_report_20250826_134634.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R106W_probe_FINAL_raw_20250826_134634.csv"
-        },
-        {
-          "role": "by_param_csv",
-          "path": "MECP2_MBD_R106W_probe_FINAL_by_param_20250826_134634.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "best_run_details/contact_maps_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.png"
-        },
-        {
-          "role": "audit_log",
-          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.jsonl"
-        },
-        {
-          "role": "audit_log",
-          "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11_final.json"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R106W_probe_FINAL_report_20250826_134634.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R106W_probe_FINAL_raw_20250826_134634.csv" },
+        { "role": "by_param_csv", "path": "MECP2_MBD_R106W_probe_FINAL_by_param_20250826_134634.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.csv" },
+        { "role": "contact_maps_npz", "path": "best_run_details/contact_maps_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.npz" },
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.png" },
+        { "role": "audit_log", "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.jsonl" },
+        { "role": "audit_log", "path": "best_run_details/_audit/audit_MECP2_MBD_R106W_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11_final.json" }
       ]
     },
     {
@@ -612,47 +275,19 @@
       "purpose": "Rescue by InterfaceAnneal protocol.",
       "canonical_claim": {
         "type": "successful_rescue",
-        "statement": "InterfaceAnneal rescues seating to near-native (final_RMSD_A \u2272 4 \u00c5).",
+        "statement": "InterfaceAnneal rescues seating to near-native (best_final_RMSD_A ≲ 4 Å).",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 4.0,
-            "tolerance": 0.5
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 4.0, "tolerance": 0.5 }
         ],
-        "tags": [
-          "DNA-complex",
-          "rescue",
-          "InterfaceAnneal",
-          "R133C"
-        ]
+        "tags": ["DNA-complex", "rescue", "InterfaceAnneal", "R133C"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R133C_DNA_IA_report_20250826_201134.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R133C_DNA_IA_raw_20250826_201134.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_7905d679.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_a9f63565.png"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R133C_DNA_IA_report_20250826_201134.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R133C_DNA_IA_raw_20250826_201134.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_7905d679.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_R133C_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_a9f63565.png" }
       ]
     },
     {
@@ -663,43 +298,17 @@
         "type": "challenge_robustness",
         "statement": "Post-anneal challenge retains stability under reduced force constants.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 6.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 6.0 }
         ],
-        "tags": [
-          "challenge",
-          "robustness",
-          "R133C"
-        ]
+        "tags": ["challenge", "robustness", "R133C"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_R133C_DNA_PAC_report_20250826_205659.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_R133C_DNA_PAC_raw_20250826_205659.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contac_df0bfeb1.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact__9c6ba420.png"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_R133C_DNA_PAC_report_20250826_205659.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_R133C_DNA_PAC_raw_20250826_205659.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contac_df0bfeb1.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_R133C_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact__9c6ba420.png" }
       ]
     },
     {
@@ -710,104 +319,41 @@
         "type": "protocol_optimization",
         "statement": "AutoAnneal tuning identifies regimes that improve seating.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 6.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 6.0 }
         ],
-        "tags": [
-          "tuning",
-          "anneal",
-          "optimization",
-          "WT"
-        ]
+        "tags": ["tuning", "anneal", "optimization", "WT"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_WT_DNA_AAT_report_20250826_214206_834626.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_WT_DNA_AAT_raw_20250826_214206_834626.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_480de421.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spr_659b57ef.png"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_WT_DNA_AAT_report_20250826_214206_834626.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_WT_DNA_AAT_raw_20250826_214206_834626.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_480de421.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_WT_DNA_AAT_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spr_659b57ef.png" }
       ]
     },
     {
       "run_id": 14,
       "source_folder": "MECP2_MBD_WT_DNA_Complex_20250826-140854_DELIVERABLE",
-      "purpose": "Gold-standard stability of the WT MBD\u2013DNA complex.",
+      "purpose": "Gold-standard stability of the WT MBD–DNA complex.",
       "canonical_claim": {
         "type": "complex_stability",
-        "statement": "WT MBD\u2013DNA complex is near-native and stable (final_RMSD_A \u2272 4 \u00c5).",
+        "statement": "WT MBD–DNA complex is near-native and stable (best_final_RMSD_A ≲ 4 Å).",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 4.0,
-            "tolerance": 0.5
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 4.0, "tolerance": 0.5 }
         ],
-        "tags": [
-          "DNA-complex",
-          "WT",
-          "gold-standard"
-        ]
+        "tags": ["DNA-complex", "WT", "gold-standard"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_WT_DNA_Cx_report_20250826_140854.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_WT_DNA_Cx_raw_20250826_140854.csv"
-        },
-        {
-          "role": "by_param_csv",
-          "path": "MECP2_MBD_WT_DNA_Cx_by_param_20250826_140854.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.png"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.jsonl"
-        },
-        {
-          "role": "audit_log",
-          "path": "audit_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3_final.json"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_WT_DNA_Cx_report_20250826_140854.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_WT_DNA_Cx_raw_20250826_140854.csv" },
+        { "role": "by_param_csv", "path": "MECP2_MBD_WT_DNA_Cx_by_param_20250826_140854.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.png" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3.jsonl" },
+        { "role": "audit_log", "path": "audit_MECP2_MBD_WT_DNA_Cx_Elec0p1_HB12p0_s3_final.json" }
       ]
     },
     {
@@ -816,47 +362,19 @@
       "purpose": "Rescue by InterfaceAnneal protocol.",
       "canonical_claim": {
         "type": "successful_rescue",
-        "statement": "InterfaceAnneal rescues seating to near-native (final_RMSD_A \u2272 4 \u00c5).",
+        "statement": "InterfaceAnneal rescues seating to near-native (best_final_RMSD_A ≲ 4 Å).",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 4.0,
-            "tolerance": 0.5
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 4.0, "tolerance": 0.5 }
         ],
-        "tags": [
-          "DNA-complex",
-          "rescue",
-          "InterfaceAnneal",
-          "WT"
-        ]
+        "tags": ["DNA-complex", "rescue", "InterfaceAnneal", "WT"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_WT_DNA_IA_report_20250826_201316.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_WT_DNA_IA_raw_20250826_201316.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s11.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_sp_98d07168.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s11.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spri_cda30ed2.png"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_WT_DNA_IA_report_20250826_201316.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_WT_DNA_IA_raw_20250826_201316.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s11.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_sp_98d07168.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s11.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_WT_DNA_IA_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spri_cda30ed2.png" }
       ]
     },
     {
@@ -867,43 +385,17 @@
         "type": "challenge_robustness",
         "statement": "Post-anneal challenge retains stability under reduced force constants.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 6.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 6.0 }
         ],
-        "tags": [
-          "challenge",
-          "robustness",
-          "WT"
-        ]
+        "tags": ["challenge", "robustness", "WT"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_WT_DNA_PAC_report_20250826_205949.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_WT_DNA_PAC_raw_20250826_205949.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_0e35f372.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spr_c969a720.png"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_WT_DNA_PAC_report_20250826_205949.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_WT_DNA_PAC_raw_20250826_205949.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_0e35f372.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s7.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spr_c969a720.png" }
       ]
     },
     {
@@ -914,44 +406,17 @@
         "type": "challenge_robustness",
         "statement": "Replicate retains stability; robustness confirmed.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 6.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 6.0 }
         ],
-        "tags": [
-          "challenge",
-          "robustness",
-          "WT",
-          "replicate"
-        ]
+        "tags": ["challenge", "robustness", "WT", "replicate"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_WT_DNA_PAC_report_20250826_214259_307890.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_WT_DNA_PAC_raw_20250826_214259_307890.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_0ae08ea1.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "contact_maps_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "comprehensive_report_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spr_0cabf877.png"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_WT_DNA_PAC_report_20250826_214259_307890.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_WT_DNA_PAC_raw_20250826_214259_307890.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.pdb" },
+        { "role": "diagnostics_csv", "path": "diagnostics_timeseries_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_s_0ae08ea1.csv" },
+        { "role": "contact_maps_npz", "path": "contact_maps_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_springs_0p03_s3.npz" },
+        { "role": "comprehensive_png", "path": "comprehensive_report_MECP2_MBD_WT_DNA_PAC_protocol_events_step_0_physicspk_hbond_10p0_physicspk_contact_spr_0cabf877.png" }
       ]
     },
     {
@@ -962,54 +427,20 @@
         "type": "general",
         "statement": "Run exhibits improved seating vs baseline.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 10.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 10.0 }
         ],
-        "tags": [
-          "general",
-          "WT"
-        ]
+        "tags": ["general", "WT"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_MBD_WT_probe_FINAL_report_20250826_132458.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_MBD_WT_probe_FINAL_raw_20250826_132458.csv"
-        },
-        {
-          "role": "by_param_csv",
-          "path": "MECP2_MBD_WT_probe_FINAL_by_param_20250826_132458.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "best_run_details/contact_maps_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.png"
-        },
-        {
-          "role": "audit_log",
-          "path": "best_run_details/_audit/audit_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.jsonl"
-        },
-        {
-          "role": "audit_log",
-          "path": "best_run_details/_audit/audit_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11_final.json"
-        }
+        { "role": "md_report", "path": "MECP2_MBD_WT_probe_FINAL_report_20250826_132458.md" },
+        { "role": "raw_csv", "path": "MECP2_MBD_WT_probe_FINAL_raw_20250826_132458.csv" },
+        { "role": "by_param_csv", "path": "MECP2_MBD_WT_probe_FINAL_by_param_20250826_132458.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.csv" },
+        { "role": "contact_maps_npz", "path": "best_run_details/contact_maps_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.npz" },
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.png" },
+        { "role": "audit_log", "path": "best_run_details/_audit/audit_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.jsonl" },
+        { "role": "audit_log", "path": "best_run_details/_audit/audit_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11_final.json" }
       ]
     },
     {
@@ -1020,57 +451,23 @@
         "type": "general",
         "statement": "Run exhibits improved seating vs baseline.",
         "constraints": [
-          {
-            "metric": "final_RMSD_A",
-            "op": "<=",
-            "value": 10.0
-          }
+          { "metric": "best_final_RMSD_A", "op": "<=", "value": 10.0 }
         ],
-        "tags": [
-          "general",
-          "WT"
-        ]
+        "tags": ["general", "WT"]
       },
       "artifacts": [
-        {
-          "role": "md_report",
-          "path": "MECP2_WT_probe_FINAL_report_20250826_061724.md"
-        },
-        {
-          "role": "raw_csv",
-          "path": "MECP2_WT_probe_FINAL_raw_20250826_061724.csv"
-        },
-        {
-          "role": "by_param_csv",
-          "path": "MECP2_WT_probe_FINAL_by_param_20250826_061724.csv"
-        },
-        {
-          "role": "trajectory_pdb",
-          "path": "traj_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb"
-        },
-        {
-          "role": "diagnostics_csv",
-          "path": "best_run_details/diagnostics_timeseries_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.csv"
-        },
-        {
-          "role": "contact_maps_npz",
-          "path": "best_run_details/contact_maps_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.npz"
-        },
-        {
-          "role": "comprehensive_png",
-          "path": "best_run_details/comprehensive_report_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.png"
-        },
-        {
-          "role": "audit_log",
-          "path": "best_run_details/_audit/audit_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.jsonl"
-        },
-        {
-          "role": "audit_log",
-          "path": "best_run_details/_audit/audit_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11_final.json"
-        }
+        { "role": "md_report", "path": "MECP2_WT_probe_FINAL_report_20250826_061724.md" },
+        { "role": "raw_csv", "path": "MECP2_WT_probe_FINAL_raw_20250826_061724.csv" },
+        { "role": "by_param_csv", "path": "MECP2_WT_probe_FINAL_by_param_20250826_061724.csv" },
+        { "role": "trajectory_pdb", "path": "traj_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb" },
+        { "role": "diagnostics_csv", "path": "best_run_details/diagnostics_timeseries_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.csv" },
+        { "role": "contact_maps_npz", "path": "best_run_details/contact_maps_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.npz" },
+        { "role": "comprehensive_png", "path": "best_run_details/comprehensive_report_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.png" },
+        { "role": "audit_log", "path": "best_run_details/_audit/audit_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.jsonl" },
+        { "role": "audit_log", "path": "best_run_details/_audit/audit_MECP2_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11_final.json" }
       ]
     }
   ],
   "created_utc": "2025-08-27T04:59:46Z",
-  "dataset_root": "/content/Results-AI-Audit-Engine/Projects/MECP2"
+  "dataset_root": "Projects/MECP2"
 }
