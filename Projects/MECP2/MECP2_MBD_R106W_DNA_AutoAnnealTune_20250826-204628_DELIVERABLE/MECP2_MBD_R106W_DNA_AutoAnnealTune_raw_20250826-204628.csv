@@ -1,4 +1,0 @@
-patch_id,step,RMSD,Rg,phi_rms,E_steric,E_elec,E_hb,E_rama,E_contacts,E_torsion,hb_pairs,num_contacts,salt_bridge_count,total_loss,seed
-"MECP2_MBD_R106W_DNA_AutoAnnealTune_protocol_events[{'step': 0, 'set': {'physicspk_hbond': 10p0, 'physicspk_contact_springs': 0p03}}]_s3",2199.0,3.5072100162506104,11.401633262634276,,,,,,,,,,,107.0500259399414,3
-"MECP2_MBD_R106W_DNA_AutoAnnealTune_protocol_events[{'step': 400, 'set': {'physicspk_hbond': 11p0, 'physicspk_contact_springs': 0p04}}]_s3",,,,,,,,,,,,,,,3
-"MECP2_MBD_R106W_DNA_AutoAnnealTune_protocol_events[{'step': 800, 'set': {'physicspk_hbond': 12p0, 'physicspk_contact_springs': 0p05}}]_s3",,,,,,,,,,,,,,,3
