@@ -1,25 +1,25 @@
 # ==============================================================================
-# Unified p53 Audit Engine
-# V1.9 (Combined Patches)
+# Unified Audit Engine (p53/MECP2-ready)
+# v2.0  — with 5 integrated patches
 # ==============================================================================
 #
-# This single script performs the complete end-to-end audit process for the
-# p53 simulation study.
-#
-# WHAT'S NEW (v1.9 Combined Patches):
-# - Patched PDB handling to prevent timeouts on large single-frame PDBs by
-#   ensuring the payload size check is never bypassed.
-# - Patched final report generation to prevent a TypeError when no valid RMSD
-#   metrics are found across all runs.
+# WHAT'S NEW (v2.0):
+# PATCH #1: Robust PDB payload guard for large/single-frame PDBs (prevents timeouts).
+# PATCH #2: Final report guard when no valid RMSDs are present (no TypeError).
+# PATCH #3: Canonical aliasing layer
+#           - preferred_sources aliases (e.g., "md_report" -> "md")
+#           - artifact role aliases; unknown-but-expected extra roles treated as AUX and skipped cleanly
+# PATCH #4: Canonical metric aliasing
+#           - "final_RMSD_A" <-> "best_final_RMSD_A" (and Rg) so constraints & thesis filters work across projects
+# PATCH #5: Schema auto-repair + warnings
+#           - findings.json is normalized in-memory (no file rewrite) so engine is tolerant but precise; all changes logged
 #
 # WORKFLOW:
-# 1. **Clone Data Repository:** Downloads the entire dataset from GitHub.
-# 2. **Initialize AI Connection:** Prompts for API key if needed, then initializes the model.
-# 3. Loads the `findings.json` manifest from the specified project directory.
-# 4. Analyzes each artifact within that project directory.
-# 5. Deterministically evaluates claims and constraints.
-# 6. Saves all final report artifacts.
-#
+# 1) Clone repo
+# 2) Load & auto-repair findings.json (canonicalize schema enums & aliases)
+# 3) Analyze artifacts deterministically + AI assists
+# 4) Evaluate constraints and thesis
+# 5) Emit comprehensive JSON + concise MD report
 # ==============================================================================
 
 import os, sys, re, json, time, hashlib, logging, random, datetime, statistics
@@ -30,7 +30,7 @@ from PIL import Image
 import requests
 import io
 
-# (Colab helpers are optional; guarded)
+# (Colab helpers)
 try:
     from google.colab import files
     IN_COLAB = True
@@ -62,9 +62,82 @@ MAX_PAYLOAD_SIZE_BYTES = 1_500_000
 PNG_MAX_SIDE = 1600
 MODEL_NAME = "gemini-1.5-pro-latest"
 
-# --- CONFIGURATION: Set your data repository and project name here ---
+# --- CONFIGURATION ---
 GITHUB_DATA_REPO_URL = "https://github.com/ProteinFoldingEngine/Results-AI-Audit-Engine.git"
-PROJECT_NAME = "MECP2"  # <-- CHANGE THIS TO SELECT THE PROJECT TO AUDIT
+PROJECT_NAME = "MECP2"   # "p53" or "MECP2" etc.
+
+# ---------------- Canonical vocab, aliases, and role handling (PATCH #3 & #4 & #5) -------------
+CANONICAL_PREFERRED_SOURCES = {"md", "raw_csv", "diagnostics_csv"}  # schema enum
+SOURCE_ALIASES = {  # input -> canonical
+    "md_report": "md",
+    "markdown": "md",
+    "report": "md",
+    "md": "md",
+    "raw": "raw_csv",
+    "raw_csv": "raw_csv",
+    "diagnostics": "diagnostics_csv",
+    "diagnostics_csv": "diagnostics_csv",
+}
+
+# primary roles we actively analyze (schema enum)
+PRIMARY_ROLES = {
+    "comprehensive_png", "diagnostics_png", "diagnostics_csv",
+    "raw_csv", "by_param_csv", "trajectory_pdb", "md_report"
+}
+
+# Auxiliary roles we *allow* but skip analysis (don’t break schema; just logged)
+AUX_ROLES = {
+    "contact_maps_npz": "aux_contact_maps",
+    "audit_log": "aux_audit_log",
+    "npz_contact_maps": "aux_contact_maps",  # extra guard
+}
+
+# Map roles to prompt-keys (only primary analyzed roles)
+ROLE_TO_PROMPT = {
+    "md_report": "md",
+    "raw_csv": "raw_csv",
+    "by_param_csv": "by_param_csv",
+    "diagnostics_csv": "diagnostics_csv",
+    "comprehensive_png": "comprehensive_png",
+    "diagnostics_png": "diagnostics_png",
+    "trajectory_pdb": "pdb",
+}
+
+# Canonical metric aliases (PATCH #4)
+# We normalize *incoming* metric names and lookups to the canonical keys used in numerics
+METRIC_ALIASES = {
+    # RMSD
+    "final_RMSD_A": "best_final_RMSD_A",
+    "best_final_RMSD_A": "best_final_RMSD_A",
+    "final_rmsd_a": "best_final_RMSD_A",
+    "best_final_rmsd_a": "best_final_RMSD_A",
+    # Rg
+    "final_Rg_A": "best_final_Rg_A",
+    "best_final_Rg_A": "best_final_Rg_A",
+    "final_rg_a": "best_final_Rg_A",
+    "best_final_rg_a": "best_final_Rg_A",
+    # Other metrics pass-through
+    "runs_count": "runs_count",
+    "failures": "failures",
+    "median_salt_bridges": "median_salt_bridges",
+}
+
+def normalize_metric_name(metric: Optional[str]) -> Optional[str]:
+    if not metric: return metric
+    return METRIC_ALIASES.get(metric, metric)
+
+def normalize_source_name(src: str) -> Optional[str]:
+    s = SOURCE_ALIASES.get(src, src)
+    return s if s in CANONICAL_PREFERRED_SOURCES else None
+
+def normalize_role_name(role: str) -> Tuple[str, bool]:
+    """Return (role_key, is_aux). Unknown roles become aux_* so they don't break the flow."""
+    if role in PRIMARY_ROLES:
+        return role, False
+    if role in AUX_ROLES:
+        return AUX_ROLES[role], True
+    # anything else -> generic aux
+    return f"aux_{role}", True
 
 PROMPT_LIBRARY = {
     "md": """ROLE: Senior biophysicist.
@@ -81,14 +154,14 @@ RULES:
 - RMSD thresholds: <=5 Å near_native; 5–12 Å intermediate; >=20 Å misfolded.
 
 SCHEMA:
-{{
+{
   "runs_count": int | null,
   "failures": int | null,
   "best_final_RMSD_A": float | null,
   "best_final_Rg_A": float | null,
   "classification": "near_native" | "intermediate" | "misfolded" | "unknown",
   "table_row_source": "string"
-}}
+}
 OUTPUT: JSON only.
 """,
     "raw_csv": """ROLE: Data auditor.
@@ -103,10 +176,10 @@ LOCAL_SUMMARY:
 {LOCAL_SUMMARY}
 
 SCHEMA:
-{{
+{
   "consistency_check": "consistent"|"inconsistent"|"cannot_determine",
   "notes": "short explanation"
-}}
+}
 OUTPUT: JSON only.
 """,
     "by_param_csv": """ROLE: Computational chemist.
@@ -127,12 +200,12 @@ GUIDE:
 - If you cannot tell from snippet, return "unknown".
 
 SCHEMA:
-{{
+{
   "n_rows": int | null,
   "distinct_param_sets": int | null,
   "sensitivity": "low" | "moderate" | "high" | "unknown",
   "notes": "brief rationale"
-}}
+}
 OUTPUT: JSON only.
 """,
     "diagnostics_csv": """ROLE: Quantitative analyst.
@@ -147,10 +220,10 @@ LOCAL_SUMMARY:
 {LOCAL_SUMMARY}
 
 SCHEMA:
-{{
+{
   "consistency_check": "consistent"|"inconsistent"|"cannot_determine",
   "notes": "short explanation"
-}}
+}
 OUTPUT: JSON only.
 """,
     "pdb": """ROLE: Structural biologist.
@@ -162,43 +235,42 @@ PDB_SNIPPET:
 >>>
 
 SCHEMA:
-{{
+{
   "frames_sampled":[int,...]|null,
   "qualitative_compaction":"yes"|"no"|"uncertain",
   "notes":"string"
-}}
+}
 OUTPUT: JSON only.
 """,
     "comprehensive_png": """ROLE: Structural biologist.
 TASK: Assess comprehensive PNG report (RMSD, Rg, snapshot).
 
 SCHEMA:
-{{
+{
   "time_series_description":"string",
   "final_structure_description":"string",
   "overall_conclusion":"string"
-}}
+}
 OUTPUT: JSON only.
 """,
     "diagnostics_png": """ROLE: Analyst.
 TASK: Assess diagnostics PNG with RMSD/Rg/H-bonds/salt bridges).
 
 SCHEMA:
-{{
+{
   "rmsd_trend":"string",
   "rg_trend":"string",
   "interaction_trends":"string",
   "mechanical_interpretation":"string"
-}}
+}
 OUTPUT: JSON only.
 """
 }
 
 # ==============================================================================
-# SECTION 1: VERIFICATION ENGINE LOGIC (STAGE 2/3)
+# SECTION 1: VERIFICATION ENGINE LOGIC
 # ==============================================================================
 
-# --------------------------- Helpers: safe text / CSV ------------------------
 def safe_text_snippet(s: str, max_bytes: int, head: int = 200, tail: int = 200) -> str:
     b = s.encode("utf-8", errors="ignore")
     if len(b) <= max_bytes:
@@ -248,17 +320,17 @@ def summarize_timeseries_csv_from_df(df: pd.DataFrame) -> Dict[str, Any]:
     rmsd_col = find_col(["rmsd", "rmsd_a", "rmsd(å)", "rmsd(aa)", "final_rmsd"])
     rg_col   = find_col(["rg", "rg_a", "rg(å)", "final_rg"])
     sb_col   = find_col(["salt_bridges", "salt-bridges", "n_salt_bridges", "saltbridges", "n_salt-bridges"])
-    if rmsd_col:
+    if rmsd_col is not None:
         s = pd.to_numeric(df[rmsd_col], errors="coerce").ffill().bfill().dropna()
         if len(s) > 0:
             out["final_RMSD_A"] = round(float(s.iloc[-1]), 5)
             tail = s.iloc[max(0, int(len(s) * 0.9)):]
             out["stabilized"] = bool(tail.std() <= 1.0)
-    if rg_col:
+    if rg_col is not None:
         g = pd.to_numeric(df[rg_col], errors="coerce").ffill().bfill().dropna()
         if len(g) > 0:
             out["final_Rg_A"] = round(float(g.iloc[-1]), 5)
-    if sb_col:
+    if sb_col is not None:
         b = pd.to_numeric(df[sb_col], errors="coerce").ffill().bfill().dropna()
         if len(b) > 0:
             out["median_salt_bridges"] = float(b.median())
@@ -279,13 +351,12 @@ def summarize_by_param_csv_from_df(df: pd.DataFrame) -> Dict[str, Any]:
             out["spread_RMSD_A"] = round(float(s.max() - s.min()), 2)
     return out
 
-# --- PATCH 1: FIX FOR PDB TIMEOUT ---
+# --- PATCH #1: FIX FOR PDB TIMEOUT / PAYLOAD SIZE ---
 def pdb_stratified_snippet(text: str, max_frames: int = 5) -> Tuple[str, List[int]]:
     lines = text.splitlines(True)
     header = [ln for ln in lines if not ln.startswith(("MODEL", "ATOM", "HETATM"))]
     models, cur, in_model = [], [], False
     frames = []
-    
     for ln in lines:
         if ln.startswith("MODEL"):
             in_model = True; cur = [ln]
@@ -293,33 +364,24 @@ def pdb_stratified_snippet(text: str, max_frames: int = 5) -> Tuple[str, List[in
             cur.append(ln); models.append(cur); in_model = False
         elif in_model:
             cur.append(ln)
-
     snippet_content = ""
     if not models:
-        # Fallback for single-frame PDBs
         snippet_content = "".join(lines[:4000])
-        # Frames list is empty for single-frame files
     else:
-        # Logic for multi-frame PDBs
         num = len(models)
         if max_frames < 2:
             idx = [0]
         else:
             idx = sorted(set([0, num - 1] + [int(num * (i / (max_frames - 1))) for i in range(1, max_frames - 1)]))
         frames = [i + 1 for i in idx]
-        
         out_lines = header + [f"REMARK SAMPLED FRAMES: {frames}\n"]
         for i in idx:
             m = models[i]
             ca = [ln for ln in m if " CA " in ln]
             out_lines.extend([m[0]] + ca[:1000] + [m[-1]])
         snippet_content = "".join(out_lines)
-
-    # --- FINAL GUARDRAIL (Now applies to BOTH cases) ---
     if len(snippet_content.encode("utf-8", errors="ignore")) > MAX_PAYLOAD_SIZE_BYTES:
-        # Use the more aggressive text snippet function as a last resort
         snippet_content = safe_text_snippet(snippet_content, MAX_PAYLOAD_SIZE_BYTES)
-        
     return snippet_content, frames
 
 def short_sha256(path: Path) -> str:
@@ -330,21 +392,20 @@ def short_sha256(path: Path) -> str:
 
 # --------------------------- Gemini call with repair --------------------------
 def call_gemini_with_retry(model, payload, max_retries=3, timeout=300):
-    # This function now assumes `model` is a valid, initialized object.
     for attempt in range(max_retries):
         try:
             cfg = {"temperature": 0.0, "response_mime_type": "application/json"}
             logger.info(f"    --> Attempting Gemini API call (Attempt {attempt + 1}/{max_retries})...")
             resp = model.generate_content(payload, generation_config=cfg, request_options={"timeout": timeout})
             logger.info(f"    --> API call returned.")
-            txt = resp.text.strip().replace("```json","").replace("```","")
+            txt = (resp.text or "").strip().replace("```json","").replace("```","")
             try:
                 return json.loads(txt)
             except json.JSONDecodeError:
                 logger.warning("    --> Invalid JSON detected. Attempting one repair pass.")
                 repair = f"Fix JSON only:\n{txt}"
                 r2 = model.generate_content(repair, generation_config=cfg)
-                return json.loads(r2.text.strip().replace("```json","").replace("```",""))
+                return json.loads((r2.text or "").strip().replace("```json","").replace("```",""))
         except (google.api_core.exceptions.ResourceExhausted,
                 google.api_core.exceptions.ServiceUnavailable,
                 google.api_core.exceptions.DeadlineExceeded,
@@ -358,22 +419,33 @@ def call_gemini_with_retry(model, payload, max_retries=3, timeout=300):
             return {"error": str(e)}
     return {"error": "API failed after all retries"}
 
-# --------------------------- Role & Metric Plumbing ---------------------------
-ROLE_TO_PROMPT = {
-    "md_report": "md", "raw_csv": "raw_csv", "by_param_csv": "by_param_csv",
-    "diagnostics_csv": "diagnostics_csv", "comprehensive_png": "comprehensive_png",
-    "diagnostics_png": "diagnostics_png", "trajectory_pdb": "pdb",
-}
-
+# --------------------------- Metric & Source Lookup --------------------------
 def get_metric_from_sources(metric: str, nums: Dict, vocab: Dict) -> Tuple[Optional[Any], Optional[str]]:
-    preferred = vocab.get(metric, {}).get("preferred_sources", [])
+    # PATCH #4: normalize metric and sources
+    metric_norm = normalize_metric_name(metric)
+    preferred = [normalize_source_name(s) for s in (vocab.get(metric, {}) or {}).get("preferred_sources", [])]
+    preferred = [s for s in preferred if s]  # drop non-canonical
+    # Key map into our numeric store
     key_map = {
-        "md": {"best_final_RMSD_A": "md_best_rmsd", "best_final_Rg_A": "md_best_rg", "runs_count": "md_runs", "failures": "md_failures"},
-        "raw_csv": {"best_final_RMSD_A": "raw_best_rmsd", "best_final_Rg_A": "raw_best_rg", "runs_count": "raw_runs"},
-        "diagnostics_csv": {"best_final_RMSD_A": "ts_final_rmsd", "best_final_Rg_A": "ts_final_rg", "median_salt_bridges": "ts_median_salt_bridges"},
+        "md": {
+            "best_final_RMSD_A": "md_best_rmsd",
+            "best_final_Rg_A": "md_best_rg",
+            "runs_count": "md_runs",
+            "failures": "md_failures",
+        },
+        "raw_csv": {
+            "best_final_RMSD_A": "raw_best_rmsd",
+            "best_final_Rg_A": "raw_best_rg",
+            "runs_count": "raw_runs",
+        },
+        "diagnostics_csv": {
+            "best_final_RMSD_A": "ts_final_rmsd",   # final of timeseries
+            "best_final_Rg_A": "ts_final_rg",
+            "median_salt_bridges": "ts_median_salt_bridges",
+        },
     }
     for source in preferred:
-        key = key_map.get(source, {}).get(metric)
+        key = key_map.get(source, {}).get(metric_norm)
         if key and nums.get(key) is not None:
             return nums[key], source
     return None, None
@@ -384,15 +456,22 @@ def apply_op(lhs, op, rhs, tol=0.0):
         lhs, rhs, tol = float(lhs), float(rhs), float(tol or 0.0)
     except (ValueError, TypeError):
         return None
-    ops = {"<=": lambda a, b: a <= b + tol, ">=": lambda a, b: a >= b - tol, "==": lambda a, b: abs(a - b) <= tol,
-           "<": lambda a, b: a < b + tol, ">": lambda a, b: a > b - tol, "!=": lambda a, b: abs(a - b) > tol}
+    ops = {
+        "<=": lambda a, b: a <= b + tol,
+        ">=": lambda a, b: a >= b - tol,
+        "==": lambda a, b: abs(a - b) <= tol,
+        "<":  lambda a, b: a <  b + tol,
+        ">":  lambda a, b: a >  b - tol,
+        "!=": lambda a, b: abs(a - b) > tol
+    }
     return ops.get(op)(lhs, rhs) if op in ops else None
 
 def evaluate_constraints(constraints: List[Dict], nums: Dict, vocab: Dict) -> Tuple[str, List[Dict]]:
     if not constraints: return "NO_EVALUABLE_CONSTRAINTS", []
     results, any_dev, any_eval = [], False, False
     for const in constraints:
-        metric, op, value, tol = const.get("metric"), const.get("op"), const.get("value"), const.get("tolerance", 0.0)
+        metric = normalize_metric_name(const.get("metric"))
+        op, value, tol = const.get("op"), const.get("value"), const.get("tolerance", 0.0)
         actual, source = get_metric_from_sources(metric, nums, vocab)
         if actual is None:
             results.append({"constraint": const, "status": "NOT_EVALUATED", "reason": f"Metric '{metric}' not found."})
@@ -400,40 +479,55 @@ def evaluate_constraints(constraints: List[Dict], nums: Dict, vocab: Dict) -> Tu
         any_eval = True
         ok = apply_op(actual, op, value, tol)
         delta = float(actual) - float(value) if actual is not None and value is not None else None
-        results.append({"constraint": const, "status": "CONFIRMED" if ok else "DEVIATION", "actual_value": actual, "source": source, "delta": delta})
+        results.append({"constraint": const, "status": "CONFIRMED" if ok else "DEVIATION",
+                        "actual_value": actual, "source": source, "delta": delta})
         if ok is False: any_dev = True
     if not any_eval: return "NO_EVALUABLE_CONSTRAINTS", results
     return "CONFIRMED_WITH_DEVIATIONS" if any_dev else "ALL_CONFIRMED", results
 
 def precheck_and_cross_validate(analyses):
-    nums = {"md_best_rmsd": None, "md_best_rg": None, "raw_best_rmsd": None, "raw_best_rg": None, "md_runs": None,
-            "raw_runs": None, "md_failures": None, "diagnostics_stable": None, "ts_final_rmsd": None, "ts_final_rg": None,
-            "ts_median_salt_bridges": None}
+    nums = {
+        "md_best_rmsd": None, "md_best_rg": None, "raw_best_rmsd": None, "raw_best_rg": None,
+        "md_runs": None, "raw_runs": None, "md_failures": None, "diagnostics_stable": None,
+        "ts_final_rmsd": None, "ts_final_rg": None, "ts_median_salt_bridges": None
+    }
     for a in analyses:
         role, an, loc = a.get("role_key"), a.get("analysis", {}), a.get("local_summary", {}) or {}
         if not isinstance(an, dict): continue
-        if role == "md": nums.update({"md_best_rmsd": an.get("best_final_RMSD_A"), "md_best_rg": an.get("best_final_Rg_A"), "md_runs": an.get("runs_count"), "md_failures": an.get("failures")})
-        elif role == "raw_csv": nums.update({"raw_best_rmsd": loc.get("best_final_RMSD_A"), "raw_best_rg": loc.get("best_final_Rg_A"), "raw_runs": loc.get("runs_count")})
-        elif role == "diagnostics_csv": nums.update({"ts_final_rmsd": loc.get("final_RMSD_A"), "ts_final_rg": loc.get("final_Rg_A"), "diagnostics_stable": bool(loc.get("stabilized")), "ts_median_salt_bridges": loc.get("median_salt_bridges")})
+        if role == "md": 
+            nums.update({
+                "md_best_rmsd": an.get("best_final_RMSD_A"),
+                "md_best_rg": an.get("best_final_Rg_A"),
+                "md_runs": an.get("runs_count"),
+                "md_failures": an.get("failures")
+            })
+        elif role == "raw_csv":
+            nums.update({
+                "raw_best_rmsd": loc.get("best_final_RMSD_A"),
+                "raw_best_rg": loc.get("best_final_Rg_A"),
+                "raw_runs": loc.get("runs_count")
+            })
+        elif role == "diagnostics_csv":
+            nums.update({
+                "ts_final_rmsd": loc.get("final_RMSD_A"),
+                "ts_final_rg": loc.get("final_Rg_A"),
+                "diagnostics_stable": bool(loc.get("stabilized")),
+                "ts_median_salt_bridges": loc.get("median_salt_bridges")
+            })
     def status(md, raw, tol=0.5):
         if md is None or raw is None: return {"md": md, "raw": raw, "status": "MISSING"}
         return {"md": md, "raw": raw, "status": "MATCH" if abs(md - raw) <= tol else "MISMATCH"}
-    checks = {"best_RMSD_md_vs_raw": status(nums["md_best_rmsd"], nums["raw_best_rmsd"], 0.5),
-              "best_Rg_md_vs_raw": status(nums["md_best_rg"], nums["raw_best_rg"], 0.25),
-              "runs_count_md_vs_raw": status(nums["md_runs"], nums["raw_runs"], 0.0)}
+    checks = {
+        "best_RMSD_md_vs_raw": status(nums["md_best_rmsd"], nums["raw_best_rmsd"], 0.5),
+        "best_Rg_md_vs_raw":   status(nums["md_best_rg"], nums["raw_best_rg"], 0.25),
+        "runs_count_md_vs_raw": status(nums["md_runs"], nums["raw_runs"], 0.0)
+    }
     discrepancies = [{"metric": k, "details": f"MD={v['md']}, RAW={v['raw']}"} for k, v in checks.items() if v["status"] == "MISMATCH"]
     return nums, checks, discrepancies
 
 # --------------------------- IO Helpers --------------------------------------
-def _resolve_path(root_dir: Path, dataset_root: Optional[str], source_folder: str, artifact_path: str) -> Path:
-    # The root_dir is now the specific project folder, e.g., '.../Projects/p53'
-    # The source_folder is the run-specific folder, e.g., 'p53_R248Q_probe_FINAL_...'
-    # The artifact_path is the file within that run folder, e.g., 'raw_data.csv'
-    # The structure is now root_dir / source_folder / artifact_path
-    base_path = Path(root_dir)
-    run_path = base_path / source_folder
-    artifact_full_path = run_path / artifact_path
-    return artifact_full_path.resolve()
+def _resolve_path(root_dir: Path, source_folder: str, artifact_path: str) -> Path:
+    return (Path(root_dir) / source_folder / artifact_path).resolve()
 
 def _open_artifact(path: Path) -> Tuple[Optional[bytes], Optional[str]]:
     if not path.exists(): return None, None
@@ -453,7 +547,7 @@ def _prepare_png_payload(raw_bytes: bytes):
         logger.warning(f"    - PNG prepare failed: {e}")
         return raw_bytes
 
-# --------------------------- Hybrid Confidence Logic --------------------------
+# --------------------------- Confidence Logic --------------------------------
 def _llm_confidence_assess(model, claim_text, constraint_summary, nums, checks, analyses):
     payload = f"""
 ROLE: Senior structural biophysicist. TASK: Assign a confidence level (HIGH | MEDIUM | LOW).
@@ -475,95 +569,240 @@ SCHEMA: {{"level":"HIGH|MEDIUM|LOW","reasons":"short string"}}
         return {"level": "MEDIUM", "reasons": f"LLM confidence fallback: {e}"}
 
 def _hybrid_confidence_guardrails(llm_level, constraint_summary):
-    lvl = llm_level.upper()
+    lvl = (llm_level or "").upper()
     if constraint_summary == "ALL_CONFIRMED": return "HIGH" if lvl == "HIGH" else "MEDIUM"
     if constraint_summary == "CONFIRMED_WITH_DEVIATIONS": return "MEDIUM"
     if constraint_summary == "NO_EVALUABLE_CONSTRAINTS": return "LOW"
     return lvl if lvl in ("HIGH","MEDIUM","LOW") else "MEDIUM"
 
-# --------------------------- Verification Engine Core --------------------------------------
+# --------------------------- Schema Auto-Repair (PATCH #5) -------------------
+def _auto_repair_findings(doc: Dict[str, Any]) -> Dict[str, Any]:
+    repaired = json.loads(json.dumps(doc))  # deep copy
+    changes = []
+
+    # Fix metrics_vocabulary preferred_sources aliases
+    mv = repaired.get("metrics_vocabulary") or {}
+    for metric_key, mcfg in mv.items():
+        ps = (mcfg or {}).get("preferred_sources", [])
+        new_ps = []
+        for s in ps:
+            ns = normalize_source_name(s)
+            if ns:
+                new_ps.append(ns)
+            else:
+                changes.append(f"metrics_vocabulary.{metric_key}.preferred_sources: dropped non-canonical '{s}'")
+        # default fallbacks if empty
+        if not new_ps:
+            # if metric looks like failures, prefer md; else md->raw->diag
+            if normalize_metric_name(metric_key) == "failures":
+                new_ps = ["md"]
+            else:
+                new_ps = ["md", "raw_csv", "diagnostics_csv"]
+            changes.append(f"metrics_vocabulary.{metric_key}.preferred_sources: filled default {new_ps}")
+        if new_ps != ps:
+            mcfg["preferred_sources"] = new_ps
+            changes.append(f"metrics_vocabulary.{metric_key}.preferred_sources: {ps} -> {new_ps}")
+
+    # Normalize constraints metric names (runs & thesis)
+    def fix_constraints(constraints, path_hint):
+        if not constraints: return
+        for c in constraints:
+            m = c.get("metric")
+            if m:
+                nm = normalize_metric_name(m)
+                if nm != m:
+                    c["metric"] = nm
+                    changes.append(f"{path_hint}.constraints.metric: '{m}' -> '{nm}'")
+
+    # Thesis constraints
+    thesis = ((repaired.get("thesis") or {}).get("canonical_field_claim") or {})
+    fix_constraints(thesis.get("constraints"), "thesis")
+
+    # Findings constraints and artifacts
+    for i, run in enumerate(repaired.get("findings", []), start=1):
+        cpath = f"findings[{i}]"
+        # Fix claim constraints metric names
+        fix_constraints(((run.get("canonical_claim") or {}).get("constraints")), f"{cpath}.canonical_claim")
+
+        # Normalize artifact roles (allow AUX; skip unknown)
+        arts = run.get("artifacts") or []
+        for a in arts:
+            role = a.get("role")
+            if not role: 
+                continue
+            new_role, is_aux = normalize_role_name(role)
+            if new_role != role:
+                a["role"] = new_role
+                changes.append(f"{cpath}.artifacts.role: '{role}' -> '{new_role}'")
+            # AUX roles are kept but not analyzed
+
+    if changes:
+        logger.info("=== SCHEMA AUTO-REPAIR SUMMARY ===")
+        for ch in changes:
+            logger.info(f"  - {ch}")
+        logger.info("=== END AUTO-REPAIR ===")
+    return repaired
+
+# --------------------------- Engine Core -------------------------------------
 def run_verification_engine(findings_path: str, root_dir: str, model: Any) -> Dict[str, Any]:
     try:
-        with open(findings_path, "r", encoding="utf-8") as f: doc = json.load(f)
+        with open(findings_path, "r", encoding="utf-8") as f:
+            raw_doc = json.load(f)
+        # PATCH #5: auto-repair
+        doc = _auto_repair_findings(raw_doc)
         findings, vocab = doc.get("findings", []), doc.get("metrics_vocabulary", {})
-        dataset_root = doc.get("dataset_root")
         root_path = Path(root_dir).resolve()
         logger.info(f"ENGINE: Loaded {len(findings)} runs from {Path(findings_path).name} (schema v{doc.get('schema_version')})")
     except Exception as e:
         logger.critical(f"CRITICAL: Failed to load findings file: {e}", exc_info=True)
         return {}
+
     report = []
     for finding in findings:
-        run_id, source_folder, claim_text = str(finding.get("run_id", "UNK")), finding.get("source_folder", ""), (finding.get("canonical_claim") or {}).get("statement", "")
+        run_id = str(finding.get("run_id", "UNK"))
+        source_folder = finding.get("source_folder", "")
+        claim_text = (finding.get("canonical_claim") or {}).get("statement", "")
         logger.info(f"\n----- RUN {run_id}: {source_folder} -----")
-        artifacts, analyses, missing_artifacts = finding.get("artifacts", []), [], []
+
+        artifacts = finding.get("artifacts", []) or []
+        analyses, missing_artifacts = [], []
+
         for art in artifacts:
-            role_name, rel_path = art.get("role"), art.get("path")
-            role_key = ROLE_TO_PROMPT.get(role_name)
-            if not role_key or not rel_path: continue
-            # The root_dir is now the project directory, so paths are resolved from there
-            resolved_path = _resolve_path(root_path, dataset_root, source_folder, rel_path)
+            role_name_raw, rel_path = art.get("role"), art.get("path")
+            if not rel_path or not role_name_raw:
+                continue
+            # Normalize role (PATCH #3/#5)
+            role_name, is_aux = normalize_role_name(role_name_raw)
+            role_key = ROLE_TO_PROMPT.get(role_name)  # only primary roles are mapped
+            if is_aux or not role_key:
+                # keep note but skip model analysis
+                logger.info(f"  - Skipping AUX/unknown artifact: {rel_path}  (Role: {role_name_raw} -> {role_name})")
+                analyses.append({"file": rel_path, "role_key": "aux", "analysis": {"note": "auxiliary_artifact_skipped"}})
+                continue
+
+            resolved_path = _resolve_path(root_path, source_folder, rel_path)
             raw_bytes, text = _open_artifact(resolved_path)
             if raw_bytes is None and text is None:
-                logger.warning(f"    - MISSING: {rel_path}"); missing_artifacts.append(rel_path); continue
+                logger.warning(f"    - MISSING: {rel_path}")
+                missing_artifacts.append(rel_path)
+                continue
+
             logger.info(f"  - Analyzing artifact: {rel_path}  (Role: {role_key})")
             file_info = {"file": rel_path, "role_key": role_key, "sha": None, "size": None}
             payload, local_summary = None, {}
             try:
-                if role_key in ("comprehensive_png", "diagnostics_png"): payload = [PROMPT_LIBRARY[role_key], _prepare_png_payload(raw_bytes)]
+                if role_key in ("comprehensive_png", "diagnostics_png"):
+                    payload = [PROMPT_LIBRARY[role_key], _prepare_png_payload(raw_bytes)]
                 elif role_key in ("raw_csv", "diagnostics_csv", "by_param_csv"):
                     df = pd.read_csv(io.BytesIO(raw_bytes) if raw_bytes else resolved_path)
-                    if role_key == "raw_csv": local_summary = summarize_raw_csv_from_df(df)
-                    elif role_key == "diagnostics_csv": local_summary = summarize_timeseries_csv_from_df(df)
-                    else: local_summary = summarize_by_param_csv_from_df(df)
-                    payload = PROMPT_LIBRARY[role_key].format(FILE_CONTENT=csv_focus_minimal(df), LOCAL_SUMMARY=json.dumps(local_summary))
+                    if role_key == "raw_csv":
+                        local_summary = summarize_raw_csv_from_df(df)
+                    elif role_key == "diagnostics_csv":
+                        local_summary = summarize_timeseries_csv_from_df(df)
+                    else:
+                        local_summary = summarize_by_param_csv_from_df(df)
+                    payload = PROMPT_LIBRARY[role_key].format(
+                        FILE_CONTENT=csv_focus_minimal(df),
+                        LOCAL_SUMMARY=json.dumps(local_summary)
+                    )
                 elif role_key == "pdb":
-                    snippet, frames = pdb_stratified_snippet(text or ""); payload = PROMPT_LIBRARY[role_key].format(FILE_CONTENT=snippet); local_summary = {"pdb_sampled_frames": frames}
-                elif role_key == "md": payload = PROMPT_LIBRARY[role_key].format(FILE_CONTENT=safe_text_snippet(text or "", MAX_PAYLOAD_SIZE_BYTES), LOCAL_SUMMARY="{}")
-                if resolved_path.exists(): file_info.update({"sha": short_sha256(resolved_path), "size": resolved_path.stat().st_size})
-                
-                # --- NEW: LOG PAYLOAD SIZE ---
+                    snippet, frames = pdb_stratified_snippet(text or "")
+                    payload = PROMPT_LIBRARY[role_key].format(FILE_CONTENT=snippet)
+                    local_summary = {"pdb_sampled_frames": frames}
+                elif role_key == "md":
+                    payload = PROMPT_LIBRARY[role_key].format(
+                        FILE_CONTENT=safe_text_snippet(text or "", MAX_PAYLOAD_SIZE_BYTES),
+                        LOCAL_SUMMARY="{}"
+                    )
+
+                if resolved_path.exists():
+                    file_info.update({"sha": short_sha256(resolved_path), "size": resolved_path.stat().st_size})
+
                 if isinstance(payload, str):
-                    payload_size = len(payload.encode('utf-8', 'ignore'))
-                    logger.info(f"    - Preparing to send text payload of size: {payload_size} bytes.")
+                    logger.info(f"    - Preparing to send text payload of size: {len(payload.encode('utf-8','ignore'))} bytes.")
                 elif isinstance(payload, list) and len(payload) > 1 and isinstance(payload[1], Image.Image):
-                     logger.info(f"    - Preparing to send image payload.")
-                # --- END NEW ---
+                    logger.info(f"    - Preparing to send image payload.")
 
                 an = call_gemini_with_retry(model, payload)
-                file_info.update({"analysis": an, "local_summary": local_summary or None}); analyses.append(file_info)
+                file_info.update({"analysis": an, "local_summary": local_summary or None})
+                analyses.append(file_info)
                 logger.info(f"    - Analysis complete for: {rel_path}")
             except Exception as e:
                 logger.error(f"    - ERROR processing artifact {rel_path}: {e}", exc_info=True)
                 analyses.append({"file": rel_path, "role_key": role_key, "analysis": {"error": f"processing_failed: {e}"}})
+
         nums, checks, discrepancies = precheck_and_cross_validate(analyses)
         constraints = (finding.get("canonical_claim") or {}).get("constraints", [])
         run_constraint_summary, constraint_results = evaluate_constraints(constraints, nums, vocab)
-        verdict = "CONFIRMED" if run_constraint_summary == "ALL_CONFIRMED" else "DEVIATION" if run_constraint_summary == "CONFIRMED_WITH_DEVIATIONS" else "INDETERMINATE"
+        verdict = "CONFIRMED" if run_constraint_summary == "ALL_CONFIRMED" else \
+                  "DEVIATION" if run_constraint_summary == "CONFIRMED_WITH_DEVIATIONS" else \
+                  "INDETERMINATE"
         logger.info(f"  - Deterministic Verdict: {verdict}")
+
+        # Confidence (LLM + guardrails)
         llm_conf = _llm_confidence_assess(model, claim_text, run_constraint_summary, nums, checks, analyses)
-        conf = _hybrid_confidence_guardrails(llm_conf["level"], run_constraint_summary)
-        rationale = call_gemini_with_retry(model, f"CLAIM:\n{claim_text}\n\nEVIDENCE:\n{json.dumps([{'file': a.get('file'), 'analysis': a.get('analysis')} for a in analyses])[:45000]}\n\nSCHEMA: {{\"rationale\":\"string\",\"evidence_citations\":[\"string\",...]}}")
-        key_numbers = {metric: get_metric_from_sources(metric, nums, vocab)[0] for metric in vocab.keys()}
-        report.append({"run_id": run_id, "claim_verified": claim_text, "independent_analyses": analyses,
-                       "biophysics_verification": {"verdict": verdict, "constraint_summary": run_constraint_summary, "rationale": rationale.get("rationale", ""),
-                                                   "key_numbers": key_numbers, "constraint_evaluations": constraint_results, "evidence_citations": rationale.get("evidence_citations", [])},
-                       "data_QA": {"cross_checks": checks, "confidence": {"level": conf, "drivers": [llm_conf.get("reasons")]},
-                                   "qa_issues": [{"missing_artifacts": missing_artifacts}, {"md_raw_discrepancies": discrepancies}] if missing_artifacts or discrepancies else []}})
+        conf = _hybrid_confidence_guardrails(llm_conf.get("level","MEDIUM"), run_constraint_summary)
+
+        # Rationale (compact)
+        rationale = call_gemini_with_retry(
+            model,
+            f"CLAIM:\n{claim_text}\n\nEVIDENCE:\n{json.dumps([{'file': a.get('file'), 'analysis': a.get('analysis')} for a in analyses])[:45000]}\n\nSCHEMA: {{\"rationale\":\"string\",\"evidence_citations\":[\"string\",...]}}"
+        )
+
+        # Key numbers by canonical metric names from metrics_vocabulary
+        key_numbers = {}
+        for metric in (vocab.keys() if isinstance(vocab, dict) else []):
+            m_norm = normalize_metric_name(metric)
+            key_numbers[metric] = get_metric_from_sources(m_norm, nums, vocab)[0]
+
+        report.append({
+            "run_id": run_id,
+            "claim_verified": claim_text,
+            "independent_analyses": analyses,
+            "biophysics_verification": {
+                "verdict": verdict,
+                "constraint_summary": run_constraint_summary,
+                "rationale": rationale.get("rationale", ""),
+                "key_numbers": key_numbers,
+                "constraint_evaluations": constraint_results,
+                "evidence_citations": rationale.get("evidence_citations", [])
+            },
+            "data_QA": {
+                "cross_checks": checks,
+                "confidence": {"level": conf, "drivers": [llm_conf.get("reasons")]},
+                "qa_issues": [{"missing_artifacts": missing_artifacts}, {"md_raw_discrepancies": discrepancies}] if missing_artifacts or discrepancies else []
+            }
+        })
     return {"comprehensive_verification_report": report}
 
 # ==============================================================================
-# SECTION 2: NARRATIVE ENGINE LOGIC (STAGE 4)
+# SECTION 2: THESIS EVAL + REPORTING
 # ==============================================================================
 
 def evaluate_thesis(thesis_cfg, per_run_numbers):
-    if not thesis_cfg or not (cons := thesis_cfg.get("constraints")): return {"present": False}
-    c0, agg, where, op, val = cons[0], cons[0].get("aggregation"), cons[0].get("where", []), cons[0].get("op"), cons[0].get("value")
-    if agg != "count_runs_meeting": return {"present": True, "satisfied": None, "explanation": f"Unsupported aggregator '{agg}'."}
-    def run_meets(kn): return all(apply_op(kn.get(w.get("metric")), w.get("op"), w.get("value"), w.get("tolerance", 0.0)) for w in where)
+    if not thesis_cfg or not (cons := thesis_cfg.get("constraints")):
+        return {"present": False}
+    c0 = cons[0]
+    agg, where, op, val = c0.get("aggregation"), c0.get("where", []), c0.get("op"), c0.get("value")
+    if agg != "count_runs_meeting":
+        return {"present": True, "satisfied": None, "explanation": f"Unsupported aggregator '{agg}'."}
+
+    def run_meets(kn):
+        for w in where:
+            m = normalize_metric_name(w.get("metric"))
+            if apply_op(kn.get(m), w.get("op"), w.get("value"), w.get("tolerance", 0.0)) is not True:
+                return False
+        return True
+
     count_meeting = sum(1 for kn in per_run_numbers if run_meets(kn))
     sat = apply_op(count_meeting, op, val, 0.0)
-    return {"present": True, "satisfied": bool(sat), "count_meeting": count_meeting, "required": {"op": op, "value": val}, "explanation": f"{count_meeting} runs meet filter; require {op} {val}."}
+    return {
+        "present": True,
+        "satisfied": bool(sat),
+        "count_meeting": count_meeting,
+        "required": {"op": op, "value": val},
+        "explanation": f"{count_meeting} runs meet filter; require {op} {val}."
+    }
 
 def generate_narrative(api_key, model_name, project, thesis, runs_rows_md, exec_summary_md):
     if not api_key or not GEMINI_AVAILABLE:
@@ -587,59 +826,96 @@ STRUCTURE: 1) Overview. 2) Bullet findings. 3) Bullet limitations. 4) Bullet nex
         return f"_Generated narrative unavailable (API call failed: {e})._"
 
 def write_final_report(findings_doc, verification_report, api_key, out_md="Biophysics_Final_Report.md", out_json="Biophysics_Final_Report_Summary.json"):
-    project, thesis_cfg, findings = findings_doc.get("project",""), (findings_doc.get("thesis") or {}).get("canonical_field_claim"), findings_doc.get("findings", [])
-    cfg_by_id = {int(r.get("run_id")): r for r in findings if "run_id" in r}
+    project = findings_doc.get("project","")
+    thesis_cfg = (findings_doc.get("thesis") or {}).get("canonical_field_claim")
+    cfg_by_id = {int(r.get("run_id")): r for r in (findings_doc.get("findings", []) or []) if "run_id" in r}
+
     blocks = verification_report.get("comprehensive_verification_report", [])
     headers = ["run_id", "source_folder", "verdict(confidence)", "best_final_RMSD_A", "best_final_Rg_A", "runs_count", "failures"]
     rows, verdict_counts, conf_counts, rmsds, per_run_keynums = [], {"CONFIRMED": 0, "DEVIATION": 0, "INDETERMINATE": 0}, {"HIGH": 0, "MEDIUM": 0, "LOW": 0}, [], []
+
     for b in blocks:
         rid = int(b.get("run_id"))
         biophys, dataqa = b.get("biophysics_verification", {}), b.get("data_QA", {})
         key_numbers = biophys.get("key_numbers", {}) or {}
-        per_run_keynums.append(key_numbers)
-        rmsds.append(key_numbers.get("best_final_RMSD_A"))
-        verdict, conf = (biophys.get("verdict") or "INDETERMINATE").upper(), ((dataqa.get("confidence") or {}).get("level") or "MEDIUM").upper()
+
+        # store per-run canonical metrics for thesis eval
+        per_kn = {}
+        for k, v in key_numbers.items():
+            per_kn[normalize_metric_name(k)] = v
+        per_run_keynums.append(per_kn)
+
+        rmsds.append(per_kn.get("best_final_RMSD_A"))
+        verdict = (biophys.get("verdict") or "INDETERMINATE").upper()
+        conf = ((dataqa.get("confidence") or {}).get("level") or "MEDIUM").upper()
         verdict_counts[verdict] += 1; conf_counts[conf] += 1
-        rows.append([rid, cfg_by_id.get(rid, {}).get("source_folder", ""), f"{verdict} — {conf}", f"{key_numbers.get('best_final_RMSD_A'):.2f}" if key_numbers.get('best_final_RMSD_A') is not None else "—", f"{key_numbers.get('best_final_Rg_A'):.2f}" if key_numbers.get('best_final_Rg_A') is not None else "—", key_numbers.get('runs_count', '—'), key_numbers.get('failures', '—')])
+
+        rows.append([
+            rid,
+            cfg_by_id.get(rid, {}).get("source_folder", ""),
+            f"{verdict} — {conf}",
+            f"{per_kn.get('best_final_RMSD_A'):.2f}" if per_kn.get('best_final_RMSD_A') is not None else "—",
+            f"{per_kn.get('best_final_Rg_A'):.2f}" if per_kn.get('best_final_Rg_A') is not None else "—",
+            per_kn.get('runs_count', '—'),
+            per_kn.get('failures', '—')
+        ])
+
     rows.sort(key=lambda r: int(r[0]))
-    
-    # --- PATCH 2: FIX FOR TYPEERROR ON REPORT GENERATION ---
+
+    # PATCH #2: robust RMSD summary
     valid_rmsds = [v for v in rmsds if v is not None]
-    median_rmsd, min_rmsd, max_rmsd = (statistics.median(valid_rmsds) if valid_rmsds else None, min(valid_rmsds) if valid_rmsds else None, max(valid_rmsds) if valid_rmsds else None)
-    
-    # Pre-format the RMSD summary string with a check for None
-    rmsd_summary_line = f"- RMSD summary: Not Available (no valid RMSD values found)"
-    if median_rmsd is not None and min_rmsd is not None and max_rmsd is not None:
+    median_rmsd = statistics.median(valid_rmsds) if valid_rmsds else None
+    min_rmsd    = min(valid_rmsds) if valid_rmsds else None
+    max_rmsd    = max(valid_rmsds) if valid_rmsds else None
+
+    rmsd_summary_line = "- RMSD summary: Not Available (no valid RMSD values found)"
+    if median_rmsd is not None:
         rmsd_summary_line = f"- RMSD summary: median **{median_rmsd:.2f} Å**, min **{min_rmsd:.2f} Å**, max **{max_rmsd:.2f} Å**"
 
     thesis_eval = evaluate_thesis(thesis_cfg, per_run_keynums)
-    exec_summary_md = (f"- Runs analyzed: **{len(blocks)}**\n"
-                       f"- Verdicts — CONFIRMED: **{verdict_counts['CONFIRMED']}**, DEVIATION: **{verdict_counts['DEVIATION']}**, INDETERMINATE: **{verdict_counts['INDETERMINATE']}**\n"
-                       f"{rmsd_summary_line}\n"  # Use the pre-formatted line
-                       f"- Thesis check: **{'✅ satisfied' if thesis_eval.get('satisfied') else '❌ not satisfied' if thesis_eval.get('satisfied') is False else '—'}** — {thesis_eval.get('explanation','')}")
-    
-    table_md = "| " + " | ".join(headers) + " |\n| " + " | ".join([":--" for _ in headers]) + " |\n" + "\n".join("| " + " | ".join(map(str,r)) + " |" for r in rows)
-    narrative = generate_narrative(api_key, MODEL_NAME, project, thesis_cfg, table_md, exec_summary_md)
-    md_content = (f"# Biophysics Final Report\n\n**Project:** {project}\n\n## Executive Summary (deterministic)\n{exec_summary_md}\n\n"
-                  f"## Run-by-Run Summary\n{table_md}\n\n## Expert Narrative (Gemini)\n{narrative}\n")
-    with open(out_md, "w", encoding="utf-8") as f: f.write(md_content)
-    with open(out_json, "w", encoding="utf-8") as f: json.dump({"verdict_counts": verdict_counts, "confidence_counts": conf_counts, "median_best_RMSD_A": median_rmsd, "thesis_evaluation": thesis_eval}, f, indent=2)
-    logger.info(f"✅ Wrote final reports: {out_md} and {out_json}")
+    exec_summary_md = (
+        f"- Runs analyzed: **{len(blocks)}**\n"
+        f"- Verdicts — CONFIRMED: **{verdict_counts['CONFIRMED']}**, DEVIATION: **{verdict_counts['DEVIATION']}**, INDETERMINATE: **{verdict_counts['INDETERMINATE']}**\n"
+        f"{rmsd_summary_line}\n"
+        f"- Thesis check: **{'✅ satisfied' if thesis_eval.get('satisfied') else '❌ not satisfied' if thesis_eval.get('satisfied') is False else '—'}** — {thesis_eval.get('explanation','')}"
+    )
+
+    table_md = "| " + " | ".join(headers) + " |\n| " + " | ".join([":--" for _ in headers]) + " |\n" + \
+               "\n".join("| " + " | ".join(map(str,r)) + " |" for r in rows)
+
+    narrative = generate_narrative(os.getenv("GEMINI_API_KEY"), MODEL_NAME, project, thesis_cfg, table_md, exec_summary_md)
+    md_content = (
+        f"# Biophysics Final Report\n\n**Project:** {project}\n\n"
+        f"## Executive Summary (deterministic)\n{exec_summary_md}\n\n"
+        f"## Run-by-Run Summary\n{table_md}\n\n"
+        f"## Expert Narrative (Gemini)\n{narrative}\n"
+    )
+
+    with open("Biophysics_Final_Report.md", "w", encoding="utf-8") as f:
+        f.write(md_content)
+    with open("Biophysics_Final_Report_Summary.json", "w", encoding="utf-8") as f:
+        json.dump({
+            "verdict_counts": verdict_counts,
+            "confidence_counts": conf_counts,
+            "median_best_RMSD_A": median_rmsd,
+            "thesis_evaluation": thesis_eval
+        }, f, indent=2)
+
+    logger.info("✅ Wrote final reports: Biophysics_Final_Report.md and Biophysics_Final_Report_Summary.json")
 
 # ==============================================================================
 # SECTION 3: MAIN ORCHESTRATOR
 # ==============================================================================
 
 def main():
-    # --- MODIFIED: Clone GitHub repository and set up project paths ---
     if not GITHUB_DATA_REPO_URL or not PROJECT_NAME:
-        logger.critical("FATAL: GITHUB_DATA_REPO_URL or PROJECT_NAME is not set. Please configure them at the top of the script.")
+        logger.critical("FATAL: GITHUB_DATA_REPO_URL or PROJECT_NAME is not set.")
         return
 
     try:
         repo_name = GITHUB_DATA_REPO_URL.split('/')[-1].replace('.git', '')
         logger.info(f"Preparing to clone data repository: {repo_name}")
-        
+
         if os.path.exists(repo_name):
             logger.info(f"Removing existing directory '{repo_name}'...")
             os.system(f"rm -rf {repo_name}")
@@ -649,19 +925,13 @@ def main():
         if clone_result != 0:
             raise RuntimeError(f"git clone failed with exit code {clone_result}")
         logger.info("✅ Repository cloned successfully.")
-        
-        # --- NEW: Construct paths based on PROJECT_NAME ---
+
         project_path = os.path.join(repo_name, "Projects", PROJECT_NAME)
-        
-        # The root directory for the audit is now the specific project folder
         root_dir = project_path
-        # The findings file is expected to be inside that project folder
         findings_path = os.path.join(project_path, "findings.json")
 
-        # --- NEW: Validate that the project path and findings file exist ---
         if not os.path.isdir(project_path):
-            logger.critical(f"FATAL: Project directory '{PROJECT_NAME}' not found inside the 'Projects' folder of the repository.")
-            logger.critical(f"Looked for: {project_path}")
+            logger.critical(f"FATAL: Project directory '{PROJECT_NAME}' not found in 'Projects'. Looked for: {project_path}")
             return
         if not os.path.exists(findings_path):
             logger.critical(f"FATAL: 'findings.json' not found in project directory: {findings_path}")
@@ -671,63 +941,50 @@ def main():
         logger.critical(f"FATAL: Failed to clone and set up the data repository. Error: {e}")
         return
 
-    # --- API Key Handling (UPDATED) ---
+    # API key
     api_key = os.getenv("GEMINI_API_KEY")
     api_key_path = Path("API_KEY.txt")
-
     if not api_key and api_key_path.exists():
         api_key = api_key_path.read_text().strip()
-    
     if not api_key and IN_COLAB:
         try:
-            # Prompt the user to paste the key directly.
             logger.info("Gemini API Key not found.")
             api_key = input("Please paste your Gemini API key here and press Enter: ")
             if api_key:
-                # Save the key to a file for the current session.
                 api_key_path.write_text(api_key)
                 logger.info("API Key received and saved to API_KEY.txt for this session.")
         except Exception as e:
             logger.warning(f"Could not get API key from user input: {e}")
-            pass
-    
     if not api_key:
-        logger.critical("FATAL: Gemini API key is missing. The audit engine requires the API key to perform AI peer review and cannot proceed.")
+        logger.critical("FATAL: Gemini API key is missing. The audit engine requires the API key for AI peer review.")
         return
 
     logger.info(f"Gemini model: {MODEL_NAME}")
     logger.info(f"Using findings: {findings_path}")
     logger.info(f"Base data root_dir: {root_dir}")
 
-    # --- Model Initialization (Unchanged) ---
-    model = None
-    if GEMINI_AVAILABLE:
-        try:
-            genai.configure(api_key=api_key)
-            model = genai.GenerativeModel(MODEL_NAME)
-            logger.info("Successfully initialized Gemini model.")
-        except Exception as e:
-            logger.critical(f"FATAL: Failed to initialize Gemini model, even with an API key. Error: {e}")
-            return
-    else:
-        logger.critical("FATAL: The 'google-generativeai' library is not installed. Cannot proceed.")
+    # Model init
+    if not GEMINI_AVAILABLE:
+        logger.critical("FATAL: 'google-generativeai' library not installed.")
+        return
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel(MODEL_NAME)
+        logger.info("Successfully initialized Gemini model.")
+    except Exception as e:
+        logger.critical(f"FATAL: Failed to initialize Gemini model: {e}")
         return
 
-    if not model:
-        logger.critical("FATAL: Gemini model could not be initialized. Aborting.")
-        return
-
-    # --- Execute Verification and Narrative (Unchanged) ---
     verification_report = run_verification_engine(findings_path=findings_path, root_dir=root_dir, model=model)
     if not verification_report or not verification_report.get("comprehensive_verification_report"):
         logger.critical("Verification engine failed to produce a report. Aborting.")
         return
-    
-    comprehensive_report_path = "Comprehensive_Verification_Report.json"
-    with open(comprehensive_report_path, "w", encoding="utf-8") as f:
-        json.dump(verification_report, f, indent=2)
-    logger.info(f"✅ Wrote comprehensive verification report: {comprehensive_report_path}")
 
+    with open("Comprehensive_Verification_Report.json", "w", encoding="utf-8") as f:
+        json.dump(verification_report, f, indent=2)
+    logger.info("✅ Wrote comprehensive verification report: Comprehensive_Verification_Report.json")
+
+    # Re-load original (unrepaired) findings for metadata (title/thesis text), but that’s safe
     with open(findings_path, "r", encoding="utf-8") as f:
         findings_doc = json.load(f)
 
