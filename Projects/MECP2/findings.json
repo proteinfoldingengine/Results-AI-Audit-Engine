@@ -13,6 +13,27 @@
     },
     {
       "run_id": null,
+      "source_folder": "MECP2_MBD_R106W_DNA_ElecTuning_20250826-152944_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_R106W_DNA_ElecTuning_20250826-164153_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_R106W_DNA_InterfaceAnneal_20250826-152124_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
       "source_folder": "MECP2_MBD_R106W_DNA_InterfaceAnneal_20250826-163334_DELIVERABLE",
       "purpose": "",
       "canonical_claim": {},
