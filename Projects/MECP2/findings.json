@@ -1,0 +1,120 @@
+{
+  "schema_version": "2.2",
+  "project": "MECP2 Rett Syndrome MBD Mutation Campaign",
+  "metrics_vocabulary": {},
+  "thesis": null,
+  "findings": [
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_R106W_DNA_Complex_20250826-140938_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_R106W_DNA_InterfaceAnneal_20250826-163334_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_R106W_DNA_PostAnnealChallenge_20250826-205447_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_R106W_DNA_RecoveryPocket_R106W_RecoveryPocket_s7_20250826-221945-381435_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_R106W_DNA_SaltpH_20250826-210532_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_R106W_DNA_SaltpH_R106W_salt0.15_pH7.0_s7_20250826-214326-803330_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_R106W_probe_FINAL_20250826-134634_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_R133C_DNA_InterfaceAnneal_20250826-201134_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_R133C_DNA_PostAnnealChallenge_20250826-205659_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_WT_DNA_AutoAnnealTune_WT_Tune_r400_kh14.0_kc0.06_s3_20250826-214206-834626_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_WT_DNA_Complex_20250826-140854_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_WT_DNA_InterfaceAnneal_20250826-201316_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_WT_DNA_PostAnnealChallenge_20250826-205949_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_WT_DNA_PostAnnealChallenge_WT_Challenge_s3_20250826-214259-307890_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_MBD_WT_probe_FINAL_20250826-132458_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    },
+    {
+      "run_id": null,
+      "source_folder": "MECP2_WT_probe_FINAL_20250826-061724_DELIVERABLE",
+      "purpose": "",
+      "canonical_claim": {},
+      "artifacts": []
+    }
+  ]
+}

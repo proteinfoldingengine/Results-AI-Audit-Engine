@@ -1,0 +1,32 @@
+{
+  "patch_id": "MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11",
+  "pdb_id": "3C2I",
+  "chain_id": "A",
+  "sequence_length": 70,
+  "uniprot": {
+    "accession": "P51608",
+    "isoform": 1,
+    "prefer_cached": true,
+    "allow_network": true,
+    "pinned_date": "2025-08-26",
+    "seq_md5": ""
+  },
+  "mutation_numbering": "uniprot",
+  "allow_forced_mutation": false,
+  "steps": 1500,
+  "log_interval": 25,
+  "outputs": {
+    "timeseries_csv": "/content/drive/My Drive/Folding/PharmaApp/plots/MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11/diagnostics_timeseries_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.csv",
+    "trajectory_pdb": "/content/drive/My Drive/Folding/PharmaApp/plots/MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11/trajectory_MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11.pdb",
+    "plots_dir": "/content/drive/My Drive/Folding/PharmaApp/plots/MECP2_MBD_WT_probe_FINAL_Ct0p03_Elec0p05_HB12p0_Rama1p5_s11"
+  },
+  "metrics_final": {
+    "RMSD": 14.380717277526855,
+    "Rg": 12.109405517578125,
+    "phi_rms": 1.9734199047088623,
+    "total_loss": 224.56369018554688
+  },
+  "health": {
+    "loss_explosions": 0
+  }
+}
