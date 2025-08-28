@@ -438,9 +438,89 @@ def write_final_report(findings_doc, verification_report, api_key, out_md="Bioph
 # ==============================================================================
 # SECTION 3: MAIN ORCHESTRATOR
 # ==============================================================================
+
 def main():
-    # This function remains the same as v2.2
-    # ... (main function logic is unchanged)
+    if not GITHUB_DATA_REPO_URL or not PROJECT_NAME:
+        logger.critical("FATAL: GITHUB_DATA_REPO_URL or PROJECT_NAME is not set.")
+        return
+
+    try:
+        repo_name = GITHUB_DATA_REPO_URL.split('/')[-1].replace('.git', '')
+        logger.info(f"Preparing to clone data repository: {repo_name}")
+
+        if os.path.exists(repo_name):
+            logger.info(f"Removing existing directory '{repo_name}'...")
+            os.system(f"rm -rf {repo_name}")
+
+        logger.info(f"Cloning from {GITHUB_DATA_REPO_URL}...")
+        clone_result = os.system(f"git clone {GITHUB_DATA_REPO_URL}")
+        if clone_result != 0:
+            raise RuntimeError(f"git clone failed with exit code {clone_result}")
+        logger.info("✅ Repository cloned successfully.")
+
+        project_path = os.path.join(repo_name, "Projects", PROJECT_NAME)
+        root_dir = project_path
+        findings_path = os.path.join(project_path, "findings.json")
+
+        if not os.path.isdir(project_path):
+            logger.critical(f"FATAL: Project directory '{PROJECT_NAME}' not found in 'Projects'. Looked for: {project_path}")
+            return
+        if not os.path.exists(findings_path):
+            logger.critical(f"FATAL: 'findings.json' not found in project directory: {findings_path}")
+            return
+
+    except Exception as e:
+        logger.critical(f"FATAL: Failed to clone and set up the data repository. Error: {e}")
+        return
+
+    # API key
+    api_key = os.getenv("GEMINI_API_KEY")
+    api_key_path = Path("API_KEY.txt")
+    if not api_key and api_key_path.exists():
+        api_key = api_key_path.read_text().strip()
+    if not api_key and IN_COLAB:
+        try:
+            logger.info("Gemini API Key not found.")
+            api_key = input("Please paste your Gemini API key here and press Enter: ")
+            if api_key:
+                api_key_path.write_text(api_key)
+                logger.info("API Key received and saved to API_KEY.txt for this session.")
+        except Exception as e:
+            logger.warning(f"Could not get API key from user input: {e}")
+    if not api_key:
+        logger.critical("FATAL: Gemini API key is missing. The audit engine requires the API key for AI peer review.")
+        return
+
+    logger.info(f"Gemini model: {MODEL_NAME}")
+    logger.info(f"Using findings: {findings_path}")
+    logger.info(f"Base data root_dir: {root_dir}")
+
+    # Model init
+    if not GEMINI_AVAILABLE:
+        logger.critical("FATAL: 'google-generativeai' library not installed.")
+        return
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel(MODEL_NAME)
+        logger.info("Successfully initialized Gemini model.")
+    except Exception as e:
+        logger.critical(f"FATAL: Failed to initialize Gemini model: {e}")
+        return
+
+    verification_report = run_verification_engine(findings_path=findings_path, root_dir=root_dir, model=model)
+    if not verification_report or not verification_report.get("comprehensive_verification_report"):
+        logger.critical("Verification engine failed to produce a report. Aborting.")
+        return
+
+    with open("Comprehensive_Verification_Report.json", "w", encoding="utf-8") as f:
+        json.dump(verification_report, f, indent=2)
+    logger.info("✅ Wrote comprehensive verification report: Comprehensive_Verification_Report.json")
+
+    # Re-load original (unrepaired) findings for metadata (title/thesis text), but that’s safe
+    with open(findings_path, "r", encoding="utf-8") as f:
+        findings_doc = json.load(f)
+
+    write_final_report(findings_doc, verification_report, api_key)
 
 if __name__ == "__main__":
     main()
