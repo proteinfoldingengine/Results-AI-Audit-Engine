@@ -309,7 +309,6 @@ def generate_final_manuscript(model: Any, findings_doc: Dict):
         return
         
     brr_reports = []
-    # This loop is the process the user asked to be confirmed
     logger.info(f"Reading individual run reports from '{brr_dir.resolve()}' to build appendix...")
     for report_path in sorted(list(brr_dir.glob("AI_BRR_Report_Run_*.json"))):
         try:
@@ -326,7 +325,6 @@ def generate_final_manuscript(model: Any, findings_doc: Dict):
         
     project_thesis = findings_doc.get("thesis", {}).get("canonical_field_claim", {}).get("statement", "N/A")
     
-    # Generate the appendix text by looping through the loaded reports
     appendix_text = format_appendix_from_brrs(brr_reports)
     logger.info("  - Successfully formatted appendix from BRR reports.")
 
