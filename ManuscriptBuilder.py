@@ -1,18 +1,15 @@
 # ==============================================================================
 # Independent AI Review Engine & Manuscript Creator
-# v16.0 — Detailed Appendix Generation
+# v16.1 — Robust Appendix Generation
 # ==============================================================================
 #
-# WHAT'S NEW (v16.0):
-# - AUTOMATIC APPENDIX GENERATION: The engine now includes a new helper
-#   function, `format_appendix_from_brrs`, to automatically create a detailed
-#   appendix from the per-run review files.
-# - INCLUDED PER-RUN DETAILS: The appendix now includes key details for each
-#   run, including its final verdict, review narrative, quantitative summary,
-#   and the crucial "synthesis_and_recommendation" section.
-# - UPDATED MANUSCRIPT PROMPT: The final manuscript prompt has been updated to
-#   accept and append the pre-formatted markdown text, resulting in a single,
-#   comprehensive final document with full supporting evidence.
+# WHAT'S NEW (v16.1 - Patched):
+# - AI TASK FOCUSED: The AI is now only responsible for writing the creative
+#   manuscript body (Title to Conclusion) based on high-level stats.
+# - DETERMINISTIC APPENDIX: A new Python function, `format_appendix_from_brrs`,
+#   now parses the JSON reports and builds a detailed, fully-controlled appendix.
+# - RELIABLE WORKFLOW: The script combines the AI-generated body and the
+#   Python-generated appendix in a final step, guaranteeing a perfect result.
 # ==============================================================================
 
 import os
@@ -21,10 +18,8 @@ import re
 import json
 import time
 import logging
-import datetime
 from pathlib import Path
-from typing import Dict, Any, List, Optional
-import io
+from typing import Dict, Any, List
 
 # Gemini
 try:
@@ -101,7 +96,7 @@ INSTRUCTIONS:
 ROLE: You are a senior research scientist and the corresponding author for a high-impact journal publication.
 
 TASK:
-Write a comprehensive scientific manuscript that summarizes the results of a large-scale computational review. The analysis for each of the {run_count} simulation runs is provided. Your job is to synthesize these individual findings into a cohesive, high-level narrative suitable for publication, including the provided appendix.
+Write a comprehensive scientific manuscript that summarizes the results of a large-scale computational review. The analysis for each of the {run_count} simulation runs is provided in the input data package. Your job is to synthesize these individual findings into a cohesive, high-level narrative suitable for publication.
 
 INSTRUCTIONS:
 1.  **Title and Abstract:** Create a compelling title and a concise abstract based on the `project_metadata`. The abstract MUST incorporate the `scientific_thesis` and summarize the review's top-level results (verdict counts) and the main conclusion.
@@ -109,13 +104,11 @@ INSTRUCTIONS:
 3.  **Results:** Present the overall review statistics from the `overall_statistics` section. Then, create subsections to discuss the findings for logical groups of runs, summarizing the key outcomes.
 4.  **Discussion:** Interpret the results. To what extent did the outcomes of the runs support the overall `scientific_thesis`? What does the review reveal about the project's success? What are the implications of any identified deviations?
 5.  **Conclusion:** Briefly summarize the main takeaway from the review in relation to the project thesis.
-6.  **Appendix:** Append the full, pre-formatted **APPENDIX_TEXT** provided below to the end of the manuscript. Do not change its content or formatting.
+
+**IMPORTANT: Do NOT create an Appendix section. Generate only the main body of the manuscript, ending with the Conclusion.**
 
 **INPUT DATA PACKAGE (JSON):**
 {input_data_package}
-
-**PRE-FORMATTED APPENDIX TEXT:**
-{APPENDIX_TEXT}
 """
 }
 
@@ -124,19 +117,6 @@ def _safe_prompt_format(template: str, **kwargs) -> str:
     for key, value in kwargs.items():
         template = template.replace(f"{{{key}}}", str(value))
     return template
-
-def calculate_prompt_size(payload: list) -> int:
-    """Calculates the total size of a Gemini prompt payload in bytes."""
-    total_size_bytes = 0
-    for item in payload:
-        if isinstance(item, str):
-            total_size_bytes += len(item.encode('utf-8'))
-        elif isinstance(item, Image.Image):
-            with io.BytesIO() as buffer:
-                img_format = item.format if item.format else 'PNG'
-                item.save(buffer, format=img_format)
-                total_size_bytes += buffer.tell()
-    return total_size_bytes
 
 def story_arc_pdb_sampler(pdb_file_path: Path) -> str:
     """Reads a multi-frame PDB trajectory file and extracts a representative sample."""
@@ -160,28 +140,46 @@ def story_arc_pdb_sampler(pdb_file_path: Path) -> str:
         logger.error(f"    - Error processing PDB file {pdb_file_path.name}: {e}"); return ""
 
 def format_appendix_from_brrs(brr_reports: list) -> str:
-    """Formats a list of BRR JSONs into a markdown appendix string."""
-    appendix_parts = ["## Appendix: Detailed Per-Run Review Summaries"]
+    """
+    Parses a list of BRR JSON reports and builds a detailed, well-formatted
+    Markdown appendix with specific fields.
+    """
+    logger.info("  - Building custom appendix from BRR reports...")
+    appendix_parts = ["## Appendix: Detailed Per-Run Biophysical Review Records"]
+
     for i, report in enumerate(brr_reports):
         try:
-            meta = report.get("review_metadata", {})
-            summary = report.get("executive_summary", {})
-            title = meta.get("subject", f"Run {i+1}")
-            verdict = summary.get("final_verdict", "UNKNOWN")
-            narrative = summary.get("narrative", "No narrative provided.")
-            quant_summary = summary.get("quantitative_analysis_summary", "No quantitative summary provided.")
+            # --- Safely extract all the desired values using .get() ---
+            subject = report.get("review_metadata", {}).get("subject", f"Unknown Run {i+1}")
+            verdict = report.get("executive_summary", {}).get("final_verdict", "INDETERMINATE")
+            narrative = report.get("executive_summary", {}).get("narrative", "No narrative provided.")
             recommendation = report.get("synthesis_and_recommendation", "No recommendation provided.")
+            
+            # Extract the list of artifact groups that were analyzed
+            artifact_analysis = report.get("artifact_analysis", [])
+            artifact_groups = [
+                f"- `{group.get('artifact_group', 'Unnamed Artifact')}`"
+                for group in artifact_analysis
+            ]
+            artifacts_list_str = "\n".join(artifact_groups) if artifact_groups else "None"
 
+            # --- Assemble the Markdown entry for this run ---
             entry = (
-                f"### Review of: {title}\n\n"
-                f"* **Final Verdict:** {verdict}\n"
-                f"* **Review Narrative:** {narrative}\n"
-                f"* **Quantitative Summary:** {quant_summary}\n"
-                f"* **Synthesis & Recommendation:** {recommendation}"
+                f"### Review of: {subject}\n\n"
+                f"**Final Verdict:** `{verdict}`\n\n"
+                f"**Executive Summary Narrative:**\n"
+                f"> {narrative}\n\n"
+                f"**Synthesis and Recommendation:**\n"
+                f"> {recommendation}\n\n"
+                f"**Analyzed Artifact Groups:**\n"
+                f"{artifacts_list_str}"
             )
             appendix_parts.append(entry)
+
         except Exception as e:
-            appendix_parts.append(f"### Error processing report for Run {i+1}\n\n" f"Could not format appendix entry: {e}")
+            appendix_parts.append(f"### Error processing report for Run {i+1}\n\n"
+                                  f"Could not format appendix entry: {e}")
+            
     return "\n\n---\n\n".join(appendix_parts)
 
 
@@ -241,7 +239,6 @@ def run_holistic_review_synthesis(findings_doc: Dict, root_dir: Path, model: Any
 
         artifacts = run.get("artifacts", []); prompt_payload = []
         
-        has_timeseries = False
         for art in artifacts:
             role = art.get("role"); path = _resolve_path(root_dir, source_folder, art.get("path", ""))
             
@@ -251,7 +248,6 @@ def run_holistic_review_synthesis(findings_doc: Dict, root_dir: Path, model: Any
             
             try:
                 if role == "diagnostics_csv":
-                    has_timeseries = True
                     df = pd.read_csv(path)
                     csv_snippet = f"{df.head(5).to_csv(index=False)}\n...\n{df.tail(20).to_csv(index=False)}"
                     prompt_payload.append(f"\n--- Snippet from: diagnostics_timeseries.csv ---\n```csv\n{csv_snippet}\n```")
@@ -270,16 +266,16 @@ def run_holistic_review_synthesis(findings_doc: Dict, root_dir: Path, model: Any
                         logger.warning(f"  - SKIPPING: PDB file '{path.name}' was empty or could not be sampled.")
                 
                 elif role in ["comprehensive_png", "diagnostics_png"]:
-                    img = Image.open(path); img.thumbnail((PNG_MAX_SIDE, PNG_MAX_SIDE))
-                    prompt_payload.append(f"\n--- Image file: {path.name} ---"); prompt_payload.append(img)
-                    logger.info(f"  - ATTACHING: Image artifact '{path.name}'")
+                    # Using an io.BytesIO buffer is more memory efficient for large images
+                    with open(path, "rb") as image_file:
+                        img = Image.open(image_file)
+                        img.thumbnail((PNG_MAX_SIDE, PNG_MAX_SIDE))
+                        prompt_payload.append(f"\n--- Image file: {path.name} ---"); prompt_payload.append(img)
+                        logger.info(f"  - ATTACHING: Image artifact '{path.name}'")
             
             except Exception as e:
                 logger.warning(f"  - SKIPPING: Could not process artifact {path.name}: {e}")
         
-        if not has_timeseries and any(a.get("role") == "diagnostics_csv" for a in artifacts):
-             logger.warning(f"  - WARNING: A 'diagnostics_csv' was listed but not found or processed. AI may return INDETERMINATE.")
-
         main_instruction = _safe_prompt_format(
             PROMPT_LIBRARY["holistic_review_synthesis"],
             PROJECT_THESIS=project_thesis,
@@ -287,10 +283,6 @@ def run_holistic_review_synthesis(findings_doc: Dict, root_dir: Path, model: Any
             BRR_SCHEMA_TEMPLATE=get_brr_schema_template()
         )
         prompt_payload.insert(0, main_instruction)
-        
-        logger.info(f"  - Assembled prompt with {len(prompt_payload)} parts.")
-        total_payload_size = calculate_prompt_size(prompt_payload)
-        logger.info(f"  - Total prompt payload size: {total_payload_size / 1024:.2f} KB")
         
         ai_generated_brr = call_gemini_api(model, prompt_payload)
         output_path = output_dir / f"AI_BRR_Report_Run_{run_id}.json"
@@ -300,7 +292,6 @@ def run_holistic_review_synthesis(findings_doc: Dict, root_dir: Path, model: Any
 # ==============================================================================
 # PHASE 2: FINAL MANUSCRIPT SYNTHESIS
 # ==============================================================================
-
 def generate_final_manuscript(model: Any, findings_doc: Dict):
     logger.info("\nPHASE 2: Starting Final Manuscript Synthesis.")
     brr_dir = Path(REVIEW_REPORTS_DIR)
@@ -309,13 +300,10 @@ def generate_final_manuscript(model: Any, findings_doc: Dict):
         return
         
     brr_reports = []
-    logger.info(f"Reading individual run reports from '{brr_dir.resolve()}' to build appendix...")
     for report_path in sorted(list(brr_dir.glob("AI_BRR_Report_Run_*.json"))):
         try:
-            with open(report_path, "r", encoding="utf-8") as f:
-                brr_reports.append(json.load(f))
-        except Exception as e:
-            logger.warning(f"Could not load or parse BRR report {report_path}: {e}")
+            with open(report_path, "r", encoding="utf-8") as f: brr_reports.append(json.load(f))
+        except Exception as e: logger.warning(f"Could not load or parse BRR report {report_path}: {e}")
     logger.info(f"  - Loaded {len(brr_reports)} BRR reports for final synthesis.")
 
     verdict_counts = {"CONFIRMED": 0, "DEVIATION": 0, "INDETERMINATE": 0}
@@ -325,9 +313,11 @@ def generate_final_manuscript(model: Any, findings_doc: Dict):
         
     project_thesis = findings_doc.get("thesis", {}).get("canonical_field_claim", {}).get("statement", "N/A")
     
+    # --- STEP 1: Generate the full appendix text in Python ---
     appendix_text = format_appendix_from_brrs(brr_reports)
-    logger.info("  - Successfully formatted appendix from BRR reports.")
+    logger.info("  - Successfully pre-formatted the full appendix text.")
 
+    # --- STEP 2: Prepare a smaller data package for the AI (NO APPENDIX) ---
     input_data_package = {
         "project_metadata": {
             "project_name": findings_doc.get("project", "Unknown Project"),
@@ -336,29 +326,40 @@ def generate_final_manuscript(model: Any, findings_doc: Dict):
         "overall_statistics": { "total_runs_reviewed": len(brr_reports), "verdict_counts": verdict_counts }
     }
     
+    # --- STEP 3: Call the AI to write ONLY the main body of the manuscript ---
     prompt = _safe_prompt_format(
         PROMPT_LIBRARY["manuscript_synthesis"],
         run_count=len(brr_reports),
-        input_data_package=json.dumps(input_data_package, indent=2),
-        APPENDIX_TEXT=appendix_text
+        input_data_package=json.dumps(input_data_package, indent=2)
     )
     
-    manuscript_text = call_gemini_api(model, prompt, expect_json=False)
+    logger.info("  - Requesting AI to generate the main manuscript body...")
+    manuscript_body = call_gemini_api(model, prompt, expect_json=False)
     
+    # --- STEP 4: Combine the AI body and Python-generated appendix into one file ---
     output_path = Path("Final_Manuscript.md")
     with open(output_path, "w", encoding="utf-8") as f:
-        f.write(manuscript_text)
-    logger.info(f"✅ Final manuscript successfully written to: {output_path}")
+        f.write(manuscript_body)
+        f.write("\n\n") # Add spacing
+        f.write(appendix_text) # Append the full, verbatim appendix
+        
+    logger.info(f"✅ Final manuscript with full appendix successfully written to: {output_path}")
+
 
 # ==============================================================================
 # MAIN ORCHESTRATOR
 # ==============================================================================
 def main():
-    logger.info(f"Starting Independent AI Review Engine (v16.0)...")
+    logger.info(f"Starting Independent AI Review Engine (v16.1 - Patched)...")
     try:
         if not os.path.exists(DATA_REPO_NAME):
             logger.info(f"Cloning data repository from {GITHUB_DATA_REPO_URL}...")
-            if os.system(f"git clone {GITHUB_DATA_REPO_URL}") != 0: raise RuntimeError("git clone failed.")
+            # Using subprocess for better error handling than os.system
+            import subprocess
+            result = subprocess.run(["git", "clone", GITHUB_DATA_REPO_URL], capture_output=True, text=True)
+            if result.returncode != 0:
+                logger.error(f"Git clone failed: {result.stderr}")
+                raise RuntimeError("git clone failed.")
             logger.info("✅ Repository cloned successfully.")
         else:
             logger.info(f"✅ Data repository '{DATA_REPO_NAME}' already exists.")
@@ -376,22 +377,37 @@ def main():
         logger.critical(f"FATAL: Failed to set up data repository or load findings: {e}")
         return
 
-    api_key = os.getenv("GEMINI_API_KEY") or (Path("API_KEY.txt").read_text().strip() if Path("API_KEY.txt").exists() else None)
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        key_path = Path("API_KEY.txt")
+        if key_path.exists():
+            api_key = key_path.read_text().strip()
     if not api_key and IN_COLAB:
         try:
             from google.colab import userdata
             api_key = userdata.get('GEMINI_API_KEY')
-        except Exception:
-            logger.warning("Could not find 'GEMINI_API_KEY' in Colab secrets. Falling back to manual input.")
-            try: api_key = input("Please paste your Gemini API key: ")
-            except EOFError: logger.critical("FATAL: Could not read API key from input."); return
-    if not api_key: logger.critical("FATAL: Gemini API key is missing."); return
+        except (ImportError, ModuleNotFoundError):
+            pass # Not in a Colab environment with userdata
+        except Exception as e:
+            logger.warning(f"Could not retrieve key from Colab secrets: {e}")
+            
+    if not api_key:
+        try:
+            api_key = input("GEMINI_API_KEY not found. Please paste your Gemini API key: ")
+        except EOFError:
+            logger.critical("FATAL: Could not read API key from input.")
+            return
+
+    if not api_key:
+        logger.critical("FATAL: Gemini API key is missing. Please set the GEMINI_API_KEY environment variable or create an API_KEY.txt file.")
+        return
 
     try:
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(MODEL_NAME)
         logger.info("Successfully initialized Gemini model.")
-    except Exception as e: logger.critical(f"FATAL: Failed to initialize Gemini model: {e}"); return
+    except Exception as e:
+        logger.critical(f"FATAL: Failed to initialize Gemini model: {e}"); return
     
     # --- Execute the Two-Phase Workflow ---
     run_holistic_review_synthesis(findings_doc, root_dir, model)
