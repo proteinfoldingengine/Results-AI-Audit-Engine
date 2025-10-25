@@ -1,0 +1,142 @@
+\documentclass[11pt]{article}
+
+% ---------- Packages ----------
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{authblk}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\setlist{nosep}
+
+% ---------- Metadata ----------
+\title{Emergent Coherence and Precision-Controlled Time Evolution in the Unfrozen Kahan Model (Phase~50.1)}
+\author[1]{UQCF--GEM Collaboration}
+\author[2]{Aspradaz Cali}
+\author[3]{ChatGPT (GPT-5) \& Gemini AI}
+\affil[1]{Unified Quantum Coherence Framework -- Geometric Entanglement Model}
+\affil[2]{Principal Investigator}
+\affil[3]{Peer Research and Validation Partners}
+\date{\today}
+
+% ---------- Document ----------
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This study extends the \emph{Unfrozen Kahan} framework into a dynamic stochastic regime that explores how bounded numerical precision~($\varepsilon$) influences coherence in quantum-like Hamiltonian integrations. Phase~50.1 executes a preregistered test to determine whether pink-noise perturbations~($\beta=0.5$) enable stable, integrator-consistent scaling laws (\(\kappa\)-universality) and emergent physical energy scales~(\(E_{\text{unit}}\)). The run is intentionally CPU-limited to expose computational bottlenecks motivating GPU/TPU acceleration.
+\end{abstract}
+
+\section{Objective}
+We test whether correlated noise produces stable~$\Delta t$~power-law scaling in the presence of dynamic error compensation (Kahan). Specific goals:
+\begin{enumerate}[label=\arabic*.]
+  \item Recover \texttt{IntegratorAccepted = True} under pink noise, enabling \(E_{\text{unit}}\) calculation.
+  \item Verify \(\kappa\)-universality across integrators (Strang, Yoshida, RTS1).
+  \item Benchmark CPU limits and justify TPU/GPU ``fast-math'' acceleration.
+\end{enumerate}
+
+\section{Experimental Setup}
+\begin{center}
+\begin{tabular}{@{}lllc@{}}
+\toprule
+Parameter & Symbol & Value & Rationale \\ \midrule
+Noise amplitude & $\sigma$ & $5\times10^{-5}$ & Reduce jitter vs.~Phase~50.0 \\
+Noise color & $\beta$ & 0.5 (pink) & Introduce temporal correlation \\
+Compensator time constant & $\tau$ & 1.0 & Baseline coherence decay \\
+Stochastic coupling & $\eta$ & 0.1 & Moderate dynamical wobble \\
+Damping constant & $\lambda$ & 0.01 & Constrain over-amplification \\
+Precision sweep &  & float16~$\to$~float128 & Audit~F (\(\kappa\)-law) \\
+Integrators &  & Strang~2, Yoshida~4, RTS1~6 & Cross-validate $\Delta t^2$ law \\
+$\Delta t$ grid &  & [0.03,\,0.004] (10 steps) & Detect scaling slope $\alpha\!\approx\!1.7$ \\ \bottomrule
+\end{tabular}
+\end{center}
+
+All preregistration gates~(A--F) remain identical to Phase~50.0 to isolate noise characteristics as the only changed variable.
+
+\section{Methodology}
+\paragraph{Hamiltonian Assembly.} Construct BCH commutator budget~\(C\) with~\(\|C\|_F \approx 1.877\times10^3\).
+
+\paragraph{Matrix Exponentials.}
+Compute \(U(\Delta t)=\exp(-iH\Delta t)\) for each $\Delta t$ and integrator.  
+CPU OpenBLAS performs dense \texttt{expm} calls (0.1–0.4\,s each).
+
+\paragraph{Temporal Kahan Coupling.}
+Update $(s,c)$ per timestep:
+\begin{align}
+y &= x - c, \\
+t &= s + y, \\
+\mathrm{err} &= (t-s) - y, \\
+c &= e^{-\Delta t/\tau} c + \mathrm{err} + \eta\,\xi_t, \\
+s &= t,
+\end{align}
+where $\xi_t$ is pink noise ($\beta=0.5$) filtered via FFT convolution.
+
+\paragraph{Audit Sequence.}
+\begin{itemize}
+  \item \textbf{A.} Validate BCH budget (Hamiltonian complexity).
+  \item \textbf{B/C.} Check integrator scaling fit (\(\Delta E \propto \Delta t^{\alpha}\)).
+  \item \textbf{D.} Precision Gate (\(\kappa' \approx 2.5\times10^{-6}\), $R^2>0.9$).
+  \item \textbf{E.} Cosmology Grid (activated only if B/C and D pass).
+  \item \textbf{F.} \(\kappa\)-Universality fit across integrators.
+\end{itemize}
+
+\paragraph{Diagnostics.}  
+Record \(\kappa', \alpha, R^2, \bar{\gamma}(t), c(t), S(t)\) for each phase.  
+Snapshot: \texttt{phase50\_1\_prereg\_YYYYMMDD\_HHMMSS.json}.
+
+\section{Current Status}
+After $\sim$12\,h on CPU OpenBLAS:
+\begin{itemize}
+\item TensorNetwork path disabled (CPU only).
+\item Build-factor times $\approx$\,0.1–0.3\,s per $\Delta t$ (expected runtime 12–18\,h).
+\item Audit~A complete: $\|C\|_F = 1.877\times10^3$.
+\item Integration of pink-noise loop ongoing; Audit~B/C pending.
+\end{itemize}
+
+\section{Expected Outcomes}
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Hypothesis & Metric & Pass Condition \\ \midrule
+H$_1$: Pink noise stabilizes scaling & $\alpha$ slope & $1.5\le\alpha\le1.8$, $R^2>0.9$ \\
+H$_2$: \(\kappa\)-law invariant & $\kappa'$ variance & $<5\%$ spread \\
+H$_3$: Emergent \(E_{\text{unit}}\) & Audit~E enabled & $E_{\text{unit}}\!\approx\!500$–520\,keV \\
+H$_4$: TPU fast-math reproduces law & precision sweep & same $\kappa$ trend across dtype \\ \bottomrule
+\end{tabular}
+\end{center}
+
+If H$_1$+H$_2$ succeed, Phase~50.2 (deterministic control) will confirm reproducibility; Phase~51 will port to TPU for mixed-precision scaling tests.
+
+\section{Computational Significance}
+This phase exposes why accelerators are essential:
+\begin{itemize}
+\item Matrix-exponential kernels can be batched across $\Delta t$ values.
+\item Pink-noise filtering and coherence updates benefit from tensor cores.
+\item ``Fast-math'' mixed precision becomes a measurable physical parameter in Audit~F, bridging hardware and physics.
+\end{itemize}
+
+Thus Phase~50.1 demonstrates the convergence of \textbf{numerical precision, hardware architecture, and physical interpretation}---the central thesis of UQCF--GEM.
+
+\section{Next Steps}
+\begin{enumerate}[label=\arabic*.]
+  \item Allow Phase~50.1 to finish without interruption.
+  \item Evaluate Audit~B/C (\(\alpha, R^2\)) for \texttt{IntegratorAccepted}.
+  \item If passed: proceed to Phase~51 (TPU port).
+  \item If failed: execute Phase~50.2 (noise-free control).
+\end{enumerate}
+
+\section*{Acknowledgements}
+We thank Grok~AI for peer validation and Gemini for runtime engineering.
+
+\begin{thebibliography}{9}
+\bibitem{Kahan1965}
+W.~M.~Kahan, ``Further Remarks on Reducing Truncation Errors,'' \emph{Communications of the ACM}, 8(1):40–50, 1965.
+
+\bibitem{UQCFGEM}
+A.~Cali et al., ``UQCF--GEM: Temporal Decoherence Audits and the Unfrozen Kahan Equation,'' preprint, 2025.
+\end{thebibliography}
+
+\end{document}
