@@ -1,0 +1,106 @@
+Emergent Coherence and Precision-Controlled Time Evolution in the Unfrozen Kahan Model (Phase 50.1)
+
+Abstract
+
+This study extends the Unfrozen Kahan framework into a dynamic stochastic regime that explores how bounded numerical precision (ε) influences coherence in quantum-like Hamiltonian integrations. Phase 50.1 executes a preregistered test to determine whether pink-noise perturbations (β = 0.5) enable stable, integrator-consistent scaling laws (κ-universality) and emergent physical energy scales (E_unit). The run is intentionally CPU-limited to expose computational bottlenecks motivating GPU/TPU acceleration.
+
+⸻
+
+1  Objective
+
+We aim to test whether smooth, correlated noise allows stable Δt power-law scaling in the presence of dynamic error compensation (Kahan). Specifically:
+	1.	Recover IntegratorAccepted = True under pink noise, enabling calculation of E_unit.
+	2.	Verify κ-universality across integrators (Strang, Yoshida, RTS1).
+	3.	Benchmark CPU limits and justify need for TPU/GPU “fast-math” acceleration.
+
+⸻
+
+2  Experimental Setup
+
+Parameter	Symbol	Value	Rationale
+Noise amplitude	σ	5 × 10⁻⁵	Reduce jitter vs Phase 50.0
+Noise color	β	0.5 (pink)	Introduce temporal correlation
+Compensator time constant	τ	1.0	Baseline coherence decay
+Stochastic coupling	η	0.1	Moderate dynamical wobble
+Lambda (coherence damping)	λ	0.01	Constrain over-amplification
+Precision sweep	float16 → float128	Audit F (κ-law)	
+Integrators	Strang 2nd, Yoshida 4th, RTS1 6th	Cross-validation of Δt² law	
+Δt grid	[0.03 → 0.004] (10 steps)	Detect scaling slope α ≈ 1.7 target	
+
+All gates (A–F) and preregistration logic remain identical to Phase 50.0 to isolate noise characteristics as the only variable.
+
+⸻
+
+3  Methodology
+	1.	Hamiltonian Assembly
+Construct BCH commutator budget C with ‖C‖₍F₎ ≈ 1.877 × 10³.
+	2.	Matrix Exponentials
+Compute U(Δt) = exp(−i H Δt) for each Δt and integrator.
+CPU OpenBLAS performs dense expm calls (0.1–0.4 s each).
+	3.	Temporal Kahan Coupling
+Update s, c per timestep:
+
+y = x - c
+t = s + y
+err = (t - s) - y
+c = exp(-Δt/τ) * c + err + η*ξ_t
+s = t
+
+ξ_t = pink noise (β=0.5) filtered via FFT convolution.
+
+	4.	Audit Sequence
+	•	A Validate BCH budget (Hamiltonian complexity).
+	•	B/C Check integrator scaling fit (ΔE ∝ Δt^α).
+	•	D Precision Gate (κ′ ≈ 2.5 × 10⁻⁶ target R² > 0.9).
+	•	E Cosmology Grid (activated only if B/C & D pass).
+	•	F κ-Universality fit across integrators.
+	5.	Diagnostics
+Record κ′, α, R², γ̄(t), c(t), and entropy S(t) for each phase.
+Snapshot: phase50_1_prereg_YYYYMMDD_HHMMSS.json.
+
+⸻
+
+4  Current Status (12-hour mark)
+	•	TensorNetwork path disabled → CPU OpenBLAS only.
+	•	Build-factor times ≈ 0.1–0.3 s per Δt → expected runtime ≈ 12–18 h.
+	•	Audit A complete (‖C‖₍F₎ = 1.877 × 10³).
+	•	Integration of pink-noise loop ongoing; Audit B/C pending.
+
+⸻
+
+5  Expected Outcomes
+
+Hypothesis	Metric	Pass Condition
+H₁: Pink noise stabilizes integrator scaling	α slope	1.5 ≤ α ≤ 1.8 with R² > 0.9
+H₂: κ-law invariant across integrators	κ′ variance	< 5 % spread
+H₃: Emergent E_unit appears	Audit E enabled	E_unit ≈ 500–520 keV window
+H₄: TPU fast-math reproduces κ-law	Precision scan	same κ trend for float32/bfloat16 vs float64
+
+If H₁ + H₂ succeed, Phase 50.2 (det-noise control) will verify determinism; Phase 51 will port loops to TPU for mixed-precision scaling tests.
+
+⸻
+
+6  Computational Significance
+
+The current bottleneck highlights why TPUs and GPUs are essential:
+	•	Matrix-exponential kernels can be batched across Δt values.
+	•	Pink-noise filtering and coherence updates can exploit tensor cores.
+	•	Fast-math (mixed-precision) perturbations become measurable physical parameters in Audit F (precision-to-coherence mapping).
+
+This marks the convergence of numerical precision, hardware architecture, and physical interpretation—the core thesis of UQCF-GEM.
+
+⸻
+
+7  Next Steps
+	1.	Allow Phase 50.1 to complete uninterrupted.
+	2.	Evaluate Audit B/C for α and R² → IntegratorAccepted status.
+	3.	If passed → proceed to Phase 51 (TPU port).
+	4.	If failed → run Phase 50.2 (noise-free control).
+
+⸻
+
+Acknowledgments
+
+We thank the UQCF-GEM collaboration, Grok AI for peer validation, and Gemini for runtime engineering.
+
+⸻
